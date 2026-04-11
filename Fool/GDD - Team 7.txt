@@ -1,0 +1,246 @@
+﻿The Fool´s Descent
+
+
+
+
+Software Construction and Decision Making (Gpo 501)
+
+
+Santiago Aguilar Mello
+Miguel Eduardo Vega Bisonó
+Regina Fernanda Portela Palacios
+________________
+Index
+
+
+1. Index…………………………………………………………………………………………..2
+2. Game Design………….…………………………………………………………………….3
+   1. Summary…………………………………………………………………………….X
+   2. Gameplay……………………………………………………………………………X
+   3. Mindset……………………………………………………………………………….X
+3. Technical……………..……………………………………………………………………...X
+   1. Screens………………………………………………………………………………X
+   2. Controls………………………………………………………………………………X
+   3. Mechanics……………………………………………………………………………X
+4. Level Design……..………………………………………………………………………….X
+   1. Themes………………………………………………………………………………X
+      1. Ambience……………………………………………………………………X 
+      2. Objects………………………………………………………………………X
+         1. Ambient……………………………………………………………..X
+         2. Interactive…………………………………………………………..X
+      3. Challenges………………………………………………………………….X
+   2. Game Flow…………………………………………………………………………..X
+5. Development…………..……………………………………………………………………X
+   1. Abstracts Classes…………………………………………………………………..X
+   2. Derived Classes…………………………………………………………………….X
+6. Graphics…………..…………………………………………………………………………X
+   1. Styles Attributes……………………………………………………………………..X
+   2. Graphics Needed……………………………………………………………………X
+7. Sounds / Music………………..……………………………………………………………X
+   1. Style Attributes………………………………………………………………………X
+   2. Sounds Needed……………………………………………………………………..X
+   3. Music Needed……………………………………………………………………….X
+8. Schedule……………..……………………………………………………………………...X
+________________
+
+
+Game Design
+
+
+## Summary
+"The Fool’s Descent" and all related content, including but not limited to: game design, characters, story, art, music, source code and documentation, are the intellectual property of  —--.
+
+
+The Fool’s Descent is an indie tabletop roguelike trading card game where the player explores a procedurally generated map and battles opponents through strategic decision-making and risk management, where probability, assessment and memory all take into place in order to make the player’s best fitting decision.
+
+
+The gameplay unfolds on a wooden table, where your opponent is facing in front of you. 
+
+
+Elevator pitch
+
+
+A roguelite tarot card game 
+
+
+## Gameplay
+
+
+What should the gameplay be like? What is the goal of the game, and what kind of obstacles are in the way? What tactics should the player use to overcome them?
+
+
+Descripción básica del juego
+Elementos de Roguelite y de Trading Card Game que contiene el juego
+Reglas y mecánicas básicas del juego
+Estilo visual del juego
+Listado de estadísticas va a recopilar el juego dentro de la base de datos
+
+
+### Cards
+Main Deck (amount of cards in deck is random)
+Only two types of cards… “these Tarot cards hold incredible power of prophecies…Two cards. Luck will decide.”
+“The Sun changes nothing.”
+“The Moon changes everything.”
+
+
+“These are not fortunes.”
+“They are outcomes.”
+
+
+1. The Sun: Nothing happens, the game continues.
+
+
+        Sun cards give a positive fortune, possible fortunes:
+        
+        “You can now blink voluntarily”
+        “You can remember your past… as far as yesterday at least”
+        “You can now read your own thought”
+        “You can now see through almost anything… that’s made out of glass”
+        “You have now gained the ability to touch grass (please do)”
+        
+        
+                
+2. The Moon: The character affected loses one life. 
+
+
+Moon cards give a funny negative fortune, possible fortunes:
+        
+        “Spontanious combustion”
+        “You will be hit by a car… while sleeping tonight”
+        “You will get a very specific and rare disease… at least you get to name it”
+        “You are now allergic to oxygen”
+        “You can now attract bullets”
+        
+  
+
+
+
+### Characters Deck Options
+1. Common Cards
+   1. The Magician: Repeats the effect of the last card played by the character during this combat.
+   2. The Chariot: Throws away the top card of the deck.
+   3. The Star: When you reach 0 lifes it revives you with an extra single one.
+   4. Page of Pentacles: If you win the next round it gives you a coin bonus. 
+   5. Strength: During the next round you are immune to death. 
+   6. Two of Pentacles: Draw two cards from the main deck, choose one to resolve, the other is annulled. 
+2. Rare Cards
+   1. The High Priestess: Can see the next card from the main deck.
+   2. The Hermit: Skips your next draw phase entirely.
+   3. Justice: If you lose a life during your next turn, your opponent loses one too.
+   4. Wheel of Fortune: Shuffles the main deck.
+
+
+3. Epic Cards
+   1. The Lovers: Opponent won’t attack unless attacked first.
+   2. The Tower: Randomly destroys 50% of your enemy player's deck.
+   3. The Devil: You gain two lifes BUT It adds one additional moon card to the main deck.
+   4. The Hanged Man: Blocks the other player from using their player's deck cards during their next turn.
+4. Legendary Cards
+   1. The Fool: Randomly applies any of the existing cards, even if they are not in your current playing deck.
+   2. King of Pentacles: If this card is played on your 7th turn, your money doubles
+
+
+  
+
+
+
+  
+
+
+
+#Mindset
+
+
+What kind of mindset do you want to provoke in the player? Do you want them to feel powerful, or weak? Adventurous, or nervous? Hurried, or calm? How do you intend to provoke those emotions?
+
+
+(The summary and gameplay parts also need to be on a slides presentation)
+________________
+
+
+Elevator pitch
+
+
+Roguelite basado en la era medieval
+Descripción básica del juego
+
+
+Elementos de Roguelite y de Trading Card Game que contiene el juego
+Reglas y mecánicas básicas del juego
+Estilo visual del juego
+Listado de estadísticas va a recopilar el juego dentro de la base de datos
+
+
+15 cartas:
+
+
+1. Sacar una carta mala del deck
+2. Sacar una carta buena del deck
+3. Ver la segunda carta
+4. Quitar algo de vida al oponente
+5. Ganar algo de vida
+6. Ver la ultima carta
+7. Cambiar la primera y ultima carta
+8. Quemar la carta de arriba
+9. Lovers- Besar oponente (no hace nada)
+
+
+—RARAS—
+Duplicar tu dinero si se juega la carta en el 7mo turno
+Muerte instantanea
+Carta #67 oponente mueve las manos arriba y abajo
+________________
+#Technical
+
+
+##Screens
+        Main Screen: Includes a play game, settings, and exit game buttons along with a themed background and text.
+                Buttons:  [New Descent], [Options][Exit]
+        Level selection: a Graph structured map will pop up, with each node representing where the player, enemy, shop or upgrade shop is. It offers a choice between low risk but low regarding options and high risk alternatives. This will allow players to plan ahread and be strategic before fighting.
+        Nodes: Batlle, Boss, mystery, Merchant and Rest Site
+        
+        Duel: A dimmed table with medieval and renaissance themes is displayed, with one out of the 10 opponents facing you. The table includes a stack of cards, which is  the aforementioned main deck. on each of the participant’s side of the table,  they will have the cards on the table with 10 slots for a card each.
+        Elements: Shared Prophecy Deck, player hand (10 slots), opponent avatar and life counter
+
+
+        Upgrade: a menu displaying the plares current cards allows them to upgrade them by collecting 3 by pressing the Infuse button.
+                Buttons:[Exit],[Infuse]
+                
+
+##Controls
+Mouse: Drag cards from the hand to the “Prophecy slot to play. Hover over cards to see their details, select elements in the menu
+Keyboard: ESC for pausing the menu, SPACE for confirming the outcome through the crystal ball 
+
+
+##Mechanics
+
+
+###Duel Mechanics
+
+
+The player will have a duel against a CPU. Each participant will have 3 lifes and the player side will have a deck depending on their current inventory.
+
+
+####Prophecy Deck
+Both participants are drawing from the same source of fate, a stack of cards containing the Sun and Moon cards.
+
+
+Load: At the start of each round, an amount of Sun and Moon cards will be shown, shuffled and placed facing down. The selection of cards will be made with the following formula to match the difficulty and randomness of the game:
+
+
+Deck Size: S = base +random(0, 2)
+Moon cards: deck - random(0,deck-1)
+The player will not know wether a moon or sun card is next, and will need to decide wether the card applies to themselves or their opponent. 
+
+
+Moon cards: These will be the key cards out of the prophecy deck. They may drain the lives of the target.
+
+
+Sun cards: These will give an extra turn if the player chooses to be the target. However, if they choose to apply it to their opponent, they will lose their turn and the opponent won’t lose any lives.
+
+
+
+
+
+
+Choose: a participant will be randomly selected, and they will need to choose wether they use a card from their deck or choose to start the prophecy deck mechanic
