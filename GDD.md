@@ -3,17 +3,13 @@
 
 ![Logo Juego](https://raw.githubusercontent.com/sant-mell/myTC2005B/main/Fool/Gemini_Generated_Image_om4mquom4mquom4m.png)
 
-**© 2025 ________ . All rights reserved.**
-
-![Logo TEC](https://javier.rodriguez.org.mx/itesm/2014/tecnologico-de-monterrey-blue-med.png)
+---
 
 ## _Game Design Document_
 
-Not so long ago, there was only **The Dealer** and the **Great Deck** was full. The apparition of the universe, life, love, death, and every heartbeat was shuffled and assigned to the world's spirits with an organized Great Deck and dealt by an wise, expert dealer who knew what was best for the order of the universe.
+**© 2026 Team 7. All rights reserved.**
 
-Due to an unknown change of events, the dealer has become bored and cynical, and has chosen to change things up. He shuffled the Great Deck and threw its cards like autumn leaves across the mortal plane.
-
-You are **The Fool**, the only born soul born without an assigned future in a dying and chaotic world where fate has become anarchic. To save what remains, you must dive into the unknown, face **The Dealer** at his own table and gamble the right to exist.
+The following content is owned by its creators. Use without written permission is strictly prohibited. 
 
 ---
 
@@ -22,158 +18,144 @@ You are **The Fool**, the only born soul born without an assigned future in a dy
 - Miguel Eduardo Vega Bisonó  
 - Regina Fernanda Portela Palacios  
 
+---
+
 ## Teachers
-- Esteban Castillo Juarez  
+- Esteban Castillo Juárez  
 - Gilberto Echeverría Furió  
-- Jose Angel Martínez Navarro  
+- José Ángel Martínez Navarro  
 
 ---
 
-# Game Overview
-
-- Genre: Trading Card Game, Roguelike  
-- Platform: PC  
-- Target Audience:  Strategy, Roguelike Players  
-- Unique Selling Points:  Decision-Based fate System, Dark Humor, Tarot theme
-
-## Game Overview (Expanded)
-
-### Target Audience
-- Casual or hardcore players?
-- Fans of strategy or luck-based games?
-- Age range?
-
-### Unique Selling Points
-- What makes your mechanic unique?
-- What emotional experience is different?
-
-### Questions
-- What makes your game memorable after one run?
-- What is the ONE sentence that sells your game?
+![Logo TEC](https://javier.rodriguez.org.mx/itesm/2014/tecnologico-de-monterrey-blue-med.png)
 
 ---
 
-# Core Gameplay Loop
+# Index
 
-Draw card → Decide target → Resolve effect → Manage risk → Repeat
+1. [Index](#index)
+2. [Game Design](#game-design)
+    1. [Summary](#summary)
+    2. [Gameplay](#gameplay)
+    3. [Mindset](#mindset)
+3. [Technical](#technical)
+<!-- Listo hasta aquí / Entrega 1 -->
 
-### Questions
-- What is the main decision each turn?
-- Where does tension peak?
-- Why does the player keep playing?
+1. [Screens](#screens)
+2. [Controls](#controls)
+3. [Mechanics](#mechanics)
+4. [Level Design](#level-design)
+1. [Themes](#themes)
+1. Ambience
+2. Objects
+1. Ambient
+2. Interactive
+3. Challenges
+2. [Game Flow](#game-flow)
+5. [Development](#development)
+1. [Abstract Classes](#abstract-classes--components)
+2. [Derived Classes](#derived-classes--component-compositions)
+6. [Graphics](#graphics)
+1. [Style Attributes](#style-attributes)
+2. [Graphics Needed](#graphics-needed)
+7. [Sounds/Music](#soundsmusic)
+1. [Style Attributes](#style-attributes-1)
+2. [Sounds Needed](#sounds-needed)
+3. [Music Needed](#music-needed)
+8. [Schedule](#schedule)
 
 ---
 
 # Game Design
 
-## Gameplay
+## Summary
 
-The Fool’s Descent is an indie tabletop roguelike trading card game where the player explores a procedurally generated map and battles opponents using a deck of cards with strategic decision-making and risk management.
+Not so long ago, there was only The Dealer and the Great Deck. The apparition of the universe, life, love, death and every heartbeat, was shuffled and assigned to the world's spirits and dealt by a wise, expert dealer who knew what was best for the cycle of life.
 
-The gameplay unfolds on a wooden table. Each participant chooses the target of the next hidden card.
+Due to an unknown change of events, The Dealer has become bored, cynical and has chosen to change things up. He shuffled the Great Deck and threw its cards like autumn leaves across the mortal plane.
 
-### Gameplay Questions
+You are The Fool, the only born soul without an assigned future in a dying and chaotic world where fate has become anarchic. To save what remains, you must dive into the unknown, face The Dealer at his own table and gamble the right to exist.
 
-- Is the game skill-based or luck-based?
-- How much control does the player have?
-- Can players plan ahead or only react?
-- How do you prevent frustration from randomness?
+- **Genre:** Trading Card Game, Roguelike  
+- **Platform:** PC  
+- **Target Audience:**  Casual Strategy, Roguelike Players - Ages 13+  
+- **Unique Selling Points:**  Decision-Based Fate System, Dark Humor, Tarot Theme
 
 ---
 
-## Cards
+## Gameplay
 
-Main Deck (amount of cards in deck is random)
+The Fool's Descent is an indie tabletop roguelike card game in which the player navigates a procedurally generated map and confronts opponents through a system built on tension, probability and choice. The gameplay takes place a tarot table, to reinforce the sensation that the player is gambling with their future. On the side lies the Great Deck, the centre of the game, composed of a random number of cards, which include either life or death outcomes, shuffled randomly at the start of each combat. In front of the players we can find their Characters Deck, which functions as their weapons to battle what the Great Deck reveals.
+
+The core loops consists in: Draw card → Manage risk (With your Characters Deck) → Decide target → Resolve effect → Repeat
+
+Managing risk is vital, as the player must choose whether to intervene before deciding the target and commiting to the result, using one of their limited options to alter the future. What sustains engagement is the constant negotiation between fate and control. In this balance, the game ensures that every run feels uncertain, but never unfair, just like life. But remember, each decision contributes meaningfully to the players descent.
+
+### Great Deck
 
 Only two types of cards…
 
-“The Sun changes nothing.”  
-“The Moon changes everything.”
+“The Sun changes nothing, The Moon changes everything”
 
-“These are not fortunes.”  
-“They are outcomes.”
+“These are not fortunes, they are futures”
 
-### The Sun
+#### The Sun
 Nothing happens.
 
-Sun cards give positive fortunes:
+Positive fortunes:
 
-- “You can now blink voluntarily”
-- “You can remember your past…”
-- “You can now read your own thought”
-- “You can now see through glass”
-- “You can now touch grass”
+- “The Sun stands upright. Life is restored”
+- “Light reveals a path forward”
+- “The arcana favors you. You remain”
+- “Vitality returns under the Sun’s gaze”
+- “The light dispels what sought to end you”
+- “Your thread holds beneath the Sun”
+- “The card speaks of life. You endure”
+- “Clarity guides you away from ruin”
+- “The Sun grants renewal”
+- “Hope rises and so do you”
 
-### The Moon
-Lose one life.
+#### The Moon
+The target loses one life.
 
-Moon cards give negative fortunes:
+Negative fortunes:
 
-- “Spontaneous combustion”
-- “You will be hit by a car”
-- “You are allergic to oxygen”
-- “You attract bullets”
+- “The Moon reveals your end”
+- “The arcana turned against you”
+- “Illusion fades. The truth is death”
+- “The path is lost beneath the Moon”
+- “What was hidden now consumes you”
+- “Your thread is severed in shadow”
+- “The card speaks of endings. You fall”
+- “Darkness claims what remains”
+- “The Moon obscures all escapes”
+- “Fate is sealed under the night”
 
----
+### Characters Deck Options
 
-## Card System Expansion
+#### Common Cards
+- *The Magician:* Repeats the effect of the last card played by the character during this combat.  
+- *The Chariot:* Throws away the top card of the Great Deck.   
+- *The Star:* When you reach 0 lives it revives you with an extra single one.  
+- *Page of Pentacles:* If you win the next round it gives you a coin bonus.   
+- *Strength:* During the next round you are immune to death.   
+- *Two of Pentacles:* Draw two cards from the Great Deck, choose one to resolve, the other is annulled.  
 
-### Distribution
-- What is the probability of Sun vs Moon?
-- Does it change over time?
+#### Rare Cards
+- *The High Priestess:* Can see the next card from the Great Deck.  
+- *The Hermit:* Skips your next draw phase entirely.   
+- *Justice:* If you lose a life during your next turn, your opponent loses one too.
+- *Wheel of Fortune:* Shuffles the Great Deck. 
+- *King of Pentacles:* If you win the award money doubles, but if you lose the loss one does too. 
 
-### Balance
-- Are Moon cards too punishing?
-- Are Sun cards too safe?
+#### Epic Cards
+- *The Lovers:* Gain one life OR Permanently remove one moon card from the Great Deck.
+- *The Tower:* Randomly destroys 50% of your enemy Characters Deck.  
+- *The Devil:* You gain two lives BUT It adds one additional moon card to the Great Deck.   
+- *The Hanged Man:* Blocks the other player from using their Characters Deck cards during their next turn.   
 
-### Questions
-- Can players manipulate probability?
-- Is there a way to predict outcomes?
-
----
-
-## Characters Deck Options
-
-### Common Cards
-- The Magician  
-- The Chariot  
-- The Star  
-- Page of Pentacles  
-- Strength  
-- Two of Pentacles  
-
-### Rare Cards
-- The High Priestess  
-- The Hermit  
-- Justice  
-- Wheel of Fortune  
-
-### Epic Cards
-- The Lovers  
-- The Tower  
-- The Devil  
-- The Hanged Man  
-
-### Legendary Cards
-- The Fool  
-- King of Pentacles  
-
----
-
-# Mindset
-
-What kind of mindset do you want to provoke?
-
-## Expanded
-
-- Tension  
-- Uncertainty  
-- Dark humor  
-
-### Questions
-- Should the player feel in control or helpless?
-- Is failure funny or frustrating?
-- What should the player feel at the end?
+#### Legendary Cards
+- *The Fool:* Randomly applies any of the existing cards, even if they are not in your Characters Deck.  
 
 ---
 
@@ -210,7 +192,27 @@ What kind of mindset do you want to provoke?
 
 ---
 
+## Mindset
+
+What kind of mindset do you want to provoke?
+
+## Expanded
+
+- Tension  
+- Uncertainty  
+- Dark humor  
+
+### Questions
+- Should the player feel in control or helpless?
+- Is failure funny or frustrating?
+- What should the player feel at the end?
+- What makes your game memorable after one run?
+- What is the ONE sentence that sells your game?
+
+---
+
 # Technical
+<!-- Listo hasta aquí / Entrega 1 -->
 
 ## Screens
 
