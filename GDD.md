@@ -136,10 +136,10 @@ Negative fortunes:
 #### Common Cards
 - *The Magician:* Repeats the effect of the last card played by the character during this combat.  
 - *The Chariot:* Throws away the top card of the Great Deck.   
-- *The Star:* When you reach 0 lives it revives you with an extra single one.  
-- *Page of Pentacles:* If you win the next round it gives you a coin bonus.   
-- *Strength:* During the next round you are immune to death.   
-- *Two of Pentacles:* Draw two cards from the Great Deck, choose one to resolve, the other is annulled.  
+- *The Star:* When you reach 0 lives it revives you with a singular extra life.  
+- *Page of Pentacles:* If you win in the next round it gives you a coin bonus. 
+- *Strength:* During the next round you cannot die.
+- *Two of Pentacles:* Draw two cards from the Great Deck, choose one to use, the other is thrown away.  
 
 ![Common cards](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Common%20Cards.png?raw=true)
 
@@ -148,12 +148,12 @@ Negative fortunes:
 - *The Hermit:* Skips your next draw phase entirely.   
 - *Justice:* If you lose a life during your next turn, your opponent loses one too.
 - *Wheel of Fortune:* Shuffles the Great Deck. 
-- *King of Pentacles:* If you win the award money doubles, but if you lose the loss one does too. 
+- *King of Pentacles:* If you win the award money doubles, but if you lose the loss money does too. 
 
 ![Rare cards](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Rare%20Cards.png?raw=true)
 
 #### Epic Cards
-- *The Lovers:* Gain one life OR Permanently remove one moon card from the Great Deck.
+- *The Lovers:* Permanently remove one moon card from the Great Deck.
 - *The Tower:* Randomly destroys 50% of your enemy Characters Deck.  
 - *The Devil:* You gain two lives BUT It adds one additional moon card to the Great Deck.   
 - *The Hanged Man:* Blocks the other player from using their Characters Deck cards during their next turn.   
@@ -172,17 +172,11 @@ Negative fortunes:
 
 
 ### Resources
-- Lives  
-- Coins  
-- Cards  
-- Risk  
+- Lives: 3 lives player and enemy. The lives are represented by a candle.
+- Coins: Coins can be used at certain points in the map to buy power ups or cards. Th eplayer will have the choice of buying it or not. The player wins coins by winning against enemies or by selling cards. Coins are kept after each reincarnation or replay.
+- Cards: 15 cards that help the player manage the risk of moon and sun cards in the main deck.
 
-### Questions
-- What is the most valuable resource?
-- Can players farm resources?
-- What prevents imbalance?
-
----
+The only resource that has any value is the coins, player can farm these coins by playing the "King of Pentacles" and then eventually losing against another enemy. Epic and legendary cards are really expensive to buy, so getting them won't be easy, but are not needed to win, therefore there is no imbalance since getting legendary or epic cards does not necesarily mean that the player will win.
 
 # Opponents
 
@@ -191,26 +185,56 @@ Negative fortunes:
 - Do they behave differently?
 - Are bosses unique?
 
----
+There are 6 possible enemies and 1 final boss:
+
+### Easy enemies:
+
+"Drunk" 
+![Easy Enemies](Drunk.png)
+
+"Peseant"
+![Easy Enemies](Peseant.png)
+
+These enemies, only use one of their cards every second turn, and their cards are common.
+
+### Mid difficulty enemies:
+
+"Crazy Jester"
+![Mid difficulty enemies](Jester.png)
+
+"Bounded Knight"
+![Mid difficulty enemies](Knight.png)
+
+These enemies will not use one of their cards every 3rd turn, and their cards have a few rares.
+
+### High difficulty enemies:
+
+"Killer Queen" 
+![High difficulty enemies](Killer_Queen.png)
+
+"The Big King"
+![High difficulty enemies](The_king.png)
+
+These enemies use their cards every turn and have some epic cards.
+
+### Final Boss:
+
+ "The Dealer"
+ ![Final Boss](Dealer.png)
+
+This enemy will use two cards every turn and has the legendary card.
 
 ## Mindset
 
 What kind of mindset do you want to provoke?
 
-## Expanded
-
 - Tension  
 - Uncertainty  
 - Dark humor  
 
-### Questions
-- Should the player feel in control or helpless?
-- Is failure funny or frustrating?
-- What should the player feel at the end?
-- What makes your game memorable after one run?
-- What is the ONE sentence that sells your game?
+The mindset this game should evoke on the players should be uncertainty and adventure, with a hint of dark humour. This mindset will be created by the medieval/magical visuals and the eerie and mysterious music. The style and story add to the ambiance that will make the game memorable from the start
 
----
+The player should at first feel helpless as thier cards will do little against the enemies, but as the game progresses the player's character deck will get better and the battles easier. Completing the game in one run would be near impossible and would requiere an impessive ammount of luck. Failure should be frustrating as that means you have to start again, but with more money and better cards.
 
 # Technical
 <!-- Listo hasta aquí / Entrega 1 -->
