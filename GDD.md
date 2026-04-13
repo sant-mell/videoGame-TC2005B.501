@@ -141,6 +141,8 @@ Negative fortunes:
 - *Strength:* During the next round you are immune to death.   
 - *Two of Pentacles:* Draw two cards from the Great Deck, choose one to resolve, the other is annulled.  
 
+![Common cards](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Common%20Cards.png?raw=true)
+
 #### Rare Cards
 - *The High Priestess:* Can see the next card from the Great Deck.  
 - *The Hermit:* Skips your next draw phase entirely.   
@@ -148,27 +150,26 @@ Negative fortunes:
 - *Wheel of Fortune:* Shuffles the Great Deck. 
 - *King of Pentacles:* If you win the award money doubles, but if you lose the loss one does too. 
 
+![Rare cards](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Rare%20Cards.png?raw=true)
+
 #### Epic Cards
 - *The Lovers:* Gain one life OR Permanently remove one moon card from the Great Deck.
 - *The Tower:* Randomly destroys 50% of your enemy Characters Deck.  
 - *The Devil:* You gain two lives BUT It adds one additional moon card to the Great Deck.   
 - *The Hanged Man:* Blocks the other player from using their Characters Deck cards during their next turn.   
 
+![Epic cards](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Legendary%20Cards.png?raw=true)
+
 #### Legendary Cards
 - *The Fool:* Randomly applies any of the existing cards, even if they are not in your Characters Deck.  
 
+![Legendary cards](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Epic%20Cards.png?raw=true)
 ---
 
 # Progression
 
 ### Questions
-- What persists between runs?
-- How does the player get stronger?
-- Why replay?
 
----
-
-# Game Economy
 
 ### Resources
 - Lives  
