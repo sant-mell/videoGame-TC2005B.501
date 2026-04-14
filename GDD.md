@@ -322,21 +322,23 @@ The player will start with zero cards and money. They must duel a common enemy f
 ### Map
 The map will be a procedually generated directed graph, similar to the one used in *Slay the Spire*, but stylized to match the pixelated tarod style.
 
-1.  Nodes: Each node will include an enemy, Upgrade, Rest site or Boss
+1.  Nodes: Each node will include an enemy, upgrade or rest site
 - Enemy: refer to the [enemy specifications](#opponents)
 - Upgrade: refer to the [upgrade specifications](#upgrades)
 - Rest: Regain 1 health point from your [life extension](#upgrades) upgrade
 1.  Paths: The player will start from the far left, advancing towards the right
 
 The encounters will be easier on the beginning, where a calculation to prioritize easier enemies will be made. However, the possibility of finding a hard enemy, or even the boss at the beginning is never zero.
+
+
 #### Upgrades
 - Card Binding (300 coins): Spend a high amount of coins in order to be able to "bound" a card. This will make the card return to your hand on the next duel even if it was used on the last one
 
-- Life extension(400 coins): Increase the maximum life, where the baseline starts at 3
+- Life Extension (400 coins): Increase the maximum life, where the baseline starts at 3
 
-- Insight(200 coins): Allows the player to see how many sun and moon cards are left on the deck in any point of the duel.
+- Insight (200 coins): Allows the player to see how many sun and moon cards are left on the deck in any point of the duel.
 
-- Card(100 coins): The player may purchase one random card to use in their next duel.
+- Card (100 coins): The player may purchase one random card to use in their next duel.
 
 ### Duel
 
