@@ -178,7 +178,7 @@ Managing risk is vital, as the player must choose whether to intervene before de
 
 
 
-! [GameBoard] ()
+![GameBoard](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Duel.png?raw=true)
 
 
 
@@ -320,6 +320,23 @@ Negative fortunes:
 The player will start with zero cards and money. They must duel a common enemy first in a match with an empty hand.  After this first battle, a procedurally generated map will be shown, where the player must weigh their decisions to what benefits them the most; having a duel or not, facing the boss headfirst or risk a duel beforehand to get more cards and money, prioritize card collection for a next run. If the player dies during a duel, they will lose all of their cards and be able to keep half of their coins.
 
 ### Map
+The map will be a procedually generated directed graph, similar to the one used in *Slay the Spire*, but stylized to match the pixelated tarod style.
+
+1.  Nodes: Each node will include an enemy, Upgrade, Rest site or Boss
+- Enemy: refer to the [enemy specifications](#opponents)
+- Upgrade: refer to the [upgrade specifications](#upgrades)
+- Rest: Regain 1 health point from your [life extension](#upgrades) upgrade
+1.  Paths: The player will start from the far left, advancing towards the right
+
+The encounters will be easier on the beginning, where a calculation to prioritize easier enemies will be made. However, the possibility of finding a hard enemy, or even the boss at the beginning is never zero.
+#### Upgrades
+- Card Binding (300 coins): Spend a high amount of coins in order to be able to "bound" a card. This will make the card return to your hand on the next duel even if it was used on the last one
+
+- Life extension(400 coins): Increase the maximum life, where the baseline starts at 3
+
+- Insight(200 coins): Allows the player to see how many sun and moon cards are left on the deck in any point of the duel.
+
+- Card(100 coins): The player may purchase one random card to use in their next duel.
 
 ### Duel
 
@@ -349,7 +366,7 @@ Choosing a card from your character deck will discard that card from your hand.
 
 
 ### Items and Currencies
-- Coins: Coins can be used at certain points in the map to buy power ups or cards. The player will have the choice of buying it or not. The player wins coins by winning against enemies or by selling cards. 50% of the coins are kept after each reincarnation or replay.
+- Coins: Coins are gained at the end of a duel, granting 100 per victory. They may be used at certain points in the map to buy power ups or cards. The player will have the choice of buying it or not. The player wins coins by winning against enemies or by selling cards. 50% of the coins are kept after each reincarnation or replay.
 - Cards: 15 cards that help the player manage the risk of moon and sun cards in the main deck.
 
 
