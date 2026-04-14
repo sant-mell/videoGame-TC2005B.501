@@ -195,7 +195,7 @@ Only two types of cards…
 
 “The Sun provides an opportunity, The Moon changes everything”
 
-
+![Sun and Moon](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Sun%20and%20Moon.png?raw=true)
 
 
 “These are not fortunes, they are futures”
@@ -249,12 +249,6 @@ Negative fortunes:
 - “Darkness claims what remains”
 - “The Moon obscures all escapes”
 - “Fate is sealed under the night”
-
-
-
-
-! [GreatDeck] ()
-
 
 
 
@@ -325,6 +319,7 @@ Negative fortunes:
 
 The player will start with zero cards and money. They must duel a common enemy first in a match with an empty hand.  After this first battle, a procedurally generated map will be shown, where the player must weigh their decisions to what benefits them the most; having a duel or not, facing the boss headfirst or risk a duel beforehand to get more cards and money, prioritize card collection for a next run. If the player dies during a duel, they will lose all of their cards and be able to keep half of their coins.
 
+### Map
 
 ### Duel
 
@@ -350,19 +345,15 @@ When the Great Deck gets depleted, the they will get more cards in the following
 - 4 for epic
 - 5 for legendary
 
+Choosing a card from your character deck will discard that card from your hand.
+
 
 ### Items and Currencies
 - Coins: Coins can be used at certain points in the map to buy power ups or cards. The player will have the choice of buying it or not. The player wins coins by winning against enemies or by selling cards. 50% of the coins are kept after each reincarnation or replay.
 - Cards: 15 cards that help the player manage the risk of moon and sun cards in the main deck.
 
 
-
-
-
-
 ### Opponents
-
-
 
 
 In order to complete the descent and restore the order of the universe, you must ultimately confront and defeat The Dealer. Because the map is generated randomly for every attempt, the path ahead is never certain. Each victory you claim along the way serves a vital purpose beyond mere survival, as defeating enemies is the primary way to obtain the more powerful cards and precious coins required to afford life. While it may be tempting to avoid conflict to preserve your health in the short term, doing so will eventually leave you under-equipped, forced to rely solely on your faith in the future.
@@ -392,7 +383,7 @@ On the map, one of the enemies of each difficulty will appear, those are also ra
 
 
 
-These enemies only use one of their cards every second turn, and their cards are common.
+These characters lack any real combat training, they only manage to play a basic common card every other turn, giving you plenty of time to find your footing.
 
 
 
@@ -414,7 +405,7 @@ These enemies only use one of their cards every second turn, and their cards are
 
 
 
-These enemies will not use one of their cards every 3rd turn, and their cards have a few rares.
+These are a bit more seasoned but still have their openings. While they’ve added some rare cards to their deck, they aren't perfectly consistent, they’ll skip an action every third turn, offering you a brief window to strike back.
 
 
 
@@ -436,7 +427,7 @@ These enemies will not use one of their cards every 3rd turn, and their cards ha
 
 
 
-These enemies use their cards every turn and have some epic cards.
+These are relentless fighters who never miss a beat, playing a card every single turn. Their decks are packed with epic cards, meaning you’ll need to stay sharp just to keep up with their constant pressure.
 
 
 #### Legendary and Final Enemy:
@@ -450,7 +441,7 @@ These enemies use their cards every turn and have some epic cards.
 
 
 
-This enemy will use two cards every turn and has the legendary card.
+He doesn’t just play the game, he MAKES it. Holding the only Legendary card in existence, he’s capable of overwhelming you by dropping two cards at once every few turns. To beat him, you’ll have to survive a level of aggression unlike anything else you have seen before.
 
 
 
