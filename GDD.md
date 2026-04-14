@@ -84,10 +84,6 @@ The following content is owned by its creators. Use without written permission i
   2. [Gameplay](#gameplay)
   3. [Mindset](#mindset)
 3. [Technical](#technical)
-<!-- Listo hasta aquí / Entrega 1 -->
-
-
-
 
 1. [Screens](#screens)
 2. [Controls](#controls)
@@ -435,7 +431,7 @@ These are a bit more seasoned but still have their openings. While they’ve add
 
 
 - "Killer Queen"
-![Epic Enemies](Killer_Queen.png)
+![Epic Enemies](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Queen.png?raw=true)
 
 
 
