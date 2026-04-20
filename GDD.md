@@ -22,7 +22,7 @@
 
 
 
-**© 2026 Team 7. All rights reserved.**
+**© 2026 Arcana Studios. All rights reserved.**
 
 
 
@@ -30,7 +30,7 @@
 The following content is owned by its creators. Use without written permission is strictly prohibited.
 
 
-
+![Studio Logo](https://github.com/sant-mell/videoGame-TC2005B.501/blob/f5e4326bab071f9ac4934273394f62ab9761b9fe/Studio%20Logo.png)
 
 ---
 
@@ -80,32 +80,25 @@ The following content is owned by its creators. Use without written permission i
 
 1. [Index](#index)
 2. [Game Design](#game-design)
-  1. [Summary](#summary)
-  2. [Gameplay](#gameplay)
-  3. [Mindset](#mindset)
+    1. [Summary](#summary)
+    2. [Gameplay](#gameplay)
+    3. [Mindset](#mindset)
 3. [Technical](#technical)
-
-1. [Screens](#screens)
-2. [Controls](#controls)
-3. [Mechanics](#mechanics)
-4. [Level Design](#level-design)
-1. [Themes](#themes)
-1. Ambience
-2. Objects
-1. Ambient
-2. Interactive
-3. Challenges
-2. [Game Flow](#game-flow)
+    1. [Screens](#screens)
+    2. [Controls](#controls)
+    3. [Mechanics](#mechanics)
 5. [Development](#development)
-1. [Abstract Classes](#abstract-classes--components)
-2. [Derived Classes](#derived-classes--component-compositions)
-6. [Graphics](#graphics)
-1. [Style Attributes](#style-attributes)
-2. [Graphics Needed](#graphics-needed)
-7. [Sounds/Music](#soundsmusic)
-1. [Style Attributes](#style-attributes-1)
-2. [Sounds Needed](#sounds-needed)
-3. [Music Needed](#music-needed)
+    1. [Abstract Classes](#abstract-classes--components)
+    2. [Derived Classes](#derived-classes--component-compositions)
+6. [Art Direction](#art-direction)
+    1. [Sound Design](#sound-design)
+    2. [Level Design](#level-design)
+        1. [Themes](#themes)
+              1. Ambience
+              2. Objects
+              1. Ambient
+              2. Interactive
+              3. Challenges
 8. [Schedule](#schedule)
 
 
@@ -313,62 +306,59 @@ Negative fortunes:
 # Progression
 
 
-The player will start with zero cards and money. They must duel a common enemy first in a match with an empty hand.  After this first battle, a procedurally generated map will be shown, where the player must weigh their decisions to what benefits them the most; having a duel or not, facing the boss headfirst or risk a duel beforehand to get more cards and money, prioritize card collection for a next run. If the player dies during a duel, they will lose all of their cards and be able to keep half of their coins.
+The player will start with zero cards and money. They must duel a common enemy first in a match with an empty hand.  After this first battle, a procedurally generated map will be shown, where the player must weigh their decisions to what benefits them the most; having a duel or not, facing the boss headfirst or risk a duel beforehand to get more cards and money and prioritize card collection for a next run. If the player dies during a duel, they will lose all of their cards but be able to keep half of their coins.
 
-### Map
-The map will be a procedually generated directed graph, similar to the one used in *Slay the Spire*, but stylized to match the pixelated tarod style.
+## Map
+The map will be a procedurally generated directed graph, similar to the one used in *Slay the Spire*, but stylized to match the pixelated tarot style.
 
-1.  Nodes: Each node will include an enemy, upgrade or rest site
-- Enemy: refer to the [enemy specifications](#opponents)
-- Upgrade: refer to the [upgrade specifications](#upgrades)
-- Rest: Regain 1 health point from your [life extension](#upgrades) upgrade
-1.  Paths: The player will start from the far left, advancing towards the right
+1. **Nodes:** Each node will include an enemy, upgrade or rest site
+    - *Enemy:* Refer to the [enemy specifications](#opponents)
+    - *Upgrade:* Refer to the [upgrade specifications](#upgrades)
+    - *Rest:* Similar to Monopoly rest stops, they do nothing, but give the player time to rethink their strategy.
+2.  **Paths:** The player will start from the far left, advancing towards the right.
 
-The encounters will be easier on the beginning, where a calculation to prioritize easier enemies will be made. However, the possibility of finding a hard enemy, or even the boss at the beginning is never zero.
+The encounters will be easier on the beginning, where a calculation to prioritize easier enemies will be made. However, the possibility of finding a hard enemy or even the boss at the beginning is never zero.
 
+![Map](https://github.com/sant-mell/videoGame-TC2005B.501/blob/7c146f31eadf7caf5773688c089ce35c24b8e933/Map.png)
 
 #### Upgrades
-- Card Binding (300 coins): Spend a high amount of coins in order to be able to "bound" a card. This will make the card return to your hand on the next duel even if it was used on the last one
+- *Card Binding* (300 coins): Spend a high amount of coins in order to be able to "bound" a card. This will make the card return to your hand on the next duel even if it was used on the last one.
 
-- Life Extension (400 coins): Increase the maximum life, where the baseline starts at 3
+- *Life Extension* (400 coins): Increase the maximum life, where the baseline starts at 3.
 
-- Insight (200 coins): Allows the player to see how many sun and moon cards are left on the deck in any point of the duel.
+- *Card* (100 coins): The player may purchase one random card to use in their next duel.
 
-- Card (100 coins): The player may purchase one random card to use in their next duel.
-
-### Duel
+## Duel
 
 
-The duel starts with the cards that were not used last round.
+The duel starts with the cards that were not used on last round.
 The progression as described in [gameplay](#gameplay) is made in the following manner:
 
 
-1. The sun and moon cards that will be put on the main deck are shown, shuffled and put face down on the table.
-2. The player will be able to choose a card from their character deck.
-3. The player must choose the target of the current card on top of the deck; either themselves or the enemy
-- If it was a sun card and they choose themselves, they get an extra turn
-- If it was a sun card and they choose the enemy
-4. Once the target for the current great deck card is shown, the player may get an extra turn or the enemy will get it.
-5. The enemy will also get to first use their character deck and then choose the target for the current great deck card.
-6. When the great deck runs out of cards, character cards will be given to each side according to the difficulty of the enemy.
-7. Repeat
+1. The sun and moon cards that will be put on the main deck are shown, shuffled and the put face down on the table.
+2. The player will be able to choose a card from their characters deck.
+3. The player must choose the target of the current card on top of the deck; either themselves or the enemy.
+    - If it was a sun card and they chose themselves, they get an extra turn.
+    - If it was a sun card and they chose the enemy, nothing happens.
+    - If it was a moon card the target loses a life.
+5. The enemy repeats the process.
+7. Repeat.
+
+When the Great Deck gets depleted, duel participants will get more character cards in the following manner:
+- 2 for common enemies
+- 3 for rare enemies
+- 4 for epic enemies
+- 5 for legendary enemies
+
+Choosing a card from your character deck will discard it from your hand.
 
 
-When the Great Deck gets depleted, the they will get more cards in the following manner:
-- 2 character cards for common enemies
-- 3 for rare
-- 4 for epic
-- 5 for legendary
-
-Choosing a card from your character deck will discard that card from your hand.
+## Items and Currencies
+- *Coins:* Coins are gained at the end of a duel, granting 100 per victory. They may be used at certain points in the map to buy powerups or cards. The player will have the choice of buying it or not. 50% of the coins are kept after each reincarnation.
+- *Cards:* 16 cards that help the player manage the risk of moon and sun cards in the main deck during duels.
 
 
-### Items and Currencies
-- Coins: Coins are gained at the end of a duel, granting 100 per victory. They may be used at certain points in the map to buy power ups or cards. The player will have the choice of buying it or not. The player wins coins by winning against enemies or by selling cards. 50% of the coins are kept after each reincarnation or replay.
-- Cards: 15 cards that help the player manage the risk of moon and sun cards in the main deck.
-
-
-### Opponents
+## Opponents
 
 
 In order to complete the descent and restore the order of the universe, you must ultimately confront and defeat The Dealer. Because the map is generated randomly for every attempt, the path ahead is never certain. Each victory you claim along the way serves a vital purpose beyond mere survival, as defeating enemies is the primary way to obtain the more powerful cards and precious coins required to afford life. While it may be tempting to avoid conflict to preserve your health in the short term, doing so will eventually leave you under-equipped, forced to rely solely on your faith in the future.
@@ -464,21 +454,19 @@ He doesn’t just play the game, he MAKES it. Holding the only Legendary card in
 ## Mindset
 
 
-The mindset this game should evoke on the players should be uncertainty and adventure, with a hint of dark humour. This mindset will be created by the medieval/magical visuals and the eerie and mysterious music. The style and story add to the ambiance that will make the game memorable from the start
+The mindset this game should evoke on the players should be uncertainty and adventure, with a hint of dark humour. This mindset will be created by the medieval/magical visuals and the eerie and mysterious music. The style and story add to the ambiance that will make the game memorable from the beginning.
 
 
 
 
-At first, the sense of chance is big, but after the first round of the first duel, each character card will introduce slowly the idea of planning and thinking before playing their cards to the player. This will let the player slowly understand the slight gambling element, while introducing the ways in which they could save themselves and punish the enemy, and vice versa from the enemy's side.
+At first, the sense of chance is big, but after the first round of the first duel, each character card will introduce slowly the idea of planning and thinking before playing their cards to the player. This will let the player slowly understand the slight gambling element, while introducing the ways in which they could save themselves and punish the enemy, and viceversa from the enemy's side.
 
 
 Since you are "The Fool", the world must feel unknown, amusing and dreadful all at once, where the player does not know all cards, but after every victory and defeat the player will get a lesson about how the character cards, world, and map works.
 
+---
 
 # Technical
-<!-- Listo hasta aquí / Entrega 1 -->
-
-
 
 
 ## Screens
@@ -587,8 +575,11 @@ Each player has 3 lives
 
 
 ---
+# Development
 
+## Abstract Classes 
 
+## Derived Classes
 
 
 # Art Direction
