@@ -608,8 +608,46 @@ Each player has 3 lives
 - What sounds signal danger?
 - Does music increase tension?
 
+Home Screen music:
+
+Introduction music:
+
+Map music:
+
+Easy difficulty enemy music:
+
+https://drive.google.com/file/d/1jQaZSr_DPYjfQTAnrEwHa09czris5vCH/view
+
+Mid difficulty enemy music:
+
+https://drive.google.com/file/d/18ZpjLBF9V656dGaQgPunKcfh6cbkQpkr/view
+
+Hard difficulty enemy music:
 
 
+
+Final Boss music:
+
+https://drive.google.com/file/d/1j0HN8uPZ_J-cHGiEnDhUq5tODtyQQd4B/view
+
+Final Boss Speech:
+
+https://drive.google.com/file/d/1GGLNlT3SoiWu1vCBj7GiiSaMB4mXp3aS/view
+
+
+### Sound effects
+
+Grabbing/placing card:
+
+https://drive.google.com/file/d/1W85aqtEAbrDJ4l1WqGxttxixxZnJmJUO/view
+
+Candle burning/losing last life:
+
+https://drive.google.com/file/d/1ou-ub_bsTDPM1OJGACr0HsuA9zkukDk8/view
+
+Temporary music when on last life (to add tension):
+
+https://drive.google.com/file/d/1ST9hems4tOUkqzwvmLZwmD1odB6efiC0/view
 
 ---
 
