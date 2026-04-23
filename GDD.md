@@ -610,9 +610,11 @@ Each player has 3 lives
 
 Home Screen music:
 
-Introduction music:
+https://drive.google.com/file/d/1urB5jivarNT5OWPFKnxyvBQH10WPmeLW/view
 
 Map music:
+
+https://drive.google.com/file/d/1MwSLkbPEPxqgpSPwxPaChh18HQwx9kr6/view
 
 Easy difficulty enemy music:
 
@@ -624,7 +626,7 @@ https://drive.google.com/file/d/18ZpjLBF9V656dGaQgPunKcfh6cbkQpkr/view
 
 Hard difficulty enemy music:
 
-
+https://drive.google.com/file/d/1urB5jivarNT5OWPFKnxyvBQH10WPmeLW/view
 
 Final Boss music:
 
@@ -648,6 +650,18 @@ https://drive.google.com/file/d/1ou-ub_bsTDPM1OJGACr0HsuA9zkukDk8/view
 Temporary music when on last life (to add tension):
 
 https://drive.google.com/file/d/1ST9hems4tOUkqzwvmLZwmD1odB6efiC0/view
+
+Enemy Defeated:
+
+https://drive.google.com/file/d/1KoQGm-IornHsb8N3QEXILYH8KixAg8Zb/view
+
+Enemy Textbox:
+
+https://drive.google.com/file/d/1i8WX0EGKbFcRM_nzs5VeQxpbuPQBxVil/view
+
+Enemy "talking":
+
+https://drive.google.com/file/d/1YFMdREcwwZ2eImFIjvnNkncWK1T1NlTC/view
 
 ---
 
