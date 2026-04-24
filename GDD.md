@@ -87,18 +87,14 @@ The following content is owned by its creators. Use without written permission i
     1. [Screens](#screens)
     2. [Controls](#controls)
     3. [Mechanics](#mechanics)
+    4. [Statistics](#statistics)
+    5. [Data Collection](#data-collection)
 5. [Development](#development)
     1. [Abstract Classes](#abstract-classes--components)
     2. [Derived Classes](#derived-classes--component-compositions)
 6. [Art Direction](#art-direction)
     1. [Sound Design](#sound-design)
     2. [Level Design](#level-design)
-        1. [Themes](#themes)
-              1. Ambience
-              2. Objects
-              1. Ambient
-              2. Interactive
-              3. Challenges
 8. [Schedule](#schedule)
 
 
@@ -319,7 +315,7 @@ The map will be a procedurally generated directed graph, similar to the one used
 
 The encounters will be easier on the beginning, where a calculation to prioritize easier enemies will be made. However, the possibility of finding a hard enemy or even the boss at the beginning is never zero.
 
-![Map](https://github.com/sant-mell/videoGame-TC2005B.501/blob/7c146f31eadf7caf5773688c089ce35c24b8e933/Map.png)
+![Map](https://github.com/sant-mell/videoGame-TC2005B.501/blob/326d1355a5f78bff3cfa89d601873a9d8a51a0c4/Final%20Map.png)
 
 #### Upgrades
 - *Card Binding* (300 coins): Spend a high amount of coins in order to be able to "bound" a card. This will make the card return to your hand on the next duel even if it was used on the last one.
@@ -572,6 +568,47 @@ Each player has 3 lives
 - Can players predict outcomes?
 
 
+## Statistics
+
+The game will include a statistics system designed to track both individual player performance and global trends across all players. This system serves two main purposes: first, to give players a sense of progression and reflection over their runs, and second, to provide useful data that can help evaluate balance and player behavior over time. They will be divided into two main categories:
+
+### Personal Statistics
+
+- Total Play Time
+- Deaths
+- Enemies Defeated
+- Victories
+- Coins Earned
+- Cards Played
+
+### Global Statistics
+
+- Total Number of Players
+- Average Play Time
+- Average Deaths
+- Total Enemies Defeated
+- Average Victories
+- Total Coins Earned
+- Total Cards Played
+
+## Data Collection
+
+The game will run on a web-based structure using HTML for layout, CSS for styling, and JavaScript for logic. The statistics will be collected in real time through JavaScript by tracking key gameplay events. Each time a relevant action occurs, such as starting or ending a run, winning or losing a duel, defeating an enemy, playing a card or gaining coins, JavaScript updates internal counters stored in variables or objects. For example, every time a player uses a card, a counter like cardsPlayed++ is updated instantly during gameplay. At the end of a session or at defined checkpoints, this data is sent to a backend using requests, allowing it to be stored in a SQL database. To support long term progression, the system will include a login feature, so the players can leave the game and return later without losing progress. 
+
+The database structure will include:
+
+- **Users Table:** Stores login credentials and a unique player ID.
+- **Player Statistics Table:** Stores individual data such as play time, deaths, victories, coins, and cards used.
+- **Global Statistics Table:** Stores aggregated values across all players.
+- **Game State Table:** Stores the player’s current run, including:
+    - Current position on the map
+    - Current deck (cards owned and remaining)
+
+When data is received player statistics are updated using the player’s ID, the current game state is saved, so the player can resume later and global statistics are updated to reflect overall activity.
+
+### Main Menu Integration
+
+From the main menu, players will have access to both “Statistics” and a “Continue Descent” option. When selecting "Statistics" JavaScript requests data from the backend, the server retrieves the stored SQL data and the information is displayed using HTML. The interface will separate Personal and Global ones. When selecting "Continue Descent" the system loads the saved game state from the database and the player resumes exactly where they left off, including map position, deck, and resources.
 
 
 ---
@@ -584,14 +621,43 @@ Each player has 3 lives
 
 # Art Direction
 
+## Themes
+The main art design in this game is Pixel Art. The cards use a cleaner and simpler pixel art style to maintain readability during gameplay, while the map and enemy designs use more detailed pixel art to create stronger atmosphere, personality, and immersion. The whole game will have themes of mystery, medieval ages and mystical and tarot references all over. Some examples include symbols in the map and the backgrounds. 
 
+## Visual References
+The visual style of the game takes inspiration from games such as Inscryption for its dark card table atmosphere. Traditional tarot illustrations and medieval themes also serve as artistic references, helping reinforce the mystical and symbolic aesthetic of the world.
 
+## Movement
+The main visual movements in the game are designed to reinforce its mystical and ominous tone while keeping interactions clear and satisfying. As the player progresses, The Fool will move smoothly across the map from node to node, emphasizing the sense of journey and descent into the unknown. During duels, cards will respond dynamically to player input by slightly elevating and rotating when selected or hovered over, creating a tactile and responsive feel that highlights their importance in decision making. Additionally, when a Moon card is applied to either the player or the enemy, a dark, magical mist will emerge from the crystal ball at the center of the table, spreading subtly across the scene to visually represent the shift toward danger and the presence of an unfavorable fate.
 
-### Questions
-- What visual style defines the game?
-- How do the Sun and Moon differ visually?
+## Animation
+The enemies will have three animation frames combined into a looping GIF to give them movement and personality during duels. These subtle animations help make each opponent feel more alive and reinforce their individual presence at the table. In addition, each enemy will have a final defeat frame, where they are shown resting their head on the table, visually representing their loss.
 
+![DefeatedEnemy](https://github.com/sant-mell/videoGame-TC2005B.501/blob/6118dd928a234c3242a84bd924dd05ca2cf0fd32/DefeatedKing.png) 
 
+The candle that represents the player’s lives will also be animated using three frames combined into a seamless looping GIF. Since the candle is both a gameplay mechanic and an important source of light on the dark table, its constant flame helps maintain the atmosphere of tension and uncertainty, especially during the second half of the game where the environment becomes darker and more oppressive.
+
+## Colors
+At the beginning of the game, the visual palette uses warmer colors to represent hope, curiosity, and the sense of adventure that comes with starting a new descent. Easy and mid-difficulty enemies are designed with warmer tones and softer backgrounds, creating a feeling of familiarity and false security. During this first half of the game, the music also reflects this atmosphere by being more adventurous, mystical, and slightly optimistic.
+
+As the player progresses deeper into the descent, the tone of the game becomes more serious and unsettling. The second half introduces a darker color palette, with colder shadows, stronger contrasts, and more oppressive environments. High-difficulty enemies and the final boss use darker tones to emphasize danger, tension, and uncertainty. The music also shifts to become more intense, eerie, and suspenseful. This transition helps communicate that the journey is no longer about simple exploration, but about surviving fate itself, creating a stronger sense of pressure without turning the experience into pure horror.
+
+The playing table uses deep purple, dark blue and silver tones to create a mystical and ominous atmosphere, making each duel feel more like a fortune telling ritual than a traditional battle. Elements such as candles, shadows, tarot symbols, and the crystal ball reinforce the idea that the player is not simply playing cards, but confronting fate itself. This darker and more elegant color palette helps build tension and mystery, while also making the brighter Sun cards stand out more clearly whenever moments of hope appear.
+
+## Enemy Design
+
+Each enemy is designed with a clear silhouette and visual personality so that players can immediately recognize their role and difficulty. Easier enemies such as the Drunk and the Peasant have simpler clothing, warmer colors, and more relaxed or clumsy postures, making them feel less threatening. Mid-difficulty enemies like the Crazy Jester and the Bounded Knight have stronger visual contrast, with sharper shapes, exaggerated expressions, and more detailed outfits that reflect instability or discipline.
+
+High-difficulty enemies such as the Killer Queen and the Mad Monarch use darker palettes, stronger posture, and more imposing silhouettes to communicate authority and danger. The Dealer is designed to feel elegant, calm and unsettling. His posture is controlled, and his visual presence should immediately make the player feel that they are facing the creator of fate itself, a force rather than another enemy.
+
+## Cards
+The Sun and Moon cards are designed as complete visual opposites, reinforcing their role as the core symbols of fate in the game. Sun cards represent hope, fortune, relief, clarity, and good luck. Their color palette uses warm tones such as gold, yellow, ivory, and soft orange to create a feeling of safety and optimism. These cards are meant to feel inviting and reassuring, giving the player a brief sense of control and comfort.
+
+In contrast, Moon cards represent misfortune, uncertainty, danger, death, and the loss of control. Their visual design is intentionally darker and more ominous, using deep blues, purples, black tones, and silver accents to create a cold and foreboding atmosphere. While Sun cards feel bright and hopeful, Moon cards should immediately communicate tension and fear. This strong visual contrast helps the player instantly recognize whether fate is working in their favor or against them.
+
+The character cards use a more varied color palette, as each one represents a different fate, power, or form of intervention against destiny. Unlike the Sun and Moon cards, which follow strict visual opposites, these cards are designed with greater visual diversity to reflect their unique effects and personalities.
+
+The cards themselves do not include strong visual indicators to distinguish whether they are Common, Rare, or Epic. This is intentional, as the design philosophy is that power should not be immediately obvious through appearance alone. A card may look simple or harmless, but its true value is revealed through its effect during gameplay. Instead of relying on flashy visuals to communicate strength, the power of each card is meant to speak for itself through the decisions it creates and the impact it has on the duel.
 
 
 ---
@@ -599,76 +665,46 @@ Each player has 3 lives
 
 
 
-# Sound Design
+## Sound Design
 
+The following audio files will be featured all throughout the game, during the specified moments:
 
+### Music
 
+- Home Screen Music: https://drive.google.com/file/d/1urB5jivarNT5OWPFKnxyvBQH10WPmeLW/view
 
-### Questions
-- What sounds signal danger?
-- Does music increase tension?
+- Map Music: https://drive.google.com/file/d/1MwSLkbPEPxqgpSPwxPaChh18HQwx9kr6/view
 
-Home Screen music:
+- Common Enemy Music: https://drive.google.com/file/d/1jQaZSr_DPYjfQTAnrEwHa09czris5vCH/view
 
-https://drive.google.com/file/d/1urB5jivarNT5OWPFKnxyvBQH10WPmeLW/view
+- Rare Enemy Music: https://drive.google.com/file/d/18ZpjLBF9V656dGaQgPunKcfh6cbkQpkr/view
 
-Map music:
+- Epic Enemy Music: https://drive.google.com/file/d/1urB5jivarNT5OWPFKnxyvBQH10WPmeLW/view
 
-https://drive.google.com/file/d/1MwSLkbPEPxqgpSPwxPaChh18HQwx9kr6/view
+- Final Boss Music: https://drive.google.com/file/d/1j0HN8uPZ_J-cHGiEnDhUq5tODtyQQd4B/view
 
-Easy difficulty enemy music:
-
-https://drive.google.com/file/d/1jQaZSr_DPYjfQTAnrEwHa09czris5vCH/view
-
-Mid difficulty enemy music:
-
-https://drive.google.com/file/d/18ZpjLBF9V656dGaQgPunKcfh6cbkQpkr/view
-
-Hard difficulty enemy music:
-
-https://drive.google.com/file/d/1urB5jivarNT5OWPFKnxyvBQH10WPmeLW/view
-
-Final Boss music:
-
-https://drive.google.com/file/d/1j0HN8uPZ_J-cHGiEnDhUq5tODtyQQd4B/view
-
-Final Boss Speech:
-
-https://drive.google.com/file/d/1GGLNlT3SoiWu1vCBj7GiiSaMB4mXp3aS/view
-
+- Final Boss Speech: https://drive.google.com/file/d/1GGLNlT3SoiWu1vCBj7GiiSaMB4mXp3aS/view
 
 ### Sound effects
 
-Grabbing/placing card:
+- Grabbing / Placing Card: https://drive.google.com/file/d/1W85aqtEAbrDJ4l1WqGxttxixxZnJmJUO/view
 
-https://drive.google.com/file/d/1W85aqtEAbrDJ4l1WqGxttxixxZnJmJUO/view
+- Candle Burning / Losing the Last Life: https://drive.google.com/file/d/1ou-ub_bsTDPM1OJGACr0HsuA9zkukDk8/view
 
-Candle burning/losing last life:
+- Temporary Music when on Last Life (to add tension): https://drive.google.com/file/d/1ST9hems4tOUkqzwvmLZwmD1odB6efiC0/view
 
-https://drive.google.com/file/d/1ou-ub_bsTDPM1OJGACr0HsuA9zkukDk8/view
+- Enemy Defeated: https://drive.google.com/file/d/1KoQGm-IornHsb8N3QEXILYH8KixAg8Zb/view
 
-Temporary music when on last life (to add tension):
+- Enemy Textbox: https://drive.google.com/file/d/1i8WX0EGKbFcRM_nzs5VeQxpbuPQBxVil/view
 
-https://drive.google.com/file/d/1ST9hems4tOUkqzwvmLZwmD1odB6efiC0/view
-
-Enemy Defeated:
-
-https://drive.google.com/file/d/1KoQGm-IornHsb8N3QEXILYH8KixAg8Zb/view
-
-Enemy Textbox:
-
-https://drive.google.com/file/d/1i8WX0EGKbFcRM_nzs5VeQxpbuPQBxVil/view
-
-Enemy "talking":
-
-https://drive.google.com/file/d/1YFMdREcwwZ2eImFIjvnNkncWK1T1NlTC/view
+- Enemy "Talking": https://drive.google.com/file/d/1YFMdREcwwZ2eImFIjvnNkncWK1T1NlTC/view
 
 ---
 
 
 
 
-# Level Design
+## Level Design
 
 
 
@@ -687,22 +723,35 @@ https://drive.google.com/file/d/1YFMdREcwwZ2eImFIjvnNkncWK1T1NlTC/view
 
 # Schedule
 
+The idea is to start with a simple but functional prototype and gradually build up complexity, adding systems, content, and polish along the way. Each milestone is meant to represent a stable version that can be tested and improved, so progress stays consistent and manageable. By the end of the five weeks, the goal is to have a complete and polished version ready for delivery.
 
+- **Week 1**
+    - Core Sun/Moon mechanics implemented
+    - Basic gameplay loop functional in console
+    - Initial testing of core interactions
 
+- **Week 2**
+    - Basic art implementation
+    - Character deck system functional
+    - Map integration working
+    - Playable but still rough experience
 
-### Milestones
-- Prototype
-- Alpha
-- Beta
+- **Week 3**
+    - Refinement of core systems
+    - Additional cards and mechanics implemented
+    - Improved UI clarity and feedback
+    - Early balancing pass
 
+- **Week 4**
+    - Sound effects integration
+    - Enemy balancing
+    - 100% of cards implemented
+    - Stable gameplay experience with minor bugs
 
+- **Week 5**
+    - Bug fixing and optimization
+    - Visual polish and consistency improvements
+    - Final testing and adjustments
+    - Final delivery version ready
 
-
-### Questions
-- What is the next step?
-- What is the biggest risk?
-
-
-
-
-
+Once this schedule is completed, the next step would be to gather feedback through playtesting and evaluate how the game performs in practice, using those insights to refine mechanics, adjust balance, and decide whether additional content or improvements are needed. At the same time we need to be careful, because the biggest risk lies in the core systems, particularly the card mechanics and overall balance, taking longer to stabilize than expected, since any issues at that stage could delay progress and compress the time available for polish and final testing, ultimately affecting the quality of the final version.
