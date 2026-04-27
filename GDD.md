@@ -480,8 +480,6 @@ Buttons:
 
 [Statistics]: Will display the statistics collected through the single plays and global plays. for more information, consult the statistics section.
 
-[Exit]: Saves the game statistics and exits the game.
-
 
 
 
