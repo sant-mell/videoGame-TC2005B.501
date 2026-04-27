@@ -464,6 +464,7 @@ Since you are "The Fool", the world must feel unknown, amusing and dreadful all 
 
 # Technical
 
+The key screens will be carefully selected and designed in order to enhance the user experience, focusing on a clear and understandable visuals, artstyles and colors that match the style and atmosphere of the game, such as the following:
 
 ## Screens
 
@@ -471,30 +472,41 @@ Since you are "The Fool", the world must feel unknown, amusing and dreadful all 
 
 
 ### Main Screen
-Buttons: [New Descent], [Options], [Exit]
+Buttons: 
+
+[New Descent]: Will start a new game, deleting and starting from zero with the money collected, cards kept and perks collected.
+
+[Continue Descent]: Will retreive all data from the database; Runs, perks, cards saved, position within the node and enemies defeated.
+
+[Statistics]: Will display the statistics collected through the single plays and global plays. for more information, consult the statistics section.
+
+[Exit]: Saves the game statistics and exits the game.
 
 
 
 
 ### Level Selection
 Graph map with nodes:
-- Battle
-- Boss
-- Mystery
-- Rest
+- Battle: Will start the duel with an enemy. It can be described off as the following
+- Boss: The boss will be shown based off the same formula as enemies, however, it will finalize the game when the battle is won
+- Mystery: Here the player will be given a random choice out of three possibilities; Card Binding, Life extension or an extra Card. for more info, refer to upgrades
+- Rest: The player will just be fiven a free node to move more freely. Standing on it will not do anything.
 
 
 
 
 ### Duel
-- 10 card slots
-- Shared deck
-
+- 10 card slots for character cards: The player will be able to hover over them do see their info, and click on them to choose the current card
+- Shared deck: Includes sun and moon cards.These will be facing down and the only thing the player will be able to do is clicking on it
+- Target screen: The player will be given a choice wether the current card selected applies to the enemy or themselves.
 
 
 
 ### Upgrade
-Buttons: [Exit], [Accept]
+A text offering to provide an upgrade from 
+Buttons: 
+- [Exit]: The offer will be rejected and the window will be closed so the player can move to another node.
+- [Accept]: The amount of money asked will be withdrawn from the player and they will be given the [upgrade](#upgrades).
 
 
 
@@ -706,6 +718,41 @@ The following audio files will be featured all throughout the game, during the s
 
 ## Level Design
 
+As said before, the levels will be procedurally generated with a graph. each node, as described in screens will include the following types:
+
+Battle: Will start the duel with an enemy. It can be described off as the following
+Boss: The boss will be shown based off the same formula as enemies, however, it will finalize the game when the battle is won
+Mystery: Here the player will be given a random choice out of three possibilities; Card Binding, Life extension or an extra Card. for more info, refer to upgrades
+Rest: The player will regain their HP lost after a battle
+Each time the graph will be generated, it must have 8 nodes total, consisting of 4 enemies (including the boss), 3 upgrades and a single rest node. The structure for the node selection be a a Undirected Connected Graph, where each node will be calculated with the a pool defined as ‘[Enemy, Enemy, Enemy, Upgrade, Upgrade, Upgrade, Rest] and will be shuffled. The first node will be chosen as the start of the game. the next node will be connected to a random node already in the web. This will be repeated until all 8 nodes are connected.
+
+With this procedure, we can guarantee that all nodes were randomly generated and connected, allowing the player to face all possibilities within the game. However, the type of enemies have not been defined yet. This will be calculated based off their height within the graph. This will be made with the help of probabilities. 
+
+First Fight
+Common Chance: 100%
+Rare Chance: 0%
+Epic Chance: 0%
+Boss: 0%
+
+
+Second Fight:
+Common Chance: 20%
+Rare Chance: 80%
+Epic Chance:  0%
+Boss: 0%
+Third Fight:
+Common Chance: 0%
+Rare Chance: 40%
+Epic Chance: 60%
+Boss: 0%
+Fourth Fight (Boss Fight):
+Common Chance: 0%
+Rare Chance: 0%
+Epic Chance: 0%
+Boss: 100%
+This will guarantee that the game will gradually increase depending on the progress of the player within the game, guaranteeing that it will be adapting to the difficulty and will add fun to the game. 
+
+With these increasing probabilities, the risk increases gradually, prompting the player to prioritize focusing on improving for the next run or facing the boss directly if the player feels ready enough with their upgrades.
 
 
 
