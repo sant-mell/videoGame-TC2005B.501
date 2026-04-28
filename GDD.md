@@ -480,7 +480,7 @@ Buttons:
 
 [Statistics]: Will display the statistics collected through the single plays and global plays. for more information, consult the statistics section.
 
-
+![MainMenu](https://github.com/sant-mell/videoGame-TC2005B.501/blob/395e3cbf8fed36b4ae730455756b10ecce19ed67/Main%20Menu.png) 
 
 
 ### Level Selection
@@ -503,11 +503,10 @@ Graph map with nodes:
 ### Upgrade
 A text offering to provide an upgrade from 
 Buttons: 
-- [Exit]: The offer will be rejected and the window will be closed so the player can move to another node.
-- [Accept]: The amount of money asked will be withdrawn from the player and they will be given the [upgrade](#upgrades).
+- [Exit Upgrade]: The offer will be rejected and the window will be closed so the player can move to another node.
+- [Accept & pay]: The amount of money asked will be withdrawn from the player and they will be given the [upgrade](#upgrades).
 
-
-
+![UpgradeMenu]() 
 
 ---
 
@@ -515,9 +514,15 @@ Buttons:
 
 
 ## UI / UX
+The user interface and experience design is focused on malong it simple, intuitive, yet inmersive into the game. This is because our intention is for the player to feel like they are the ones sitting at the fortune table and traveling along this universe. The interface must integrate well with our world building and should also avoid breaking the mystical yet comical atmosphere that is being built.
 
-
-
+### Visual Interface
+- Duel(The table): The screen does not have a clear health bar, but rather lives represented by melting candles. This is inspired from *Ghosts of Tsushima*, where game elements like HP, stamina, guidance maps are mixed onto the very atmosphere of the game represented with elements within the game's nature. The cards will be placed in an intuitive manner in front of the player, and the elements such as character cards and the great deck will be highlighted when the mouse hovers them in order to describe the elements efficiently
+- Character deck: positioned at the bottom of the screen, cards will elevate and show a brief description of their effects as described in [the character deck](#Characters-Deck-Options). The player will be able to click to select the card and then choose the target.
+- The Great Deck: positioned at the center left of the table, it will initially display its contents of sun and moon cards every time a new round is started, then it will be suffled and only display the top card facing down. The player will be able to hover their mouse over it, highlighting but yet not showing its contents in order to higlight the mystical aspect of the game. To choose its target, the player will click the card and choose the target, which will be diisplayed by a simple text asking "Apply to:[Enemy] on the top, and [Yourself] on the bottom".
+- Targeting screen: When the player clicks on the great deck, a simple text asking "Apply to:[Enemy] on the top, and [Yourself] on the bottom".
+- Map: The map will be a graph with nodes, within this graph, the player will only be able to click on those nodes adjacent to their current position. Each node will vary as stated in [the map section](#map), and will be represented by a black square for bosses, gears for their upgrades,a portal to represent the rest site, and finally a castle to represent the bossfight.
+- Upgrade screen: a small window over the map will pop with the offer to upgrade in exchange of coins. The player will be able to click on the [Accept & Pay] button to accept the offer and pay the coins, or click on the [Exit Upgrade] button to reject the offer and close the window.
 
 ### Questions
 - Is the information clear?
@@ -591,6 +596,8 @@ The game will include a statistics system designed to track both individual play
 - Coins Earned
 - Cards Played
 
+![StatisticsMenu](https://github.com/sant-mell/videoGame-TC2005B.501/blob/e5716534b1ccca2264114ac672b63a724b73d133/Statistics.png) 
+
 ### Global Statistics
 
 - Total Number of Players
@@ -639,6 +646,8 @@ The visual style of the game takes inspiration from games such as Inscryption fo
 
 ## Movement
 The main visual movements in the game are designed to reinforce its mystical and ominous tone while keeping interactions clear and satisfying. As the player progresses, The Fool will move smoothly across the map from node to node, emphasizing the sense of journey and descent into the unknown. During duels, cards will respond dynamically to player input by slightly elevating and rotating when selected or hovered over, creating a tactile and responsive feel that highlights their importance in decision making. Additionally, when a Moon card is applied to either the player or the enemy, a dark, magical mist will emerge from the crystal ball at the center of the table, spreading subtly across the scene to visually represent the shift toward danger and the presence of an unfavorable fate.
+
+![FoolsSprite](https://github.com/sant-mell/videoGame-TC2005B.501/blob/2d099e65d5230778663ebcbb02c3dcb14857597b/Gemini_Generated_Image_9tjvd69tjvd69tjv.png)
 
 ## Animation
 The enemies will have three animation frames combined into a looping GIF to give them movement and personality during duels. These subtle animations help make each opponent feel more alive and reinforce their individual presence at the table. In addition, each enemy will have a final defeat frame, where they are shown resting their head on the table, visually representing their loss.
