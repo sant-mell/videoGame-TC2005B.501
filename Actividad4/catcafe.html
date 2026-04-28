@@ -1,1 +1,87 @@
+<!DOCTYPE html>
 
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<title>Cat Café</title>
+<link rel="stylesheet" href="catcafe.css">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet">
+<script src="catcafe.js" defer></script>
+</head>
+
+<body>
+<h1>Cat Café</h1>
+
+<div class="contenedor">
+
+    <div class="menu-lado lado">
+        <h2>Menú</h2>
+        <select onchange="cambiarMenu(this.value)">
+            <option value="lunes">Lunes</option>
+            <option value="martes">Martes</option>
+            <option value="miercoles">Miércoles</option>
+            <option value="jueves">Jueves</option>
+            <option value="viernes">Viernes</option>
+            <option value="sabado">Sábado</option>
+        </select>
+        <div class="menu" id="menu"></div>
+        <img id="imagen">
+    </div>
+
+    <div class="visitanos lado">
+        <h2>Visítanos</h2>
+        <h3><b>Horario:</b></h3>
+        <p>Lunes a Sábado: 9:00 - 19:00</p>
+        <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3764.2735788455034!2d-99.2599099!3d19.3573033!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d200c0fa04d82b%3A0x5e726f97d5cf3c8b!2sTecnol%C3%B3gico%20de%20Monterrey%20Campus%20Santa%20Fe!5e0!3m2!1ses!2smx!4v1777330075126!5m2!1ses!2smx"
+            height="275px" 
+            style="border-radius:15px;">
+        </iframe>
+    </div>
+
+</div>
+
+<h2>Nuestros gatos</h2>
+
+<div class="gatos">
+
+    <div class="gato">
+        <img src="https://images.ctfassets.net/denf86kkcx7r/4IPlg4Qazd4sFRuCUHIJ1T/f6c71da7eec727babcd554d843a528b8/gatocomuneuropeo-97?fm=webp&w=612">
+        <h3><b>Milo</b></h3>
+        <p>2 años</p>
+        <p>Juguetón</p>
+    </div>
+
+    <div class="gato">
+        <img src="https://es.mypet.com/wp-content/uploads/sites/23/2021/03/GettyImages-623368750-e1582816063521-1.jpg">
+        <h3><b>Luna</b></h3>
+        <p>3 años</p>
+        <p>Tranquila</p>
+    </div>
+
+    <div class="gato">
+        <img src="https://urgenciesveterinaries.com/wp-content/uploads/2023/09/survet-gato-caida-pelo-01.jpeg">
+        <h3><b>Simba</b></h3>
+        <p>1 año</p>
+        <p>Curioso</p>
+    </div>
+
+    <div class="gato">
+        <img src="https://www.patasencasa.com/sites/default/files/styles/article_detail_1200/public/2025-06/gato-bicolor_0.png.webp?itok=Jsy93Hjc">
+        <h3><b>Nala</b></h3>
+        <p>4 años</p>
+        <p>Cariñosa</p>
+    </div>
+
+    <div class="gato">
+        <img src="https://mivet.com/wp-content/uploads/2024/10/shutterstock_1655991508.jpg">
+        <h3><b>Tom</b></h3>
+        <p>5 años</p>
+        <p>Flojo</p>
+    </div>
+
+</div>
+</body>
+
+</html>
