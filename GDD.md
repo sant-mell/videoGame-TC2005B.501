@@ -492,7 +492,7 @@ Since you are "The Fool", the world must feel unknown, amusing and dreadful all 
 
 # Technical
 
-The key screens will be carefully selected and designed in order to enhance the user experience, focusing on a clear and understandable visuals, artstyles and colors that match the style and atmosphere of the game, such as the following:
+The key screens will be carefully selected and designed in order to enhance the user experience, focusing on a clear and understandable visuals, art styles and colors that match the atmosphere of the game, such as the following:
 
 ## Screens
 
@@ -502,9 +502,9 @@ The key screens will be carefully selected and designed in order to enhance the 
 ### Main Screen
 Buttons: 
 
-[New Descent]: Will start a new game, deleting and starting from zero but with the money collected, cards kept
-and upgrades already bought.
-[Continue Descent]: Will retreive all data from the database; Runs, perks, cards saved, position within the node and enemies defeated.
+[New Descent]: Will start a new game, deleting and starting from zero but with the money collected, cards kept and upgrades already bought.
+
+[Continue Descent]: Will retrieve all data from the database: Runs, perks, cards saved, position within the node and enemies defeated.
 
 [Statistics]: Will display the statistics collected through the single plays and global plays. for more information, consult the statistics section.
 
@@ -513,37 +513,32 @@ and upgrades already bought.
 
 ### Level Selection
 
-Graph map with nodes:
+Graph map with nodes: 
 
-- **Battle**: Will start the duel with an enemy. It can be described off as the following
+-  **Boss**: Will start the duel with an enemy.
 
--  **Boss**: The boss will be shown based off the l finalize the game when the battle is won
+-  **Mystery**: Here the player will be given a random choice out of three possibilities: Card Binding, Life Extension or an Extra Card. For more info, refer to upgrades.
 
--  **Mystery**: Here the player will be given a random choice out of three possibilities; Card Binding, Life extension or an extra C.ard. for more info, refer to upgrades
-
--  **Rest:** The player will just be fiven a free node to move more freely. Standing on it will not do anything.
+-  **Rest:** The player will just be given a free node to move more freely. Standing on it will not do anything.
 
 
-  
-  
 
 ### Controls
 
-- 10 card slots for character cards: The player will be able to hover over them do see their info, and click on them to choose the current card
+- 10 card slots for Character Cards: The player will be able to hover over them to see their info, and click on them to choose the card they are going to use.
 
-- Shared deck: Includes sun and moon cards. These will be facing down and the only thing the player will be able to do is clicking on it.
+- Shared deck: Includes sun and moon cards. These will be facing down and the only thing the player will be able to do is click on them.
 
-- Target screen: The player will be given a choice wether the current card selected applies to the enemy or themselves.
+- Target screen: The player will be given a choice whether the current card selected applies to the enemy or themselves.
 
   
-
 ## Mechanics
 
 
 
 
 ### Duel Mechanics
-Each player has 3 lives. When a participant reaches 0 lives, they will lose the game. The player will start with 0 character cards and will be added after the great deck has been depleted and given the enemy difficulty. The player is first able to see the total amount of sun and moon cards on the main deck before being shuffled and placed down, then they will be given the opportunity to choose from their character deck (if there is no cards on the character deck, this step is skipped). Then they will have to choose the target of the curret card on top of the main deck. I can be either themselves or the enemy. The effects of the card will be revealed after an animation of it being placed on the crystal ball and its result will be revealed after said animation. After the effects are applied, the enemy will do the same.
+Each player has 3 lives. When a participant reaches 0 lives, they will lose the game. The player will start with 0 character cards but they will be added after the Great Deck has been depleted and given the enemy difficulty. The player is first able to see the total amount of sun and moon cards on the main deck before being shuffled and placed down, then they will be given the opportunity to choose from their character deck (if there are no cards on the character deck, this step is skipped). Then they will have to choose the target of the curret card on top of the main deck. It can be either themselves or the enemy. The effects of the card will be revealed after an animation of it being placed on the crystal ball and it's result will be revealed after said animation. After the effects are applied, the enemy will do the same.
 
 Steps:
 
@@ -552,7 +547,7 @@ Steps:
 3. Choose a character card from your hand (if available).
 4. Choose the target for the current top card (self or enemy).
 5. Apply the top card's effect.
-6. Enemy's turn: they follow the same sequence.
+6. Enemy's turn: They follow the same sequence.
 7. Repeat until one duelist reaches 0 lives.
  
 
@@ -563,7 +558,7 @@ Steps:
 
 
 ### Effects
-- Moon: damage
+- Moon: Damage
 - Sun: Provides a turn
 
 ### Up Removes a life
@@ -583,18 +578,18 @@ The health system is represented by candles, where a candle will melt in three s
 
 
 ## UI / UX
-The user interface and experience design is focused on malong it simple, intuitive, yet inmersive into the game. This is because our intention is for the player to feel like they are the ones sitting at the fortune table and traveling along this universe. The interface must integrate well with our world building and should also avoid breaking the mystical yet comical atmosphere that is being built.
+The user interface and experience design is focused on making it simple, intuitive, yet inmersive into the game. This is because our intention is for the player to feel like they are the ones sitting at the fortune table and traveling along this universe. The interface must integrate well with our world building and should also avoid breaking the mystical yet comical atmosphere that is being built.
 
 ![GameInProgress](https://github.com/sant-mell/videoGame-TC2005B.501/blob/3ebdf16ac5020073548ac0bcce372303ab492b80/Gameplay.png)
 
 ### Visual Interface
 - Duel (The Table): The screen does not have a clear health bar, but rather lives represented by melting candles. This is inspired from *Ghosts of Tsushima*, where game elements like HP, stamina, guidance maps are mixed onto the very atmosphere of the game represented with elements within the game's nature. The cards will be placed in an intuitive manner in front of the player, and the elements such as character cards and the great deck will be highlighted when the mouse hovers them in order to describe the elements efficiently
-- Character Deck: positioned at the bottom of the screen, cards will elevate and show a brief description of their effects as described in [the character deck](#Characters-Deck-Options). The player will be able to click to select the card and then choose the target.
-- The Great Deck: positioned at the center left of the table, it will initially display its contents of sun and moon cards every time a new round is started, then it will be suffled and only display the top card facing down. The player will be able to hover their mouse over it, highlighting but yet not showing its contents in order to higlight the mystical aspect of the game. To choose its target, the player will click the card and choose the target, which will be diisplayed by a simple text asking "Apply to:[Enemy] on the top, and [Yourself] on the bottom".
-- Targeting screen: When the player clicks on the great deck, a simple text asking "Apply to:[Enemy] on the top, and [Yourself] on the bottom".
-- Map: The map will be a graph with nodes, within this graph, the player will only be able to click on those nodes adjacent to their current position. Each node will vary as stated in [the map section](#map), and will be represented by a black square for bosses, gears for their upgrades,a portal to represent the rest site, and finally a castle to represent the bossfight.
-- Upgrade screen: a small window over the map will pop with the offer to upgrade in exchange of coins. The player will be able to click on the [Accept & Pay] button to accept the offer and pay the coins, or click on the [Exit Upgrade] button to reject the offer and close the window.
-- Statistics Screen: From the main menu, the player will access and view the statistics screen
+- Character Deck: Positioned at the bottom of the screen, cards will elevate and show a brief description of their effects as described in [the character deck](#Characters-Deck-Options). The player will be able to click to select the card and then choose the target.
+- The Great Deck: Positioned at the center left of the table, it will initially display its contents of sun and moon cards every time a new round is started, then it will be suffled and only display the top card facing down. The player will be able to hover their mouse over it, highlighting but yet not showing its contents in order to higlight the mystical aspect of the game. To choose its target, the player will click the card and choose the target, which will be diisplayed by a simple text asking "Apply to:[Enemy] on the top, and [Yourself] on the bottom".
+- Targeting Screen: When the player clicks on the great deck, a simple text asking "Apply to:[Enemy] on the top, and [Yourself] on the bottom".
+- Map: The map will be a graph with nodes, within this graph, the player will only be able to click on those nodes adjacent to their current position. Each node will vary as stated in [the map section](#map), and will be represented by a black square for bosses, gears for their upgrades, a portal to represent the rest site, and finally a castle to represent the boss fight.
+- Upgrade Screen: A small window over the map will pop with the offer to upgrade in exchange of coins. The player will be able to click on the [Accept & Pay] button to accept the offer and pay the coins, or click on the [Exit Upgrade] button to reject the offer and close the window.
+- Statistics Screen: From the main menu, the player will access and view the statistics screen.
 [!Statistics Screen](Statistics.png)
  - Duel Closure: When the player wins or loses the game, a window will pop up, showing the result of the game, providing a description of the results and giving a small text of the money earned to increase the dopamine of the game. The player will be able to click an [Return] button to return to the map for the next enemy.
 
@@ -819,17 +814,11 @@ The following audio files will be featured all throughout the game, during the s
 
 ## Level Design
 
-As said before, the levels will be procedurally generated with a graph. each node, as described in screens will include the following types:
-
-- Battle: Will start the duel with an enemy. It can be described off as the following
-- Boss: The boss will be shown based off the same formula as enemies, however, it will finalize the game when the battle is won
-- Mystery: Here the player will be given a random choice out of three possibilities. The possibilities will be generated by the help of the aforementioned array for the map, and then we will have an array including each possibility for the upgrade, which will be shuffled and poped on each upgrade node. The three possibilities will be Card Binding, Life extension or an extra Card. for more info, refer to upgrades
-- Rest: The player will regain their HP lost after a battle
-Each time the graph will be generated, it must have 8 nodes total, consisting of 4 enemies (including the boss), 3 upgrades and a single rest node. The structure for the node selection be a a Undirected Connected Graph, where each node will be calculated with the a pool defined as ‘[Enemy, Enemy, Enemy, Upgrade, Upgrade, Upgrade, Rest] and will be shuffled. The first node will be chosen as the start of the game. the next node will be connected to a random node already in the web. This will be repeated until all 8 nodes are connected.
+As said before, the levels will be procedurally generated with a graph. Each time the graph will be generated, it must have 8 nodes total, consisting of 4 enemies (including the boss), 3 upgrades and a single rest node. The structure for the node selection be a a Undirected Connected Graph, where each node will be calculated with a pool defined as [Enemy, Enemy, Enemy, Upgrade, Upgrade, Upgrade, Rest] and will be shuffled. The first node will be chosen as the start of the game. The next node will be connected to a random node already in the web. This will be repeated until all 8 nodes are connected.
 
 With this procedure, we can guarantee that all nodes were randomly generated and connected, allowing the player to face all possibilities within the game. However, the type of enemies have not been defined yet. This will be calculated based off their height within the graph. This will be made with the help of probabilities. 
 
-First Fight
+First Fight:
 - Common Chance: 100%
 - Rare Chance: 0%
 - Epic Chance: 0%
