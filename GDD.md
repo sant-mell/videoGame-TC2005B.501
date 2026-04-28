@@ -86,7 +86,6 @@ The following content is owned by its creators. Use without written permission i
 3. [Technical](#technical)
     1. [Screens](#screens)
     2. [Controls](#controls)
-    3. [Mechanics](#mechanics)
     4. [Statistics](#statistics)
     5. [Data Collection](#data-collection)
 5. [Development](#development)
@@ -527,12 +526,7 @@ The user interface and experience design is focused on malong it simple, intuiti
 - Upgrade screen: a small window over the map will pop with the offer to upgrade in exchange of coins. The player will be able to click on the [Accept & Pay] button to accept the offer and pay the coins, or click on the [Exit Upgrade] button to reject the offer and close the window.
 - Statistics Screen: From the main menu, the player will access and view the statistics screen
 [!Statistics Screen](Statistics.png)
-
-### Questions
-- Is the information clear?
-- Can players understand the game instantly?
-- Is feedback strong enough?
-
+ - Duel Closure: When the player wins or loses the game, a window will pop up, showing the result of the game, providing a description of the results and giving a small text of the money earned to increase the dopamine of the game. The player will be able to click an [Return] button to return to the map for the next enemy.
 
 
 
@@ -544,47 +538,8 @@ The user interface and experience design is focused on malong it simple, intuiti
 ## Controls
 
 
-
-
 Mouse: drag cards
 Keyboard: ESC, SPACE
-
-
-
-
----
-
-
-
-
-## Mechanics
-
-
-
-
-### Duel Mechanics
-Each player has 3 lives
-
-
-
-
-### Prophecy Deck
-- Deck Size: `S = base + random(0,2)`
-- Moon cards: random distribution
-
-
-
-
-### Effects
-- Moon: damage
-- Sun: extra turn
-
-
-
-
-### Questions
-- Is randomness fair?
-- Can players predict outcomes?
 
 
 ## Statistics
@@ -634,6 +589,8 @@ From the main menu, players will have access to both “Statistics” and a “C
 
 ---
 # Development
+
+The tentative classes with the necessary methods to program the game are the following: 
 
 ## Abstract Classes 
 
@@ -747,21 +704,25 @@ First Fight
 - Rare Chance: 0%
 - Epic Chance: 0%
 - Boss: 0%
+
 Second Fight:
 - Common Chance: 20%
 - Rare Chance: 80%
 - Epic Chance:  0%
 - Boss: 0%
+
 Third Fight:
 - Common Chance: 0%
 - Rare Chance: 40%
 - Epic Chance: 60%
 - Boss: 0%
+
 Fourth Fight (Boss Fight):
 - Common Chance: 0%
 - Rare Chance: 0%
 - Epic Chance: 0%
 - Boss: 100%
+
 This will guarantee that the game will gradually increase depending on the progress of the player within the game, guaranteeing that it will be adapting to the difficulty and will add fun to the game. 
 
 With these increasing probabilities, the risk increases gradually, prompting the player to prioritize focusing on improving for the next run or facing the boss directly if the player feels ready enough with their upgrades. And will be able to plan ahead their movements and wether they want to keep their cards for the next battle or use it now to manage risks.
