@@ -506,9 +506,9 @@ Buttons:
 and upgrades already bought.
 [Continue Descent]: Will retreive all data from the database; Runs, perks, cards saved, position within the node and enemies defeated.
 
-: R[Statistics]: Will display the statistics collected through the single plays and global plays. for more information, consult the statistics section.
+[Statistics]: Will display the statistics collected through the single plays and global plays. for more information, consult the statistics section.
 
-F![MainMenu](https://github.com/sant-mell/videoGame-TC2005B.501/blob/395e3cbf8fed36b4ae730455756b10ecce19ed67/Main%20Menu.png) 
+![MainMenu](https://github.com/sant-mell/videoGame-TC2005B.501/blob/395e3cbf8fed36b4ae730455756b10ecce19ed67/Main%20Menu.png) 
 
 
 ### Level Selection
