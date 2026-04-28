@@ -115,17 +115,17 @@ The following content is owned by its creators. Use without written permission i
 
 
 
-Not so long ago, there was only The Dealer and the Great Deck. The apparition of the universe, life, love, death and every heartbeat, was shuffled and assigned to the world's spirits and dealt with by a wise, expert who knew what was best for the cycle of life.
+Not so long ago, there was only [The Dealer](#summary) and the [Great Deck](#great-deck). The apparition of the universe, life, love, death and every heartbeat, was shuffled and assigned to the world's spirits and dealt with by a wise, expert who knew what was best for the cycle of life.
 
 
 
 
-Due to an unknown change of events, The Dealer has become bored, cynical and has chosen to change things up. He shuffled the Great Deck and threw its cards like autumn leaves across the mortal plane.
+Due to an unknown change of events, [The Dealer](#summary) has become bored, cynical and has chosen to change things up. He shuffled the [Great Deck](#great-deck) and threw its cards like autumn leaves across the mortal plane.
 
 
 
 
-You are The Fool, the only born soul without an assigned future in a dying and chaotic world where fate has become anarchic. To save what remains, you must dive into the unknown, face The Dealer at his own table and gamble the right to exist.
+You are [The Fool](#summary), the only born soul without an assigned future in a dying and chaotic world where fate has become anarchic. To save what remains, you must dive into the unknown, face [The Dealer](#summary) at his own table and gamble the right to exist.
 
 
 
@@ -148,12 +148,12 @@ You are The Fool, the only born soul without an assigned future in a dying and c
 
 
 
-The Fool's Descent is an indie tabletop roguelike card game in which the player navigates a procedurally generated map and confronts opponents through a system built on tension, gambling, probability and choice. The gameplay takes place at a tarot table, to reinforce the sensation that the player is gambling with their future. On the side lies the Great Deck, the centre of the game, composed of a random number of cards, which include either life or death outcomes, shuffled randomly at the start of each combat. In front of the players we can find their Characters Deck, which functions as their weapons to battle what the Great Deck reveals.
+The Fool's Descent is an indie tabletop roguelike card game in which the player navigates a procedurally generated [map](#map) and confronts opponents through a system built on tension, gambling, probability and choice. The gameplay takes place at a tarot table, to reinforce the sensation that the player is gambling with their future. On the side lies the [Great Deck](#great-deck), the centre of the game, composed of a random number of cards, which include either life or death outcomes, shuffled randomly at the start of each combat. In front of the players we can find their [Characters Deck](#characters-deck-options), which functions as their weapons to battle what the Great Deck reveals.
 
 
 
 
-The core loops consists in: Draw card → Manage risk (With your Characters Deck) → Decide target → Resolve effect → Repeat
+The core loops consists in: Draw card → Manage risk (With your [Characters Deck](#characters-deck-options)) → Decide target → Resolve effect → Repeat
 
 
 
@@ -244,11 +244,11 @@ Negative fortunes:
 
 #### Common Cards
 - *The Magician:* Repeats the effect of the last card played by the character during this combat.
-- *The Chariot:* Throws away the top card of the Great Deck. 
+-- *The Chariot:* Throws away the top card of the [Great Deck](#great-deck). 
 - *The Star:* When you reach 0 lives it revives you with a singular extra life.
 - *Page of Pentacles:* If you win in the next round it gives you a coin bonus.
 - *Strength:* During the next round you cannot die.
-- *Two of Pentacles:* Draw two cards from the Great Deck, choose one to use, the other is thrown away.
+-- *Two of Pentacles:* Draw two cards from the [Great Deck](#great-deck), choose one to use, the other is thrown away.
 
 
 
@@ -259,10 +259,10 @@ Negative fortunes:
 
 
 #### Rare Cards
-- *The High Priestess:* Can see the next card from the Great Deck.
+-- *The High Priestess:* Can see the next card from the [Great Deck](#great-deck).
 - *The Hermit:* Skips your next draw phase entirely. 
 - *Justice:* If you lose a life during your next turn, your opponent loses one too.
-- *Wheel of Fortune:* Shuffles the Great Deck.
+-- *Wheel of Fortune:* Shuffles the [Great Deck](#great-deck).
 - *King of Pentacles:* If you win the award money doubles, but if you lose the loss money does too.
 
 
@@ -274,9 +274,9 @@ Negative fortunes:
 
 
 #### Epic Cards
-- *The Lovers:* Permanently remove one moon card from the Great Deck.
-- *The Tower:* Randomly destroys 50% of your enemy Characters Deck.
-- *The Devil:* You gain two lives BUT It adds one additional moon card to the Great Deck. 
+-- *The Lovers:* Permanently remove one [moon card](#the-moon) from the [Great Deck](#great-deck).
+-- *The Tower:* Randomly destroys 50% of your enemy [Characters Deck](#characters-deck-options).
+-- *The Devil:* You gain two lives BUT It adds one additional [moon card](#the-moon) to the [Great Deck](#great-deck). 
 - *The Hanged Man:* Blocks the other player from using their Characters Deck cards during their next turn. 
 
 
@@ -288,7 +288,7 @@ Negative fortunes:
 
 
 #### Legendary Cards
-- *The Fool:* Randomly applies any of the existing cards, even if they are not in your Characters Deck.
+-- *The Fool:* Randomly applies any of the existing cards, even if they are not in your [Characters Deck](#characters-deck-options).
 
 
 
@@ -302,7 +302,7 @@ Negative fortunes:
 # Progression
 
 
-The player will start with zero cards and money. They must duel a common enemy first in a match with an empty hand.  After this first battle, a procedurally generated map will be shown, where the player must weigh their decisions to what benefits them the most; having a duel or not, facing the boss headfirst or risk a duel beforehand to get more cards and money and prioritize card collection for a next run. If the player dies during a duel, they will lose all of their cards but be able to keep half of their coins.
+The player will start with zero cards and money. They must [duel](#duel) a common enemy first in a match with an empty hand.  After this first battle, a procedurally generated [map](#map) will be shown, where the player must weigh their decisions to what benefits them the most; having a duel or not, facing the boss headfirst or risk a duel beforehand to get more cards and money and prioritize card collection for a next run. If the player dies during a duel, they will lose all of their cards but be able to keep half of their coins.
 
 ## Map
 The map will be a procedurally generated directed graph, similar to the one used in *Slay the Spire*, but stylized to match the pixelated tarot style.
@@ -331,8 +331,8 @@ The duel starts with the cards that were not used on last round.
 The progression as described in [gameplay](#gameplay) is made in the following manner:
 
 
-1. The sun and moon cards that will be put on the main deck are shown, shuffled and the put face down on the table.
-2. The player will be able to choose a card from their characters deck.
+1. The [sun](#the-sun) and [moon](#the-moon) cards that will be put on the [main deck](#great-deck) are shown, shuffled and the put face down on the table.
+2. The player will be able to choose a card from their [Characters Deck](#characters-deck-options).
 3. The player must choose the target of the current card on top of the deck; either themselves or the enemy.
     - If it was a sun card and they chose themselves, they get an extra turn.
     - If it was a sun card and they chose the enemy, nothing happens.
@@ -340,7 +340,7 @@ The progression as described in [gameplay](#gameplay) is made in the following m
 5. The enemy repeats the process.
 7. Repeat.
 
-When the Great Deck gets depleted, duel participants will get more character cards in the following manner:
+When the [Great Deck](#great-deck) gets depleted, duel participants will get more character cards in the following manner:
 - 2 for common enemies
 - 3 for rare enemies
 - 4 for epic enemies
@@ -351,13 +351,13 @@ Choosing a card from your character deck will discard it from your hand.
 
 ## Items and Currencies
 - *Coins:* Coins are gained at the end of a duel, granting 100 per victory. They may be used at certain points in the map to buy powerups or cards. The player will have the choice of buying it or not. 50% of the coins are kept after each reincarnation.
-- *Cards:* 16 cards that help the player manage the risk of moon and sun cards in the main deck during duels.
+- *Cards:* 16 cards that help the player manage the risk of [moon](#the-moon) and [sun](#the-sun) cards in the [main deck](#great-deck) during [duels](#duel).
 
 
 ## Opponents
 
 
-In order to complete the descent and restore the order of the universe, you must ultimately confront and defeat The Dealer. Because the map is generated randomly for every attempt, the path ahead is never certain. Each victory you claim along the way serves a vital purpose beyond mere survival, as defeating enemies is the primary way to obtain the more powerful cards and precious coins required to afford life. While it may be tempting to avoid conflict to preserve your health in the short term, doing so will eventually leave you under-equipped, forced to rely solely on your faith in the future.
+In order to complete the descent and restore the order of the universe, you must ultimately confront and defeat [The Dealer](#summary). Because the [map](#map) is generated randomly for every attempt, the path ahead is never certain. Each victory you claim along the way serves a vital purpose beyond mere survival, as defeating enemies is the primary way to obtain the more powerful cards and precious coins required to afford life. While it may be tempting to avoid conflict to preserve your health in the short term, doing so will eventually leave you under-equipped, forced to rely solely on your faith in the future.
 
 
 
@@ -516,6 +516,8 @@ Buttons:
 ## UI / UX
 The user interface and experience design is focused on malong it simple, intuitive, yet inmersive into the game. This is because our intention is for the player to feel like they are the ones sitting at the fortune table and traveling along this universe. The interface must integrate well with our world building and should also avoid breaking the mystical yet comical atmosphere that is being built.
 
+![GameInProgress](https://github.com/sant-mell/videoGame-TC2005B.501/blob/3ebdf16ac5020073548ac0bcce372303ab492b80/Gameplay.png)
+
 ### Visual Interface
 - Duel(The table): The screen does not have a clear health bar, but rather lives represented by melting candles. This is inspired from *Ghosts of Tsushima*, where game elements like HP, stamina, guidance maps are mixed onto the very atmosphere of the game represented with elements within the game's nature. The cards will be placed in an intuitive manner in front of the player, and the elements such as character cards and the great deck will be highlighted when the mouse hovers them in order to describe the elements efficiently
 - Character deck: positioned at the bottom of the screen, cards will elevate and show a brief description of their effects as described in [the character deck](#Characters-Deck-Options). The player will be able to click to select the card and then choose the target.
@@ -523,6 +525,8 @@ The user interface and experience design is focused on malong it simple, intuiti
 - Targeting screen: When the player clicks on the great deck, a simple text asking "Apply to:[Enemy] on the top, and [Yourself] on the bottom".
 - Map: The map will be a graph with nodes, within this graph, the player will only be able to click on those nodes adjacent to their current position. Each node will vary as stated in [the map section](#map), and will be represented by a black square for bosses, gears for their upgrades,a portal to represent the rest site, and finally a castle to represent the bossfight.
 - Upgrade screen: a small window over the map will pop with the offer to upgrade in exchange of coins. The player will be able to click on the [Accept & Pay] button to accept the offer and pay the coins, or click on the [Exit Upgrade] button to reject the offer and close the window.
+- Statistics Screen: From the main menu, the player will access and view the statistics screen
+[!Statistics Screen](Statistics.png)
 
 ### Questions
 - Is the information clear?
@@ -633,8 +637,11 @@ From the main menu, players will have access to both “Statistics” and a “C
 
 ## Abstract Classes 
 
+class Card {}
+
 ## Derived Classes
 
+class 
 
 # Art Direction
 
