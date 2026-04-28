@@ -71,33 +71,57 @@ The following content is owned by its creators. Use without written permission i
 ---
 
 
-
-
 # Index
-
-
-
 
 1. [Index](#index)
 2. [Game Design](#game-design)
     1. [Summary](#summary)
     2. [Gameplay](#gameplay)
+        1. [Great Deck](#great-deck)
+            - [The Sun](#the-sun)
+            - [The Moon](#the-moon)
+        2. [Characters Deck Options](#characters-deck-options)
+            - [Common Cards](#common-cards)
+            - [Rare Cards](#rare-cards)
+            - [Epic Cards](#epic-cards)
+            - [Legendary Cards](#legendary-cards)
     3. [Mindset](#mindset)
-3. [Technical](#technical)
+3. [Progression](#progression)
+    1. [Map](#map)
+        - [Upgrades](#upgrades)
+4. [Duel](#duel)
+5. [Items and Currencies](#items-and-currencies)
+6. [Opponents](#opponents)
+    1. [Common Enemies](#common-enemies)
+    2. [Rare Enemies](#rare-enemies)
+    3. [Epic Enemies](#epic-enemies)
+    4. [Legendary and Final Enemy](#legendary-and-final-enemy)
+7. [Technical](#technical)
     1. [Screens](#screens)
     2. [Controls](#controls)
-    4. [Statistics](#statistics)
-    5. [Data Collection](#data-collection)
-5. [Development](#development)
+    3. [Mechanics](#mechanics)
+        - [Duel Mechanics](#duel-mechanics)
+        - [Prophecy Deck](#prophecy-deck)
+        - [Effects](#effects)
+        - [Upgrade](#upgrade)
+        - [Health System](#health-system)
+    4. [UI / UX](#ui--ux)
+    5. [Statistics](#statistics)
+    6. [Data Collection](#data-collection)
+8. [Development](#development)
     1. [Abstract Classes](#abstract-classes--components)
     2. [Derived Classes](#derived-classes--component-compositions)
-6. [Art Direction](#art-direction)
-    1. [Sound Design](#sound-design)
-    2. [Level Design](#level-design)
-8. [Schedule](#schedule)
-
-
-
+9. [Art Direction](#art-direction)
+    1. [Themes](#themes)
+    2. [Visual References](#visual-references)
+    3. [Movement](#movement)
+    4. [Animation](#animation)
+    5. [Colors](#colors)
+    6. [Enemy Design](#enemy-design)
+    7. [Cards](#cards)
+    8. [Sound Design](#sound-design)
+    9. [Level Design](#level-design)
+10. [Schedule](#schedule)
 
 ---
 
@@ -258,7 +282,7 @@ Negative fortunes:
 
 
 #### Rare Cards
--- *The High Priestess:* Can see the next card from the [Great Deck](#great-deck).
+- *The High Priestess:* Can see the next card from the [Great Deck](#great-deck).
 - *The Hermit:* Skips your next draw phase entirely. 
 - *Justice:* If you lose a life during your next turn, your opponent loses one too.
 -- *Wheel of Fortune:* Shuffles the [Great Deck](#great-deck).
@@ -334,7 +358,7 @@ The progression as described in [gameplay](#gameplay) is made in the following m
 2. The player will be able to choose a card from their [Characters Deck](#characters-deck-options).
 3. The player must choose the target of the current card on top of the deck; either themselves or the enemy.
     - If it was a sun card and they chose themselves, they get an extra turn.
-    - If it was a sun card and they chose the enemy, nothing happens.
+    - If it was a sun card and they chose the enemy, nothing happens. This is not purposeful, but rather what the player wants to avoid during the gameplay.
     - If it was a moon card the target loses a life.
 5. The enemy repeats the process.
 7. Repeat.
@@ -395,12 +419,14 @@ These characters lack any real combat training, they only manage to play a basic
 
 - "Crazy Jester"
 ![Rare Enemies](Jester.png)
+Cards Included: The Magician, The Chariot.
 
 
 
 
 - "Bounded Knight"
 ![Rare Enemies](Knight.png)
+Cards Included: The Star, Page of Pentacles.
 
 
 
@@ -417,12 +443,14 @@ These are a bit more seasoned but still have their openings. While they’ve add
 
 - "Killer Queen"
 ![Epic Enemies](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Queen.png?raw=true)
+Cards Included: Strength, Two of Pentacles, The High Priestess, The Hermit.
 
 
 
 
 - "Mad Monarch"
 ![Epic Enemies](The_king.png)
+Cards Included: Justice, Wheel of Fortune, King of Pentacles.
 
 
 
@@ -437,6 +465,7 @@ These are relentless fighters who never miss a beat, playing a card every single
 
 - "The Dealer"
 ![Final Boss](Dealer.png)
+Cards Included: The Lovers, The Tower, The Devil, The Hanged Man
 
 
 
@@ -473,42 +502,72 @@ The key screens will be carefully selected and designed in order to enhance the 
 ### Main Screen
 Buttons: 
 
-[New Descent]: Will start a new game, deleting and starting from zero with the money collected, cards kept and perks collected.
-
+[New Descent]: Will start a new game, deleting and starting from zero but with the money collected, cards kept
+and upgrades already bought.
 [Continue Descent]: Will retreive all data from the database; Runs, perks, cards saved, position within the node and enemies defeated.
 
-[Statistics]: Will display the statistics collected through the single plays and global plays. for more information, consult the statistics section.
+: R[Statistics]: Will display the statistics collected through the single plays and global plays. for more information, consult the statistics section.
 
-![MainMenu](https://github.com/sant-mell/videoGame-TC2005B.501/blob/395e3cbf8fed36b4ae730455756b10ecce19ed67/Main%20Menu.png) 
+F![MainMenu](https://github.com/sant-mell/videoGame-TC2005B.501/blob/395e3cbf8fed36b4ae730455756b10ecce19ed67/Main%20Menu.png) 
 
 
 ### Level Selection
 Graph map with nodes:
 - Battle: Will start the duel with an enemy. It can be described off as the following
-- Boss: The boss will be shown based off the same formula as enemies, however, it will finalize the game when the battle is won
-- Mystery: Here the player will be given a random choice out of three possibilities; Card Binding, Life extension or an extra Card. for more info, refer to upgrades
-- Rest: The player will just be fiven a free node to move more freely. Standing on it will not do anything.
+- **Boss: T**he boss will be shown based off the l finalize the game when the battle is won
+- **Myste**ry: Here the player will be given a random choice out of three possibilities; Card Binding, Life extension or an extra C.ard. for more info, refer to upgrades
+- **Rest: Th**e player will just be fiven a free node to move more freely. Standing on :t will not do anything.
+F.
+g****
 
 
-
-
-### Duel
+### Controls
 - 10 card slots for character cards: The player will be able to hover over them do see their info, and click on them to choose the current card
 - Shared deck: Includes sun and moon cards.These will be facing down and the only thing the player will be able to do is clicking on it
-- Target screen: The player will be given a choice wether the current card selected applies to the enemy or themselves.
+.- Target screen: The player will be given a choice wether the current card selected applies to the enemy or themselves.
+
+ .them.## Mechanics
+h
 
 
 
-### Upgrade
-A text offering to provide an upgrade from 
-Buttons: 
+### Duel Mechanics
+Each player has 3 lives. When a participant reaches 0 lives, they will lose the game. The player will start with 0 character cards and will be added after the great deck has been depleted and given the enemy difficulty. The player is first able to see the total amount of sun and moon cards on the main deck before being shuffled and placed down, then they will be given the opportunity to choose from their character deck (if there is no cards on the character deck, this step is skipped). Then they will have to choose the target of the curret card on top of the main deck. I can be either themselves or the enemy. The effects of the card will be revealed after an animation of it being placed on the crystal ball and its result will be revealed after said animation. After the effects are applied, the enemy will do the same.
+
+Steps:
+
+1. Show main deck contents (sun/moon counts).
+2. Shuffle the main deck and place it face-down on the table.
+3. Choose a character card from your hand (if available).
+4. Choose the target for the current top card (self or enemy).
+5. Apply the top card's effect.
+6. Enemy's turn: they follow the same sequence.
+7. Repeat until one duelist reaches 0 lives.
+ 
+
+
+### Prophecy Deck
+- Deck Size: `S = base + random(0,2)`
+- Moon cards: `random distribution 'M = random(1, S-1)`
+
+
+### Effects
+- Moon: damage
+- Sun: Provides a turn
+
+### Up Removes a life
+A text offering to provide an upgrade from buttons: 
 - [Exit Upgrade]: The offer will be rejected and the window will be closed so the player can move to another node.
 - [Accept & pay]: The amount of money asked will be withdrawn from the player and they will be given the [upgrade](#upgrades).
 
 ![UpgradeMenu](https://github.com/sant-mell/videoGame-TC2005B.501/blob/c804d31e0a706471500d3423f4f2f93afbd4c3c7/UpgradeMenu.png)
 
----
+### Health System
+The health system is represented by candles, where a candle will melt in three sections to represent each base life. When the candle is completely melted, the player has lost all of their lives and thus the game, prompting them to start a new run. If a health upgrade is accepted, a second candle will be added proportional to the HP increase, still divided in 3 sections. When the extra candle runs out, the original one will start melting.
 
+`Health = 3 * candles + (3 - current candle section)`
+
+---
 
 
 
@@ -518,8 +577,8 @@ The user interface and experience design is focused on malong it simple, intuiti
 ![GameInProgress](https://github.com/sant-mell/videoGame-TC2005B.501/blob/3ebdf16ac5020073548ac0bcce372303ab492b80/Gameplay.png)
 
 ### Visual Interface
-- Duel(The table): The screen does not have a clear health bar, but rather lives represented by melting candles. This is inspired from *Ghosts of Tsushima*, where game elements like HP, stamina, guidance maps are mixed onto the very atmosphere of the game represented with elements within the game's nature. The cards will be placed in an intuitive manner in front of the player, and the elements such as character cards and the great deck will be highlighted when the mouse hovers them in order to describe the elements efficiently
-- Character deck: positioned at the bottom of the screen, cards will elevate and show a brief description of their effects as described in [the character deck](#Characters-Deck-Options). The player will be able to click to select the card and then choose the target.
+- Duel (The Table): The screen does not have a clear health bar, but rather lives represented by melting candles. This is inspired from *Ghosts of Tsushima*, where game elements like HP, stamina, guidance maps are mixed onto the very atmosphere of the game represented with elements within the game's nature. The cards will be placed in an intuitive manner in front of the player, and the elements such as character cards and the great deck will be highlighted when the mouse hovers them in order to describe the elements efficiently
+- Character Deck: positioned at the bottom of the screen, cards will elevate and show a brief description of their effects as described in [the character deck](#Characters-Deck-Options). The player will be able to click to select the card and then choose the target.
 - The Great Deck: positioned at the center left of the table, it will initially display its contents of sun and moon cards every time a new round is started, then it will be suffled and only display the top card facing down. The player will be able to hover their mouse over it, highlighting but yet not showing its contents in order to higlight the mystical aspect of the game. To choose its target, the player will click the card and choose the target, which will be diisplayed by a simple text asking "Apply to:[Enemy] on the top, and [Yourself] on the bottom".
 - Targeting screen: When the player clicks on the great deck, a simple text asking "Apply to:[Enemy] on the top, and [Yourself] on the bottom".
 - Map: The map will be a graph with nodes, within this graph, the player will only be able to click on those nodes adjacent to their current position. Each node will vary as stated in [the map section](#map), and will be represented by a black square for bosses, gears for their upgrades,a portal to represent the rest site, and finally a castle to represent the bossfight.
@@ -528,19 +587,9 @@ The user interface and experience design is focused on malong it simple, intuiti
 [!Statistics Screen](Statistics.png)
  - Duel Closure: When the player wins or loses the game, a window will pop up, showing the result of the game, providing a description of the results and giving a small text of the money earned to increase the dopamine of the game. The player will be able to click an [Return] button to return to the map for the next enemy.
 
-
+![Victory](https://github.com/sant-mell/videoGame-TC2005B.501/blob/d26bae798adafc60393cd75a7038e819850e294e/Victory.png)
 
 ---
-
-
-
-
-## Controls
-
-
-Mouse: drag cards
-Keyboard: ESC, SPACE
-
 
 ## Statistics
 
@@ -594,11 +643,81 @@ The tentative classes with the necessary methods to program the game are the fol
 
 ## Abstract Classes 
 
-class Card {}
+    class Card {
+        String name;
+        public Card(String name) {
+            this.name = name;
+        }
+        abstract void applyEffect(Game game, Entity source, Entity target);
+    }
+
+    class Entity {
+        int lives;
+        void loseLife() {
+            lives--;
+        }
+        void gainLife() {
+            lives++;
+        }
+        void revive() {
+            lives = 1;
+        }
+    }
+
+    class Deck {
+        Card[] cards;
+    }
+
+    class Game {
+        MainDeck mainDeck;
+        void extraTurn(Entity e) {}
+        void repeatEffect() {}
+        void discardMainDeck() {}
+        void addMoon() {}
+        void randomEffect() {}
+    }
 
 ## Derived Classes
 
-class 
+    class MainDeckCard extends Card {
+        public MainDeckCard(String name) {
+            super(name);
+        }
+    }
+
+    class Sun extends MainDeckCard {
+        public Sun() {
+            super("Sun");
+        }
+        void applyEffect(Game game, Entity source, Entity target) {
+            game.extraTurn(source);
+        }
+    }
+// Needs to be repeated for the Moon Card
+
+    class CharacterCard extends Card {
+        public CharacterCard(String name) {
+            super(name);
+        }
+    }
+
+    class Magician extends CharacterCard {
+        public Magician() {
+            super("Magician");
+        }
+        void applyEffect(Game game, Entity source, Entity target) {
+            game.repeatEffect();
+        }
+    }
+// One per character
+
+    class Player extends Entity {
+    }
+// The same for enemy
+
+    class MainDeck extends Deck {
+    }
+// Applies to the Characters Deck too
 
 # Art Direction
 
@@ -767,4 +886,4 @@ The idea is to start with a simple but functional prototype and gradually build 
     - Final testing and adjustments
     - Final delivery version ready
 
-Once this schedule is completed, the next step would be to gather feedback through playtesting and evaluate how the game performs in practice, using those insights to refine mechanics, adjust balance, and decide whether additional content or improvements are needed. At the same time we need to be careful, because the biggest risk lies in the core systems, particularly the card mechanics and overall balance, taking longer to stabilize than expected, since any issues at that stage could delay progress and compress the time available for polish and final testing, ultimately affecting the quality of the final version.
+Once this schedule is completed, the next step would be to gather feedback through playtesting and evaluate how the game performs in practice, using those insights to refine mechanics, adjust balance, and decide whether additional content or improvements are needed. At the same time we need to be careful, because the biggest risk lies in the core systems, particularly the card mechanics and overall balance, taking longer to stabilize than expected, since any issues at that stage could delay progress and compress the time available for polish and final testing, ultimately affecting the quality of the final version. 
