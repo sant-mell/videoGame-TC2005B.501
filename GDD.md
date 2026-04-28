@@ -267,11 +267,11 @@ Negative fortunes:
 
 #### Common Cards
 - *The Magician:* Repeats the effect of the last card played by the character during this combat.
--- *The Chariot:* Throws away the top card of the [Great Deck](#great-deck). 
+- *The Chariot:* Throws away the top card of the [Great Deck](#great-deck). 
 - *The Star:* When you reach 0 lives it revives you with a singular extra life.
 - *Page of Pentacles:* If you win in the next round it gives you a coin bonus.
 - *Strength:* During the next round you cannot die.
--- *Two of Pentacles:* Draw two cards from the [Great Deck](#great-deck), choose one to use, the other is thrown away.
+- *Two of Pentacles:* Draw two cards from the [Great Deck](#great-deck), choose one to use, the other is thrown away.
 
 
 
@@ -285,7 +285,7 @@ Negative fortunes:
 - *The High Priestess:* Can see the next card from the [Great Deck](#great-deck).
 - *The Hermit:* Skips your next draw phase entirely. 
 - *Justice:* If you lose a life during your next turn, your opponent loses one too.
--- *Wheel of Fortune:* Shuffles the [Great Deck](#great-deck).
+- *Wheel of Fortune:* Shuffles the [Great Deck](#great-deck).
 - *King of Pentacles:* If you win the award money doubles, but if you lose the loss money does too.
 
 
@@ -297,9 +297,9 @@ Negative fortunes:
 
 
 #### Epic Cards
--- *The Lovers:* Permanently remove one [moon card](#the-moon) from the [Great Deck](#great-deck).
--- *The Tower:* Randomly destroys 50% of your enemy [Characters Deck](#characters-deck-options).
--- *The Devil:* You gain two lives BUT It adds one additional [moon card](#the-moon) to the [Great Deck](#great-deck). 
+- *The Lovers:* Permanently remove one [moon card](#the-moon) from the [Great Deck](#great-deck).
+- *The Tower:* Randomly destroys 50% of your enemy [Characters Deck](#characters-deck-options).
+- *The Devil:* You gain two lives BUT It adds one additional [moon card](#the-moon) to the [Great Deck](#great-deck). 
 - *The Hanged Man:* Blocks the other player from using their Characters Deck cards during their next turn. 
 
 
@@ -311,7 +311,7 @@ Negative fortunes:
 
 
 #### Legendary Cards
--- *The Fool:* Randomly applies any of the existing cards, even if they are not in your [Characters Deck](#characters-deck-options).
+- *The Fool:* Randomly applies any of the existing cards, even if they are not in your [Characters Deck](#characters-deck-options).
 
 
 
