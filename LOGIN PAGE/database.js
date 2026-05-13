@@ -1,5 +1,5 @@
 const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
+const sqlite3 = require('mysql').verbose();
 
 // abrir el archivo de la base de datos
 const db = new sqlite3.Database(path.join(__dirname, 'users.db'));
