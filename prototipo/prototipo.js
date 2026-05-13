@@ -25,9 +25,9 @@ class Game {
         this.playerLives = 3;
         this.currentTurn = "player";
         this.gameOver = false;
-        this.startSound = new Audio("easyEnemies.mpeg");
+        this.startSound = new Audio("../assets/audio/easyEnemies.mpeg");
         this.startSound.volume = 0.2;
-        this.hurtSound = new Audio ("fahhh_KcgAXfs.mp3");
+        this.hurtSound = new Audio ("../assets/audio/fahhh_KcgAXfs.mp3");
         this.hurtSound.volume = 1;
         this.showStartButton = true;
 
@@ -52,7 +52,7 @@ class Game {
         );
 
         this.background.setSprite(
-            "./table.png",
+            "../assets/images/table.png",
             new Rect(0, 0, 1202, 662)
         );
 
@@ -105,7 +105,7 @@ class Game {
         );
 
         this.card.setSprite(
-            "chariot_card.png",
+            "../assets/images/chariot_card.png",
             new Rect(0, 0, 560, 1100)
         );
 
@@ -130,7 +130,7 @@ class Game {
         );
 
         this.card2.setSprite(
-            "high_priestess_card.png",
+            "../assets/images/high_priestess_card.png",
             new Rect(0, 0, 380, 730)
         );
 
@@ -151,7 +151,7 @@ class Game {
         );
 
         this.card3.setSprite(
-            "wheel_of_fortune_card.png",
+            "../assets/images/wheel_of_fortune_card.png",
             new Rect(0, 0, 310, 590)
         );
 
@@ -191,7 +191,7 @@ class Game {
         );
         
         this.centerImage.setSprite(
-            "backside_card.png",
+            "../assets/images/backside_card.png",
             new Rect(0, 0, 550, 800)
         );
         // FINAL IMAGE
