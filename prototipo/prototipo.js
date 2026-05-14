@@ -1,5 +1,7 @@
 "use strict";
-
+//Puto el que lo lea
+//Hola como estas
+let hola=0;
 // Global variables
 const canvasWidth = 1200;
 const canvasHeight = 600;
