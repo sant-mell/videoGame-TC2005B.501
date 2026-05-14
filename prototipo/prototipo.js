@@ -1,6 +1,4 @@
 "use strict";
-//Puto el que lo lea
-//Hola como estas
 let hola=0;
 // Global variables
 const canvasWidth = 1200;
@@ -11,7 +9,6 @@ let ctx;
  
 // A variable to store the game object
 let game;
-//super puto
 // Variable to store the time at the previous frame
 let oldTime;
 
