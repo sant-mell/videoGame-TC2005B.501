@@ -56,14 +56,13 @@ class Game {
         );
 
         this.greatDeck = [
-            "sun",
-            "sun",
+            "moon",
+            "moon",
+            "moon",     
             "moon",
             "moon",
             "moon",
-            "moon",
-            "moon",
-            "sun"
+            "moon"
         ];
         this.greatDeck.sort(() => Math.random() - 0.5);
 
@@ -149,12 +148,23 @@ class Game {
             new Rect(0, 0, 310, 590)
         );
 
+        // hacer un array de las cartas 
+        this.cards = [];
+
         this.maindeck = {
             x: 280,
             y: 270,
             width: 80,
             height: 120
         };
+
+        // hacer push sobre el arreglo de las cards
+        this.cards.push(this.card3);
+        this.cards.push(this.card);
+        this.cards.push(this.card2);
+
+        // centrar las cartas despues de pushearlas
+        this.positionCards();
         // You
         this.enemyButton = {
             x: canvasWidth / 2 - 50,
@@ -298,9 +308,12 @@ class Game {
 
             this.checkStartButton(mouseX, mouseY);
 
-            this.checkCardClick(this.card, mouseX, mouseY);
-            this.checkCardClick(this.card2, mouseX, mouseY);
-            this.checkCardClick(this.card3, mouseX, mouseY);
+            // checkea los clicks para cada carta en el arreglo de las cartas
+            if (this.cards && this.cards.length > 0) {
+                for (let c of this.cards) {
+                    this.checkCardClick(c, mouseX, mouseY);
+                }
+            }
             this.checkMainDeckClick(mouseX, mouseY);
             this.checkChoiceButtons(mouseX, mouseY);
             
@@ -342,7 +355,7 @@ class Game {
         ) {
 
             // MOVE CARD TO CENTER
-            card.position.x = canvasWidth / 2 + 8;
+            card.position.x = canvasWidth / 2;
             card.position.y = canvasHeight / 2;
             if (card === this.card) {
                 this.showcard1info = true;
@@ -642,18 +655,22 @@ class Game {
             actor.draw(ctx);
         }
 
-        // DRAW CARDS
+        // DRAW CARDS (y centrar)
         if (this.showCards) {
-            if (this.cardVisible) {
-                this.card.draw(ctx);
-            }
-            
-            if (this.card2Visible) {
-                this.card2.draw(ctx);
-            }
-            
-            if (this.card3Visible) {
-                this.card3.draw(ctx);
+            // ver si estan bien puestas antes de dibujar
+            this.positionCards();
+
+            if (this.cards && this.cards.length > 0) {
+                for (let c of this.cards) {
+                    let visible = true;
+                    if (c === this.card && !this.cardVisible) visible = false;
+                    if (c === this.card2 && !this.card2Visible) visible = false;
+                    if (c === this.card3 && !this.card3Visible) visible = false;
+
+                    if (visible) {
+                        c.draw(ctx);
+                    }
+                }
             }
         }
         if (this.showPeekCard) {
@@ -778,6 +795,40 @@ class Game {
         // UPDATE ACTORS
         for (let actor of this.actors) {
             actor.updateFrame(deltaTime);
+        }
+    }
+    // las pone en el centro y cone spacio enmedio de ellas
+    positionCards() {
+        if (!this.cards || this.cards.length === 0) return;
+
+        // ver que tarjetas estan visibles y guardatlas en un arreglo
+        const visibleCards = this.cards.filter((c) => {
+            if (c === this.card) return this.cardVisible;
+            if (c === this.card2) return this.card2Visible;
+            if (c === this.card3) return this.card3Visible;
+            return true;
+        });
+
+        const count = visibleCards.length;
+        if (count === 0) return;
+
+        // espacio entre cartas pero que se ajusta dependiendo de el tamano de las que se ven
+        let spacing = 110;
+        for (let candidate of visibleCards) {
+            if (candidate && candidate.size && candidate.size.x) {
+                spacing = candidate.size.x + 10;
+                break;
+            }
+        }
+
+        const totalWidth = (count - 1) * spacing;
+        const startX = canvasWidth / 2 - totalWidth / 2;
+        const y = canvasHeight - 108;
+
+        for (let i = 0; i < count; i++) {
+            const c = visibleCards[i];
+            c.position.x = startX + i * spacing;
+            c.position.y = y;
         }
     }
     drawHitbox(ctx, card) {
