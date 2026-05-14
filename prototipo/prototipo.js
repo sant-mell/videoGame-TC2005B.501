@@ -6,7 +6,7 @@ const canvasHeight = 600;
 
 // Context of the Canvas
 let ctx;
-
+ 
 // A variable to store the game object
 let game;
 
@@ -53,7 +53,7 @@ class Game {
 
         this.background.setSprite(
             "../assets/images/FinalDuelTable.png",
-            new Rect(0, 0, 1202, 662)
+            new Rect(0, 0, 1920, 1051)
         );
 
         this.greatDeck = [
@@ -151,10 +151,10 @@ class Game {
         );
 
         this.maindeck = {
-            x: 310,
-            y: 280,
-            width: 69,
-            height: 100
+            x: 280,
+            y: 270,
+            width: 80,
+            height: 120
         };
         // You
         this.enemyButton = {
@@ -736,6 +736,26 @@ class Game {
             }
     }
     drawCustomHitbox(ctx, hitbox) {
+        if (hitbox === this.startButton) {
+
+            ctx.fillStyle = "gray";
+    
+            ctx.fillRect(
+                hitbox.x,
+                hitbox.y,
+                hitbox.width,
+                hitbox.height
+            );
+            ctx.fillStyle = "white";
+            ctx.font = "30px MedievalSharp";
+            ctx.textAlign = "center";
+
+            ctx.fillText(
+            "START",
+            hitbox.x + hitbox.width / 2,
+            hitbox.y + hitbox.height / 2 + 10
+            );
+        }
 
         ctx.strokeStyle = "red";
         ctx.lineWidth = 2;
