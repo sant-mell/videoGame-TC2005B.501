@@ -52,12 +52,18 @@ class Game {
         );
 
         this.background.setSprite(
-            "../assets/images/table.png",
+            "../assets/images/FinalDuelTable.png",
             new Rect(0, 0, 1202, 662)
         );
 
         this.greatDeck = [
             "sun",
+            "sun",
+            "moon",
+            "moon",
+            "moon",
+            "moon",
+            "moon",
             "sun"
         ];
         this.greatDeck.sort(() => Math.random() - 0.5);
