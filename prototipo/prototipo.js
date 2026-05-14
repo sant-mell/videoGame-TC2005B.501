@@ -57,19 +57,8 @@ class Game {
         );
 
         this.greatDeck = [
-            "moon",
-            "moon",
             "sun",
-            "moon",
-            "moon",
-            "sun",
-            "sun",
-            "moon",
-            "sun",
-            "sun",
-            "moon",
-            "moon",
-            "moon"
+            "sun"
         ];
         this.greatDeck.sort(() => Math.random() - 0.5);
 
@@ -97,7 +86,7 @@ class Game {
 
             // SIZE
             100,
-            185,
+            185, 
 
             "gray",
             "card",
@@ -208,7 +197,7 @@ class Game {
         );
 
         this.finalImage.setSprite(
-        "moon_card.png",
+        "../assets/images/moon_card.png",
         new Rect(0, 0, 430, 850)
         ); 
         //sun IMAGE//
@@ -225,7 +214,7 @@ class Game {
         );
         
         this.sunImage.setSprite(
-            "sun_card.png",
+            "../assets/images/sun_card.png",
             new Rect(0, 0, 430, 850)
         );
 
@@ -357,15 +346,13 @@ class Game {
             if (card === this.card2) {
                 this.showcard2info = true;
 
-            if (this.greatDeck.length > 0) {
-
-            this.peekedCard = this.greatDeck[0];
-    
-            this.showPeekCard = true;
-            }
-            setTimeout(() => {
-                this.showPeekCard = false;
-            },2000);
+                if (this.greatDeck.length > 0) {
+                    this.peekedCard = this.greatDeck[0];
+                    this.showPeekCard = true;
+                }
+                setTimeout(() => {
+                    this.showPeekCard = false;
+                }, 2000);
             }
             if (card === this.card3) {
                 this.showcard3info = true;

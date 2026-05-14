@@ -7,7 +7,7 @@
 
 
 
-![Logo Juego](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Gemini_Generated_Image_om4mquom4mquom4m.png?raw=true)
+![Logo Juego](../assets/images/Gemini_Generated_Image_om4mquom4mquom4m.png)
 
 
 
@@ -30,7 +30,7 @@
 The following content is owned by its creators. Use without written permission is strictly prohibited.
 
 
-![Studio Logo](https://github.com/sant-mell/videoGame-TC2005B.501/blob/f5e4326bab071f9ac4934273394f62ab9761b9fe/Studio%20Logo.png)
+![Studio Logo](../assets/images/Studio%20Logo.png)
 
 ---
 
@@ -186,7 +186,7 @@ Managing risk is vital, as the player must choose whether to intervene before de
 
 
 
-![GameBoard](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Duel.png?raw=true)
+![GameBoard](../assets/images/Duel.png)
 
 
 
@@ -203,7 +203,7 @@ Only two types of cards…
 
 “The Sun provides an opportunity, The Moon changes everything”
 
-![Sun and Moon](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Sun%20and%20Moon.png?raw=true)
+![Sun and Moon](../assets/images/Sun%20and%20Moon.png)
 
 
 “These are not fortunes, they are futures”
@@ -276,7 +276,7 @@ Negative fortunes:
 
 
 
-![Common cards](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Common%20Cards.png?raw=true)
+![Common cards](../assets/images/Common%20Cards.png)
 
 
 
@@ -291,7 +291,7 @@ Negative fortunes:
 
 
 
-![Rare cards](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Rare%20Cards.png?raw=true)
+![Rare cards](../assets/images/Rare%20Cards.png)
 
 
 
@@ -305,7 +305,7 @@ Negative fortunes:
 
 
 
-![Epic cards](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Legendary%20Cards.png?raw=true)
+![Epic cards](../assets/images/Legendary%20Cards.png)
 
 
 
@@ -316,7 +316,7 @@ Negative fortunes:
 
 
 
-![Legendary cards](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Epic%20Cards.png?raw=true)
+![Legendary cards](../assets/images/Epic%20Cards.png)
 ---
 
 
@@ -338,7 +338,7 @@ The map will be a procedurally generated directed graph, similar to the one used
 
 The encounters will be easier on the beginning, where a calculation to prioritize easier enemies will be made. However, the possibility of finding a hard enemy or even the boss at the beginning is never zero.
 
-![Map](https://github.com/sant-mell/videoGame-TC2005B.501/blob/326d1355a5f78bff3cfa89d601873a9d8a51a0c4/Final%20Map.png)
+![Map](../assets/images/Final%20Map.png)
 
 #### Upgrades
 - *Card Binding* (300 coins): Spend a high amount of coins in order to be able to "bound" a card. This will make the card return to your hand on the next duel even if it was used on the last one.
@@ -396,13 +396,13 @@ On the map, one of the enemies of each difficulty will appear, those are also ra
 - "Drunk"
 
 
-![Common Enemies](Drunk.png)
+![Common Enemies](../assets/images/Drunk.png)
 
 
 
 
 - "Peasant"
-![Common Enemies](Peseant.png)
+![Common Enemies](../assets/images/Peseant.png)
 
 
 
@@ -418,14 +418,14 @@ These characters lack any real combat training, they only manage to play a basic
 
 
 - "Crazy Jester"
-![Rare Enemies](Jester.png)
+![Rare Enemies](../assets/images/Jester.png)
 Cards Included: The Magician, The Chariot.
 
 
 
 
 - "Bounded Knight"
-![Rare Enemies](Knight.png)
+![Rare Enemies](../assets/images/Knight.png)
 Cards Included: The Star, Page of Pentacles.
 
 
@@ -442,14 +442,14 @@ These are a bit more seasoned but still have their openings. While they’ve add
 
 
 - "Killer Queen"
-![Epic Enemies](https://github.com/sant-mell/videoGame-TC2005B.501/blob/main/Queen.png?raw=true)
+![Epic Enemies](../assets/images/Queen.png)
 Cards Included: Strength, Two of Pentacles, The High Priestess, The Hermit.
 
 
 
 
 - "Mad Monarch"
-![Epic Enemies](The_king.png)
+![Epic Enemies](../assets/images/The_king.png)
 Cards Included: Justice, Wheel of Fortune, King of Pentacles.
 
 
@@ -464,7 +464,7 @@ These are relentless fighters who never miss a beat, playing a card every single
 
 
 - "The Dealer"
-![Final Boss](Dealer.png)
+![Final Boss](../assets/images/Dealer.png)
 Cards Included: The Lovers, The Tower, The Devil, The Hanged Man
 
 
@@ -508,7 +508,7 @@ Buttons:
 
 [Statistics]: Will display the statistics collected through the single plays and global plays. for more information, consult the statistics section.
 
-![MainMenu](https://github.com/sant-mell/videoGame-TC2005B.501/blob/395e3cbf8fed36b4ae730455756b10ecce19ed67/Main%20Menu.png) 
+![MainMenu](../assets/images/Main%20Menu.png)
 
 
 ### Level Selection
@@ -566,7 +566,7 @@ A text offering to provide an upgrade from buttons:
 - [Exit Upgrade]: The offer will be rejected and the window will be closed so the player can move to another node.
 - [Accept & pay]: The amount of money asked will be withdrawn from the player and they will be given the [upgrade](#upgrades).
 
-![UpgradeMenu](https://github.com/sant-mell/videoGame-TC2005B.501/blob/c804d31e0a706471500d3423f4f2f93afbd4c3c7/UpgradeMenu.png)
+![UpgradeMenu](../assets/images/UpgradeMenu.png)
 
 ### Health System
 The health system is represented by candles, where a candle will melt in three sections to represent each base life. When the candle is completely melted, the player has lost all of their lives and thus the game, prompting them to start a new run. If a health upgrade is accepted, a second candle will be added proportional to the HP increase, still divided in 3 sections. When the extra candle runs out, the original one will start melting.
@@ -580,7 +580,7 @@ The health system is represented by candles, where a candle will melt in three s
 ## UI / UX
 The user interface and experience design is focused on making it simple, intuitive, yet inmersive into the game. This is because our intention is for the player to feel like they are the ones sitting at the fortune table and traveling along this universe. The interface must integrate well with our world building and should also avoid breaking the mystical yet comical atmosphere that is being built.
 
-![GameInProgress](https://github.com/sant-mell/videoGame-TC2005B.501/blob/3ebdf16ac5020073548ac0bcce372303ab492b80/Gameplay.png)
+![GameInProgress](../assets/images/Gameplay.png)
 
 ### Visual Interface
 - Duel (The Table): The screen does not have a clear health bar, but rather lives represented by melting candles. This is inspired from *Ghosts of Tsushima*, where game elements like HP, stamina, guidance maps are mixed onto the very atmosphere of the game represented with elements within the game's nature. The cards will be placed in an intuitive manner in front of the player, and the elements such as character cards and the great deck will be highlighted when the mouse hovers them in order to describe the elements efficiently
@@ -590,10 +590,10 @@ The user interface and experience design is focused on making it simple, intuiti
 - Map: The map will be a graph with nodes, within this graph, the player will only be able to click on those nodes adjacent to their current position. Each node will vary as stated in [the map section](#map), and will be represented by a black square for bosses, gears for their upgrades, a portal to represent the rest site, and finally a castle to represent the boss fight.
 - Upgrade Screen: A small window over the map will pop with the offer to upgrade in exchange of coins. The player will be able to click on the [Accept & Pay] button to accept the offer and pay the coins, or click on the [Exit Upgrade] button to reject the offer and close the window.
 - Statistics Screen: From the main menu, the player will access and view the statistics screen.
-[!Statistics Screen](Statistics.png)
+![Statistics Screen](../assets/images/Statistics.png)
  - Duel Closure: When the player wins or loses the game, a window will pop up, showing the result of the game, providing a description of the results and giving a small text of the money earned to increase the dopamine of the game. The player will be able to click an [Return] button to return to the map for the next enemy.
 
-![Victory](https://github.com/sant-mell/videoGame-TC2005B.501/blob/d26bae798adafc60393cd75a7038e819850e294e/Victory.png)
+![Victory](../assets/images/Victory.png)
 
 ---
 
@@ -610,7 +610,7 @@ The game will include a statistics system designed to track both individual play
 - Coins Earned
 - Cards Played
 
-![StatisticsMenu](https://github.com/sant-mell/videoGame-TC2005B.501/blob/e5716534b1ccca2264114ac672b63a724b73d133/Statistics.png) 
+![StatisticsMenu](../assets/images/Statistics.png)
 
 ### Global Statistics
 
@@ -736,12 +736,12 @@ The visual style of the game takes inspiration from games such as Inscryption fo
 ## Movement
 The main visual movements in the game are designed to reinforce its mystical and ominous tone while keeping interactions clear and satisfying. As the player progresses, The Fool will move smoothly across the map from node to node, emphasizing the sense of journey and descent into the unknown. During duels, cards will respond dynamically to player input by slightly elevating and rotating when selected or hovered over, creating a tactile and responsive feel that highlights their importance in decision making. Additionally, when a Moon card is applied to either the player or the enemy, a dark, magical mist will emerge from the crystal ball at the center of the table, spreading subtly across the scene to visually represent the shift toward danger and the presence of an unfavorable fate.
 
-![FoolsSprite](https://github.com/sant-mell/videoGame-TC2005B.501/blob/2d099e65d5230778663ebcbb02c3dcb14857597b/Gemini_Generated_Image_9tjvd69tjvd69tjv.png)
+![FoolsSprite](../assets/images/Gemini_Generated_Image_9tjvd69tjvd69tjv.png)
 
 ## Animation
 The enemies will have three animation frames combined into a looping GIF to give them movement and personality during duels. These subtle animations help make each opponent feel more alive and reinforce their individual presence at the table. In addition, each enemy will have a final defeat frame, where they are shown resting their head on the table, visually representing their loss.
 
-![DefeatedEnemy](https://github.com/sant-mell/videoGame-TC2005B.501/blob/6118dd928a234c3242a84bd924dd05ca2cf0fd32/DefeatedKing.png) 
+![DefeatedEnemy](../assets/images/DefeatedKing.png)
 
 The candle that represents the player’s lives will also be animated using three frames combined into a seamless looping GIF. Since the candle is both a gameplay mechanic and an important source of light on the dark table, its constant flame helps maintain the atmosphere of tension and uncertainty, especially during the second half of the game where the environment becomes darker and more oppressive.
 
