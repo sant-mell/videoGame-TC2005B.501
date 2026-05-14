@@ -9,7 +9,7 @@ let ctx;
  
 // A variable to store the game object
 let game;
-
+//super puto
 // Variable to store the time at the previous frame
 let oldTime;
 
