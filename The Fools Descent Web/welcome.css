@@ -1,0 +1,106 @@
+body{
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: #120b2e;
+    background-image: radial-gradient(circle at top, #3b1d73, #120b2e 70%);
+    font-family: Arial, sans-serif;
+}
+
+.background-glow{
+    position: absolute;
+    width: 900px;
+    height: 900px;
+    background: radial-gradient(rgba(115, 72, 190, 0.35), transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.landing-container{
+    width: 1150px;
+    height: 720px;
+    position: relative;
+    z-index: 1;
+    border: 8px solid #4d3a2a;
+    border-radius: 20px;
+    background:
+    linear-gradient(rgba(12, 8, 30, 0.92), rgba(12, 8, 30, 0.92)),
+    radial-gradient(circle at center, #2d1b59, #120b2e 75%);
+    box-shadow:
+    0px 0px 25px black,
+    0px 0px 40px rgba(115, 72, 190, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo{
+    width: 900px;
+    max-width: 90%;
+    margin-bottom: 50px;
+    display: block;
+    filter: drop-shadow(0px 0px 15px rgba(120, 90, 255, 0.5));
+}
+
+a{
+    text-decoration: none;
+}
+
+.play-button{
+    width: 320px;
+    height: 85px;
+    font-size: 34px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: #f0cc84;
+    background: linear-gradient(#4f5e7a, #38435a);
+    border: 5px solid #7a5a34;
+    border-radius: 14px;
+    box-shadow:
+    0px 0px 10px rgba(255, 215, 120, 0.2);
+    cursor: pointer;
+}
+
+.play-button:hover{
+    background: linear-gradient(#5d6d8d, #45516b);
+}
+
+.corner{
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    border: 6px solid #8b6a3f;
+}
+
+.top-left{
+    top: 20px;
+    left: 20px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.top-right{
+    top: 20px;
+    right: 20px;
+    border-left: none;
+    border-bottom: none;
+}
+
+.bottom-left{
+    bottom: 20px;
+    left: 20px;
+    border-right: none;
+    border-top: none;
+}
+
+.bottom-right{
+    bottom: 20px;
+    right: 20px;
+    border-left: none;
+    border-top: none;
+}
