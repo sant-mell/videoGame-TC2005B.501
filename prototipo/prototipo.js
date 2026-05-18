@@ -23,11 +23,19 @@ class Game {
         this.enemyLives = 3;
         this.playerLives = 3;
         this.currentTurn = "player";
+        //booleans
         this.gameOver = false;
-        this.startSound = new Audio("../assets/audio/easyEnemies.mpeg");
-        this.startSound.volume = 0.2;
         this.showStartButton = true;
         this.sunMessage = false;
+        //audio
+        this.startSound = new Audio("../assets/audio/easyEnemies.mpeg");
+        this.startSound.volume = 0.2;
+        this.candleburn = new Audio("../assets/audio/candle_burning.mov");
+        this.candleburn.volume = 0.3;
+        this.candleblow = new Audio("../assets/audio/candle_blow.mov");
+        this.candleblow.volume = 0.3;
+        this.cardSound = new Audio("../assets/audio/card.mpeg");
+        this.cardSound.volume = 0.3;
 
         this.startButton = {
         x: canvasWidth / 2 - 75,
@@ -286,6 +294,7 @@ class Game {
                 "../assets/images/Candles.png",
                 new Rect(385, 70, 280, 570)
             );
+            this.candleburn.play();
         }
     
         if (this.playerLives === 1) {
@@ -293,6 +302,7 @@ class Game {
                 "../assets/images/Candles.png",
                 new Rect(710, 70, 280, 570)
             );
+            this.candleburn.play();
         }
     
         if (this.playerLives === 0) {
@@ -300,6 +310,7 @@ class Game {
                 "../assets/images/Candles.png",
                 new Rect(1050, 70, 280, 570)
             );
+            this.candleblow.play();
         }
     }
     updateEnemyCandles() {
@@ -341,6 +352,7 @@ class Game {
         if (this.greatDeck.length <= 0) {
             return;
         }
+        this.showCards = false;
         this.currentTurn = "enemy";
 
         // SHOW BACKSIDE CARD FIRST
@@ -478,7 +490,9 @@ class Game {
     }
 
     checkStartButton(mouseX, mouseY) {
+        if (!this.gameOver){
         this.startSound.play();
+        }
         if (!this.showStartButton) {
             return;
         }
@@ -536,6 +550,7 @@ class Game {
     
             // SHOW IMAGE
             this.showCenterImage = true;
+            this.cardSound.play();
             this.showCards = false;
         }
     }
@@ -589,6 +604,10 @@ class Game {
         // GAME OVER CHECK
         if (this.playerLives <= 0) {
             this.gameOver = true;
+            this.showCards = false;
+            this.showFinalImage = false;
+            this.showCenterImage = false;
+    
             return;
         }
         if (this.currentTurn === "enemy") {
@@ -817,6 +836,7 @@ class Game {
                 }
             }
             if (this.gameOver) {
+                this.startSound.pause();
                 if (this.playerLives <= 0){
                     ctx.fillStyle = "white";
                 ctx.font = "70px MedievalSharp";
