@@ -134,7 +134,7 @@ class Game {
         this.card = new AnimatedObject(
 
             // POSITION
-            new Vector(canvasWidth / 2 + 8, canvasHeight - 108),
+            new Vector(canvasWidth / 2, canvasHeight - 108),
 
             // SIZE
             100,
@@ -159,7 +159,7 @@ class Game {
         this.card2 = new AnimatedObject(
 
             // POSITION
-            new Vector(canvasWidth / 2 + 110, canvasHeight - 108),
+            new Vector(canvasWidth / 2 + 102, canvasHeight - 108),
 
             // SIZE
             100,
@@ -180,7 +180,7 @@ class Game {
         this.card3 = new AnimatedObject(
 
             // POSITION
-            new Vector(canvasWidth / 2 - 94, canvasHeight - 108),
+            new Vector(canvasWidth / 2 - 102, canvasHeight - 108),
 
             // SIZE
             100,
@@ -454,7 +454,7 @@ class Game {
         ) {
 
             // MOVE CARD TO CENTER
-            card.position.x = canvasWidth / 2 + 8;
+            card.position.x = canvasWidth / 2;
             card.position.y = canvasHeight / 2;
             if (card === this.card) {
                 this.showcard1info = true;
@@ -488,7 +488,7 @@ class Game {
                     this.card3Visible = false;
                     this.showcard3info = false;
                 }
-            
+                this.repositionCards();
             }, 2000);
         }
         console.log(left, right, top, bottom);
@@ -682,6 +682,22 @@ class Game {
         this.enemyTurn();
 
         }, 3000);
+        }
+    }
+
+    repositionCards() {
+        const y = canvasHeight - 108;
+        const spacing = 102;
+        const visible = [];
+        if (this.cardVisible)  visible.push(this.card);
+        if (this.card2Visible) visible.push(this.card2);
+        if (this.card3Visible) visible.push(this.card3);
+        const n = visible.length;
+        if (n === 0) return;
+        const startX = canvasWidth / 2 - ((n - 1) * spacing) / 2;
+        for (let i = 0; i < n; i++) {
+            visible[i].position.x = startX + i * spacing;
+            visible[i].position.y = y;
         }
     }
 
@@ -985,7 +1001,7 @@ class Game {
                     if (this.sunImage.position.y >= this.downtargetY)  {
             
                         this.finalImage.position.y = this.downtargetY;
-            
+             
                         this.isCardSliding = false;
             
                         setTimeout(() => {
