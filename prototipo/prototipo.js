@@ -20,7 +20,7 @@ class Game {
     }
     initObjects() {
         
-        this.enemyLives = 3;
+        this.enemyLives = 1;
         this.playerLives = 3;
         this.currentTurn = "player";
         //card animation
@@ -33,6 +33,8 @@ class Game {
         this.gameOver = false;
         this.showStartButton = true;
         this.sunMessage = false;
+        this.isEnemyShowing = true;
+        this.isShowingDefeatedEnemy = false;
         //audio
         this.startSound = new Audio("../assets/audio/easyEnemies.mpeg");
         this.startSound.volume = 0.2;
@@ -127,10 +129,32 @@ class Game {
             this.moonCount++;
         }
 }
-        // =========================
-        // CARD 1
-        // =========================
+        this.king = new AnimatedObject(
+            new Vector(canvasWidth / 2, 151.5),
+            390,
+            260,
+            "gray",
+           "enemy",
+            45
+        );
 
+        this.king.setSprite(
+            "../assets/images/The_King_new.png",
+            new Rect(10, 0, 835, 600)
+        );
+        this.defeatedKing = new AnimatedObject(
+            new Vector(canvasWidth / 2, 205),
+            270,
+            140,
+            "gray",
+            "enemy",
+            45
+        );
+
+        this.defeatedKing.setSprite(
+            "../assets/images/DefeatedKing_new.png",
+            new Rect(0, 0, 380, 174)
+        );
         this.card = new AnimatedObject(
 
             // POSITION
@@ -202,15 +226,12 @@ class Game {
             width: 95,
             height: 95
         };
-        // You
         this.enemyButton = {
-            x: canvasWidth / 2 - 50,
-            y: 100,
-            width: 100,
-            height: 50
+            x: this.king.position.x - this.king.size.x / 2,
+            y: this.king.position.y - this.king.size.y / 2,
+            width: this.king.size.x,
+            height: this.king.size.y
         };
-
-        // Enemy
         this.youButton = {
             x: canvasWidth / 2 - 50,
             y: 500,
@@ -345,6 +366,8 @@ class Game {
                 "../assets/images/Candles.png",
                 new Rect(1050, 70, 280, 570)
             );
+            this.isEnemyShowing = false;
+            this.isShowingDefeatedEnemy = true;
         }
     }
     enemyTurn() {
@@ -689,6 +712,14 @@ class Game {
 
         // DRAW BACKGROUND
         this.background.draw(ctx);
+
+        if (this.isEnemyShowing){
+        this.king.draw(ctx);
+        }
+        if (this.isShowingDefeatedEnemy){
+             this.defeatedKing.draw(ctx);
+     }
+
         if (this.showcard1info) {
 
             ctx.fillStyle = "white";
@@ -710,12 +741,12 @@ class Game {
             ctx.fillText(
                 this.sunCount + " Sun, " + this.moonCount + " Moon",
                 canvasWidth / 2,
-                100
+                490
             );
             ctx.fillText(
                 "Good Luck",
                 canvasWidth / 2,
-                150
+                540
             );
         }
         if (!this.showStartButton && !this.showIntroText) {
@@ -814,7 +845,6 @@ class Game {
             }
         }
 
-        this.drawCustomHitbox(ctx, this.maindeck);
 
         // DRAW HITBOXES
         //this.drawHitbox(ctx, this.card);
@@ -827,7 +857,6 @@ class Game {
         if (this.showCenterImage && this.currentTurn === "player") {
 
         this.drawCustomHitbox(ctx, this.youButton);
-        this.drawCustomHitbox(ctx, this.enemyButton);
         }
 
             if (this.showFinalImage) {
@@ -885,6 +914,18 @@ class Game {
             "START",
             hitbox.x + hitbox.width / 2,
             hitbox.y + hitbox.height / 2 + 10
+            );
+        }
+        if (hitbox === this.youButton) {
+
+            ctx.fillStyle = "white";
+            ctx.font = "25px MedievalSharp";
+            ctx.textAlign = "center";
+        
+            ctx.fillText(
+                "Fool",
+                hitbox.x + hitbox.width / 2,
+                hitbox.y + hitbox.height / 2 + 8
             );
         }
 
@@ -1023,12 +1064,6 @@ class Game {
     }
 }
 
-
-
-// =========================
-// MAIN
-// =========================
-
 function main() {
 
     const canvas = document.getElementById('canvas');
@@ -1061,4 +1096,3 @@ function drawScene(newTime) {
 
     requestAnimationFrame(drawScene);
 }
-//hola
