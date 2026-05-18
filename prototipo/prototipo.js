@@ -130,8 +130,8 @@ class Game {
         );
 
         this.card.setSprite(
-            "../assets/images/chariot_card.png",
-            new Rect(0, 0, 560, 1100)
+            "../assets/images/Common Cards.png",
+            new Rect(230, 20, 210, 400)
         );
 
 
@@ -155,8 +155,8 @@ class Game {
         );
 
         this.card2.setSprite(
-            "../assets/images/high_priestess_card.png",
-            new Rect(0, 0, 380, 730)
+            "../assets/images/Rare Cards.png",
+            new Rect(20, 10, 210, 400)
         );
 
         // CARD 3
@@ -176,8 +176,8 @@ class Game {
         );
 
         this.card3.setSprite(
-            "../assets/images/wheel_of_fortune_card.png",
-            new Rect(0, 0, 310, 590)
+            "../assets/images/Rare Cards.png",
+            new Rect(660, 10, 210, 400)
         );
 
         this.maindeck = {
