@@ -23,6 +23,12 @@ class Game {
         this.enemyLives = 3;
         this.playerLives = 3;
         this.currentTurn = "player";
+        //card animation
+        this.isCardSliding = false;
+        this.slideDirection = "up";
+        this.slideSpeed = 500; // pixels per second
+        this.uptargetY = 120;
+        this.downtargetY = canvasHeight - 120;
         //booleans
         this.gameOver = false;
         this.showStartButton = true;
@@ -58,13 +64,13 @@ class Game {
         );
 
         this.background.setSprite(
-            "../assets/images/FinalDuelTable.png",
-            new Rect(0, 0, 1920, 1051)
+            "../assets/images/new_table.png",
+            new Rect(0, 0, 1690, 928)
         );
         this.player_candles = new AnimatedObject(
 
             // POSITION
-            new Vector(canvasWidth - 285 , 378),
+            new Vector(canvasWidth - 290 , 420),
 
             // SIZE
             90,
@@ -81,7 +87,7 @@ class Game {
         this.enemy_candles = new AnimatedObject(
 
             // POSITION
-            new Vector(canvasWidth / 2 - 282 , 130),
+            new Vector(canvasWidth / 2 - 282 , 217),
 
             // SIZE
             90,
@@ -191,10 +197,10 @@ class Game {
         );
 
         this.maindeck = {
-            x: 280,
-            y: 270,
-            width: 80,
-            height: 120
+            x: 273,
+            y: 350,
+            width: 95,
+            height: 95
         };
         // You
         this.enemyButton = {
@@ -243,8 +249,8 @@ class Game {
         );
 
         this.finalImage.setSprite(
-        "../assets/images/moon_card.png",
-        new Rect(0, 0, 430, 850)
+        "../assets/images/Sun and Moon.png",
+        new Rect(50, 20, 220, 410)
         ); 
         //sun IMAGE//
         this.sunImage = new AnimatedObject(
@@ -260,8 +266,8 @@ class Game {
         );
         
         this.sunImage.setSprite(
-            "../assets/images/sun_card.png",
-            new Rect(0, 0, 430, 850)
+            "../assets/images/Sun and Moon.png",
+            new Rect(270, 20, 220, 410)
         );
 
         this.showFinalImage = false;
@@ -296,7 +302,6 @@ class Game {
             );
             this.candleburn.play();
         }
-    
         if (this.playerLives === 1) {
             this.player_candles.setSprite(
                 "../assets/images/Candles.png",
@@ -304,7 +309,6 @@ class Game {
             );
             this.candleburn.play();
         }
-    
         if (this.playerLives === 0) {
             this.player_candles.setSprite(
                 "../assets/images/Candles.png",
@@ -369,11 +373,13 @@ class Game {
             this.currentGreatCard = this.greatDeck.shift();
     
             this.showFinalImage = true;
+            setTimeout(() => {
+            this.slideDirection = "down";
+            this.isCardSliding = true;
+            },500);
             // DAMAGE PLAYER
             if (this.currentGreatCard === "moon") {
                 this.playerLives--;
-                this.updatePlayerCandles();
-
             }
             // GAME OVER CHECK
             if (this.playerLives <= 0) {
@@ -389,9 +395,9 @@ class Game {
                     this.currentTurn = "player";
                 }
     
-            }, 4000);
+            }, 3000);
     
-        }, 4000);
+        }, 3000);
     }
     createEventListeners() {
 
@@ -540,7 +546,9 @@ class Game {
         if (this.showFinalImage) {
             return;
         }
-
+        if (!this.showCards) {
+            return;
+        }
         if (
             mouseX >= this.maindeck.x &&
             mouseX <= this.maindeck.x + this.maindeck.width &&
@@ -578,13 +586,15 @@ class Game {
 
         this.showFinalImage = true;
 
+        setTimeout(() => {
+            this.slideDirection = "down";
+            this.isCardSliding = true;
+        }, 1000);
+
         // IF MOON -> PLAYER TAKES DAMAGE
         if (this.currentGreatCard === "moon") {
             this.playerLives--;
-            this.updatePlayerCandles();
-
-        // PLAYER TURN ENDS
-        this.currentTurn = "enemy";
+            this.currentTurn = "enemy";
         }
 
         // IF SUN -> PLAYER GETS ANOTHER TURN
@@ -597,7 +607,6 @@ class Game {
             }, 2000);
         }
         setTimeout(() => {
-
         this.showFinalImage = false;
         this.showCards = true;
 
@@ -632,18 +641,26 @@ class Game {
 
         this.showFinalImage = true;
 
+        this.finalImage.position.x = canvasWidth / 2;
+        this.finalImage.position.y = canvasHeight / 2;
+
+        this.sunImage.position.x = canvasWidth / 2;
+        this.sunImage.position.y = canvasHeight / 2;
+
+        setTimeout(() => {
+            this.slideDirection = "up";
+            this.isCardSliding = true;
+        }, 1000);
+
         // IF MOON -> ENEMY TAKES DAMAGE
         if (this.currentGreatCard === "moon") {
-
         this.enemyLives--;
-        this.updateEnemyCandles();
         }
 
         // PLAYER TURN ALWAYS ENDS
         this.currentTurn = "enemy";
 
         setTimeout(() => {
-
         this.showFinalImage = false;
 
         // CHECK IF ENEMY LOST
@@ -667,10 +684,6 @@ class Game {
         }, 3000);
         }
     }
-
-    // =========================
-    // DRAW EVERYTHING
-    // =========================
 
     draw(ctx) {
 
@@ -816,15 +829,8 @@ class Game {
         this.drawCustomHitbox(ctx, this.youButton);
         this.drawCustomHitbox(ctx, this.enemyButton);
         }
+
             if (this.showFinalImage) {
-
-                if (this.showFinalImage) {
-
-                    this.finalImage.position.x = canvasWidth / 2;
-                    this.finalImage.position.y = canvasHeight / 2;
-                
-                    this.sunImage.position.x = canvasWidth / 2;
-                    this.sunImage.position.y = canvasHeight / 2;
                 
                     if (this.currentGreatCard === "moon") {
                         this.finalImage.draw(ctx);
@@ -834,7 +840,6 @@ class Game {
                         this.sunImage.draw(ctx);
                     }
                 }
-            }
             if (this.gameOver) {
                 this.startSound.pause();
                 if (this.playerLives <= 0){
@@ -895,12 +900,106 @@ class Game {
     }
 
 
-
-    // =========================
-    // UPDATE
-    // =========================
-
     update(deltaTime) {
+        let dt = deltaTime / 1000;
+        if (this.isCardSliding) {
+
+            // MOON CARD
+            if (this.currentGreatCard === "moon") {
+
+                // UP
+                if (this.slideDirection === "up") {
+            
+                    this.finalImage.position.y -= this.slideSpeed * dt;
+            
+                    if (this.finalImage.position.y <= this.uptargetY) {
+            
+                        this.finalImage.position.y = this.uptargetY;
+                        this.updateEnemyCandles();
+                        this.isCardSliding = false;
+            
+                        setTimeout(() => {
+            
+                            this.showFinalImage = false;
+            
+                            this.finalImage.position.x = canvasWidth / 2;
+                            this.finalImage.position.y = canvasHeight / 2;
+            
+                        }, 300);
+                    }
+                }
+            
+                // DOWN
+                if (this.slideDirection === "down") {
+            
+                    this.finalImage.position.y += this.slideSpeed * dt;
+            
+                    if (this.finalImage.position.y >= this.downtargetY) {
+            
+                        this.sunImage.position.y = this.downtargetY;
+                        this.updatePlayerCandles();
+                        this.isCardSliding = false;
+            
+                        setTimeout(() => {
+            
+                            this.showFinalImage = false;
+            
+                            this.finalImage.position.x = canvasWidth / 2;
+                            this.finalImage.position.y = canvasHeight / 2;
+            
+                        }, 300);
+                    }
+                }
+            }
+    
+            // SUN CARD
+            if (this.currentGreatCard === "sun") {
+
+                // UP
+                if (this.slideDirection === "up") {
+            
+                    this.sunImage.position.y -= this.slideSpeed * dt;
+            
+                    if (this.sunImage.position.y <= this.uptargetY) {
+            
+                        this.sunImage.position.y = this.uptargetY;
+            
+                        this.isCardSliding = false;
+            
+                        setTimeout(() => {
+            
+                            this.showFinalImage = false;
+            
+                            this.sunImage.position.x = canvasWidth / 2;
+                            this.sunImage.position.y = canvasHeight / 2;
+            
+                        }, 300);
+                    }
+                }
+            
+                // DOWN
+                if (this.slideDirection === "down") {
+            
+                    this.sunImage.position.y += this.slideSpeed * dt;
+            
+                    if (this.sunImage.position.y >= this.downtargetY)  {
+            
+                        this.finalImage.position.y = this.downtargetY;
+            
+                        this.isCardSliding = false;
+            
+                        setTimeout(() => {
+            
+                            this.showFinalImage = false;
+            
+                            this.sunImage.position.x = canvasWidth / 2;
+                            this.sunImage.position.y = canvasHeight / 2;
+            
+                        }, 300);
+                    }
+                }
+            }
+        }
 
         // UPDATE ACTORS
         for (let actor of this.actors) {
