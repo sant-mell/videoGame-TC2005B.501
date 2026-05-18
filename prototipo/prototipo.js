@@ -25,8 +25,6 @@ class Game {
         this.gameOver = false;
         this.startSound = new Audio("../assets/audio/easyEnemies.mpeg");
         this.startSound.volume = 0.2;
-        this.hurtSound = new Audio ("../assets/audio/fahhh_KcgAXfs.mp3");
-        this.hurtSound.volume = 1;
         this.showStartButton = true;
 
         this.startButton = {
@@ -359,7 +357,6 @@ class Game {
             this.showFinalImage = true;
             // DAMAGE PLAYER
             if (this.currentGreatCard === "moon") {
-                this.hurtSound.play();
                 this.playerLives--;
                 this.updatePlayerCandles();
 
@@ -566,7 +563,6 @@ class Game {
 
         // IF MOON -> PLAYER TAKES DAMAGE
         if (this.currentGreatCard === "moon") {
-            this.hurtSound.play();
             this.playerLives--;
             this.updatePlayerCandles();
 
