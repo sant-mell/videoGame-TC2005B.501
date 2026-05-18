@@ -127,74 +127,48 @@ class Game {
             this.moonCount++;
         }
 }
-        // =========================
-        // CARD 1
-        // =========================
-
-        this.card = new AnimatedObject(
-
-            // POSITION
-            new Vector(canvasWidth / 2, canvasHeight - 108),
-
-            // SIZE
-            100,
-            185, 
-
-            "gray",
-            "card",
-            1
-        );
-
-        this.card.setSprite(
-            "../assets/images/Common Cards.png",
-            new Rect(230, 20, 210, 400)
-        );
-
-
-
-        // =========================
-        // CARD 2
-        // =========================
-
-        this.card2 = new AnimatedObject(
-
-            // POSITION
-            new Vector(canvasWidth / 2 + 102, canvasHeight - 108),
-
-            // SIZE
-            100,
-            185,
-
-            "gray",
-            "card",
-            1
-        );
-
-        this.card2.setSprite(
-            "../assets/images/Rare Cards.png",
-            new Rect(20, 10, 210, 400)
-        );
-
-        // CARD 3
-
-        this.card3 = new AnimatedObject(
-
-            // POSITION
-            new Vector(canvasWidth / 2 - 102, canvasHeight - 108),
-
-            // SIZE
-            100,
-            185,
-
-            "gray",
-            "card",
-            1
-        );
-
-        this.card3.setSprite(
-            "../assets/images/Rare Cards.png",
-            new Rect(660, 10, 210, 400)
-        );
+        this.characterCards = [
+            {
+                object: new AnimatedObject(
+                    new Vector(canvasWidth / 2, canvasHeight - 108),
+                    100, 185, "gray", "card", 1
+                ),
+                sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(230, 20, 210, 400) },
+                visible: true,
+                showInfo: false,
+                infoText: "Throwing away the top card of the Great Deck...",
+                action: () => { this.discardedCard = this.greatDeck.shift(); }
+            },
+            {
+                object: new AnimatedObject(
+                    new Vector(canvasWidth / 2 + 102, canvasHeight - 108),
+                    100, 185, "gray", "card", 1
+                ),
+                sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(20, 10, 210, 400) },
+                visible: true,
+                showInfo: false,
+                infoText: "See the next card from the Great Deck",
+                action: () => {
+                    if (this.greatDeck.length > 0) {
+                        this.peekedCard = this.greatDeck[0];
+                        this.showPeekCard = true;
+                    }
+                    setTimeout(() => { this.showPeekCard = false; }, 2000);
+                }
+            },
+            {
+                object: new AnimatedObject(
+                    new Vector(canvasWidth / 2 - 102, canvasHeight - 108),
+                    100, 185, "gray", "card", 1
+                ),
+                sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(660, 10, 210, 400) },
+                visible: true,
+                showInfo: false,
+                infoText: "Shuffling the Great Deck...",
+                action: () => { this.greatDeck.sort(() => Math.random() - 0.5); }
+            }
+        ];
+        this.characterCards.forEach(c => c.object.setSprite(c.sprite.src, c.sprite.rect));
 
         this.maindeck = {
             x: 273,
@@ -274,12 +248,6 @@ class Game {
         this.showCenterImage = false;
         this.showCards = false;
         this.showIntroText = false;
-        this.cardVisible = true;
-        this.card2Visible = true;
-        this.card3Visible = true;
-        this.showcard1info = false;
-        this.showcard2info = false;
-        this.showcard3info = false;
 
         
 
@@ -410,9 +378,9 @@ class Game {
 
             this.checkStartButton(mouseX, mouseY);
 
-            this.checkCardClick(this.card, mouseX, mouseY);
-            this.checkCardClick(this.card2, mouseX, mouseY);
-            this.checkCardClick(this.card3, mouseX, mouseY);
+            for (let c of this.characterCards) {
+                this.checkCardClick(c, mouseX, mouseY);
+            }
             this.checkMainDeckClick(mouseX, mouseY);
             this.checkChoiceButtons(mouseX, mouseY);
             
@@ -422,29 +390,22 @@ class Game {
     // CHECK IF CARD WAS CLICKED
     // =========================
 
-    checkCardClick(card, mouseX, mouseY) {
+    checkCardClick(cardEntry, mouseX, mouseY) {
         if (this.showStartButton) {
             return;
         }
         if (this.showCenterImage) {
             return;
         }
-        if (card === this.card && !this.cardVisible) {
+        if (!cardEntry.visible) {
             return;
         }
-        
-        if (card === this.card2 && !this.card2Visible) {
-            return;
-        }
-        
-        if (card === this.card3 && !this.card3Visible) {
-            return;
-        }
-        const left = card.position.x - card.size.x / 2;
-        const right = card.position.x + card.size.x / 2;
 
-        const top = card.position.y - card.size.y / 2;
-        const bottom = card.position.y + card.size.y / 2;
+        const obj = cardEntry.object;
+        const left   = obj.position.x - obj.size.x / 2;
+        const right  = obj.position.x + obj.size.x / 2;
+        const top    = obj.position.y - obj.size.y / 2;
+        const bottom = obj.position.y + obj.size.y / 2;
 
         if (
             mouseX >= left &&
@@ -452,42 +413,16 @@ class Game {
             mouseY >= top &&
             mouseY <= bottom
         ) {
-
             // MOVE CARD TO CENTER
-            card.position.x = canvasWidth / 2;
-            card.position.y = canvasHeight / 2;
-            if (card === this.card) {
-                this.showcard1info = true;
-                this.discardedCard = this.greatDeck.shift();
-            }
-            if (card === this.card2) {
-                this.showcard2info = true;
+            obj.position.x = canvasWidth / 2;
+            obj.position.y = canvasHeight / 2;
 
-                if (this.greatDeck.length > 0) {
-                    this.peekedCard = this.greatDeck[0];
-                    this.showPeekCard = true;
-                }
-                setTimeout(() => {
-                    this.showPeekCard = false;
-                }, 2000);
-            }
-            if (card === this.card3) {
-                this.showcard3info = true;
-                this.greatDeck.sort(() => Math.random() - 0.5);
-            }
+            cardEntry.showInfo = true;
+            cardEntry.action();
+
             setTimeout(() => {
-                if (card === this.card) {
-                    this.cardVisible = false;
-                    this.showcard1info = false;
-                }
-                if (card === this.card2) {
-                    this.card2Visible = false;
-                    this.showcard2info = false;
-                }
-                if (card === this.card3) {
-                    this.card3Visible = false;
-                    this.showcard3info = false;
-                }
+                cardEntry.visible = false;
+                cardEntry.showInfo = false;
                 this.repositionCards();
             }, 2000);
         }
@@ -536,11 +471,11 @@ class Game {
         if (this.showIntroText) {
             return;
         }
-        if (
-            this.showcard1info ||
-            this.showcard2info ||
-            this.showcard3info
-        ) {
+        let anyCardInfo = false;
+        for (let c of this.characterCards) {
+            if (c.showInfo) anyCardInfo = true;
+        }
+        if (anyCardInfo) {
             return;
         }
         if (this.showFinalImage) {
@@ -689,9 +624,9 @@ class Game {
         const y = canvasHeight - 108;
         const spacing = 102;
         const visible = [];
-        if (this.cardVisible)  visible.push(this.card);
-        if (this.card2Visible) visible.push(this.card2);
-        if (this.card3Visible) visible.push(this.card3);
+        for (let c of this.characterCards) {
+            if (c.visible) visible.push(c.object);
+        }
         const n = visible.length;
         if (n === 0) return;
         const startX = canvasWidth / 2 - ((n - 1) * spacing) / 2;
@@ -705,17 +640,13 @@ class Game {
 
         // DRAW BACKGROUND
         this.background.draw(ctx);
-        if (this.showcard1info) {
-
-            ctx.fillStyle = "white";
-            ctx.font = "40px MedievalSharp";
-            ctx.textAlign = "center";
-        
-            ctx.fillText(
-                "Throwing away the top card of the Great Deck...",
-                canvasWidth / 2,
-                100
-            );
+        for (let c of this.characterCards) {
+            if (c.showInfo) {
+                ctx.fillStyle = "white";
+                ctx.font = "40px MedievalSharp";
+                ctx.textAlign = "center";
+                ctx.fillText(c.infoText, canvasWidth / 2, 100);
+            }
         }
         if (this.showIntroText) {
 
@@ -747,30 +678,6 @@ class Game {
             this.player_candles.draw(ctx)
 
         }
-        if (this.showcard2info) {
-
-            ctx.fillStyle = "white";
-            ctx.font = "40px MedievalSharp";
-            ctx.textAlign = "center";
-        
-            ctx.fillText(
-                "See the next card from the Great Deck",
-                canvasWidth / 2,
-                100
-            );
-        }
-        if (this.showcard3info) {
-
-            ctx.fillStyle = "white";
-            ctx.font = "40px MedievalSharp";
-            ctx.textAlign = "center";
-        
-            ctx.fillText(
-                "Shuffling the Great Deck...",
-                canvasWidth / 2,
-                100
-            );
-        }
         if (this.showStartButton) {
             this.drawCustomHitbox(ctx, this.startButton);
         }
@@ -799,16 +706,8 @@ class Game {
 
         // DRAW CARDS
         if (this.showCards) {
-            if (this.cardVisible) {
-                this.card.draw(ctx);
-            }
-            
-            if (this.card2Visible) {
-                this.card2.draw(ctx);
-            }
-            
-            if (this.card3Visible) {
-                this.card3.draw(ctx);
+            for (let c of this.characterCards) {
+                if (c.visible) c.object.draw(ctx);
             }
         }
         if (this.showPeekCard) {
@@ -1077,4 +976,3 @@ function drawScene(newTime) {
 
     requestAnimationFrame(drawScene);
 }
-//hola
