@@ -19,6 +19,7 @@ class Game {
         this.createEventListeners();
     }
     initObjects() {
+        
         this.enemyLives = 3;
         this.playerLives = 3;
         this.currentTurn = "player";
@@ -26,6 +27,7 @@ class Game {
         this.startSound = new Audio("../assets/audio/easyEnemies.mpeg");
         this.startSound.volume = 0.2;
         this.showStartButton = true;
+        this.sunMessage = false;
 
         this.startButton = {
         x: canvasWidth / 2 - 75,
@@ -573,20 +575,22 @@ class Game {
         // IF SUN -> PLAYER GETS ANOTHER TURN
         if (this.currentGreatCard === "sun") {
             this.currentTurn = "player";
-        }
+            this.sunMessage = true;
 
+            setTimeout(() => {
+                this.sunMessage = false;
+            }, 2000);
+        }
         setTimeout(() => {
 
         this.showFinalImage = false;
+        this.showCards = true;
 
         // GAME OVER CHECK
         if (this.playerLives <= 0) {
             this.gameOver = true;
             return;
         }
-
-        // ONLY START ENEMY TURN
-        // IF TURN CHANGED
         if (this.currentTurn === "enemy") {
             this.enemyTurn();
         }
@@ -722,6 +726,23 @@ class Game {
         if (this.showStartButton) {
             this.drawCustomHitbox(ctx, this.startButton);
         }
+        if (this.sunMessage) {
+
+            ctx.fillStyle = "white";
+            ctx.font = "40px MedievalSharp";
+            ctx.textAlign = "center";
+        
+            ctx.fillText(
+                "Lucky guess.",
+                canvasWidth / 2,
+                100
+            );
+            ctx.fillText(
+                "You get another turn",
+                canvasWidth / 2,
+                140
+            );
+        }
 
         // DRAW ACTORS
         for (let actor of this.actors) {
@@ -771,7 +792,7 @@ class Game {
             this.centerImage.draw(ctx);
         }
         // DRAW BUTTONS ONLY WHEN CENTER IMAGE EXISTS
-        if (this.showCenterImage) {
+        if (this.showCenterImage && this.currentTurn === "player") {
 
         this.drawCustomHitbox(ctx, this.youButton);
         this.drawCustomHitbox(ctx, this.enemyButton);
