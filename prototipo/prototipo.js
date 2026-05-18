@@ -18,17 +18,16 @@ class Game {
         this.initObjects();
         this.createEventListeners();
     }
-
     initObjects() {
+        
         this.enemyLives = 3;
         this.playerLives = 3;
         this.currentTurn = "player";
         this.gameOver = false;
         this.startSound = new Audio("../assets/audio/easyEnemies.mpeg");
         this.startSound.volume = 0.2;
-        this.hurtSound = new Audio ("../assets/audio/fahhh_KcgAXfs.mp3");
-        this.hurtSound.volume = 1;
         this.showStartButton = true;
+        this.sunMessage = false;
 
         this.startButton = {
         x: canvasWidth / 2 - 75,
@@ -53,6 +52,40 @@ class Game {
         this.background.setSprite(
             "../assets/images/FinalDuelTable.png",
             new Rect(0, 0, 1920, 1051)
+        );
+        this.player_candles = new AnimatedObject(
+
+            // POSITION
+            new Vector(canvasWidth - 285 , 378),
+
+            // SIZE
+            90,
+            200, 
+
+            "gray",
+            "card",
+            1
+        );
+        this.player_candles.setSprite(
+            "../assets/images/Candles.png",
+            new Rect(50, 70, 280, 570)
+        );
+        this.enemy_candles = new AnimatedObject(
+
+            // POSITION
+            new Vector(canvasWidth / 2 - 282 , 130),
+
+            // SIZE
+            90,
+            180, 
+
+            "gray",
+            "card",
+            1
+        );
+        this.enemy_candles.setSprite(
+            "../assets/images/Candles.png",
+            new Rect(50, 70, 280, 570)
         );
 
         this.greatDeck = [
@@ -99,8 +132,8 @@ class Game {
         );
 
         this.card.setSprite(
-            "../assets/images/chariot_card.png",
-            new Rect(0, 0, 560, 1100)
+            "../assets/images/Common Cards.png",
+            new Rect(230, 20, 210, 400)
         );
 
 
@@ -124,8 +157,8 @@ class Game {
         );
 
         this.card2.setSprite(
-            "../assets/images/high_priestess_card.png",
-            new Rect(0, 0, 380, 730)
+            "../assets/images/Rare Cards.png",
+            new Rect(20, 10, 210, 400)
         );
 
         // CARD 3
@@ -145,8 +178,8 @@ class Game {
         );
 
         this.card3.setSprite(
-            "../assets/images/wheel_of_fortune_card.png",
-            new Rect(0, 0, 310, 590)
+            "../assets/images/Rare Cards.png",
+            new Rect(660, 10, 210, 400)
         );
 
         this.maindeck = {
@@ -239,6 +272,66 @@ class Game {
         // OPTIONAL ACTORS ARRAY
         this.actors = [];
     }
+    updatePlayerCandles() {
+
+        if (this.playerLives === 3) {
+            this.player_candles.setSprite(
+                "../assets/images/Candles.png",
+                new Rect(0, 0, 380, 500)
+            );
+        }
+    
+        if (this.playerLives === 2) {
+            this.player_candles.setSprite(
+                "../assets/images/Candles.png",
+                new Rect(385, 70, 280, 570)
+            );
+        }
+    
+        if (this.playerLives === 1) {
+            this.player_candles.setSprite(
+                "../assets/images/Candles.png",
+                new Rect(710, 70, 280, 570)
+            );
+        }
+    
+        if (this.playerLives === 0) {
+            this.player_candles.setSprite(
+                "../assets/images/Candles.png",
+                new Rect(1050, 70, 280, 570)
+            );
+        }
+    }
+    updateEnemyCandles() {
+
+        if (this.enemyLives === 3) {
+            this.enemy_candles.setSprite(
+                "../assets/images/Candles.png",
+                new Rect(0, 0, 380, 500)
+            );
+        }
+    
+        if (this.enemyLives === 2) {
+            this.enemy_candles.setSprite(
+                "../assets/images/Candles.png",
+                new Rect(385, 70, 280, 570)
+            );
+        }
+    
+        if (this.enemyLives === 1) {
+            this.enemy_candles.setSprite(
+                "../assets/images/Candles.png",
+                new Rect(710, 70, 280, 570)
+            );
+        }
+    
+        if (this.enemyLives === 0) {
+            this.enemy_candles.setSprite(
+                "../assets/images/Candles.png",
+                new Rect(1050, 70, 280, 570)
+            );
+        }
+    }
     enemyTurn() {
 
         if (this.gameOver) {
@@ -266,8 +359,9 @@ class Game {
             this.showFinalImage = true;
             // DAMAGE PLAYER
             if (this.currentGreatCard === "moon") {
-                this.hurtSound.play();
                 this.playerLives--;
+                this.updatePlayerCandles();
+
             }
             // GAME OVER CHECK
             if (this.playerLives <= 0) {
@@ -471,8 +565,8 @@ class Game {
 
         // IF MOON -> PLAYER TAKES DAMAGE
         if (this.currentGreatCard === "moon") {
-            this.hurtSound.play();
             this.playerLives--;
+            this.updatePlayerCandles();
 
         // PLAYER TURN ENDS
         this.currentTurn = "enemy";
@@ -481,20 +575,22 @@ class Game {
         // IF SUN -> PLAYER GETS ANOTHER TURN
         if (this.currentGreatCard === "sun") {
             this.currentTurn = "player";
-        }
+            this.sunMessage = true;
 
+            setTimeout(() => {
+                this.sunMessage = false;
+            }, 2000);
+        }
         setTimeout(() => {
 
         this.showFinalImage = false;
+        this.showCards = true;
 
         // GAME OVER CHECK
         if (this.playerLives <= 0) {
             this.gameOver = true;
             return;
         }
-
-        // ONLY START ENEMY TURN
-        // IF TURN CHANGED
         if (this.currentTurn === "enemy") {
             this.enemyTurn();
         }
@@ -521,6 +617,7 @@ class Game {
         if (this.currentGreatCard === "moon") {
 
         this.enemyLives--;
+        this.updateEnemyCandles();
         }
 
         // PLAYER TURN ALWAYS ENDS
@@ -596,18 +693,11 @@ class Game {
             ctx.textAlign = "center";
         
             // TOP TEXT
-            ctx.fillText(
-                "ENEMY LIVES: " + this.enemyLives,
-                canvasWidth / 2,
-                140
-            );
+            this.enemy_candles.draw(ctx)
         
             // BOTTOM TEXT
-            ctx.fillText(
-                "YOUR LIVES: " + this.playerLives,
-                canvasWidth / 2 + 350,
-                530
-            );
+            this.player_candles.draw(ctx)
+
         }
         if (this.showcard2info) {
 
@@ -635,6 +725,23 @@ class Game {
         }
         if (this.showStartButton) {
             this.drawCustomHitbox(ctx, this.startButton);
+        }
+        if (this.sunMessage) {
+
+            ctx.fillStyle = "white";
+            ctx.font = "40px MedievalSharp";
+            ctx.textAlign = "center";
+        
+            ctx.fillText(
+                "Lucky guess.",
+                canvasWidth / 2,
+                100
+            );
+            ctx.fillText(
+                "You get another turn",
+                canvasWidth / 2,
+                140
+            );
         }
 
         // DRAW ACTORS
@@ -685,7 +792,7 @@ class Game {
             this.centerImage.draw(ctx);
         }
         // DRAW BUTTONS ONLY WHEN CENTER IMAGE EXISTS
-        if (this.showCenterImage) {
+        if (this.showCenterImage && this.currentTurn === "player") {
 
         this.drawCustomHitbox(ctx, this.youButton);
         this.drawCustomHitbox(ctx, this.enemyButton);
