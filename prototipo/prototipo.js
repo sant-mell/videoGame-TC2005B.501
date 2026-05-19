@@ -33,6 +33,8 @@ class Game {
         this.gameOver = false;
         this.showStartButton = true;
         this.sunMessage = false;
+        this.isEnemyShowing = true;
+        this.isShowingDefeatedEnemy = false;
         // card effect states
         this.coins = 0;
         this.pageOfPentaclesActive = false;
@@ -80,6 +82,33 @@ class Game {
         this.background.setSprite(
             "../assets/images/new_table.png",
             new Rect(0, 0, 1690, 928)
+        );
+        this.king = new AnimatedObject(
+            new Vector(canvasWidth / 2, 151.5),
+            390,
+            260,
+            "gray",
+            "enemy",
+            45
+        );
+        
+        this.king.setSprite(
+            "../assets/images/The_King_new.png",
+            new Rect(10, 0, 835, 600)
+        );
+        
+        this.defeatedKing = new AnimatedObject(
+            new Vector(canvasWidth / 2, 205),
+            270,
+            140,
+            "gray",
+            "enemy",
+            45
+        );
+        
+        this.defeatedKing.setSprite(
+            "../assets/images/DefeatedKing_new.png",
+            new Rect(0, 0, 380, 174)
         );
         this.player_candles = new AnimatedObject(
 
@@ -166,14 +195,10 @@ class Game {
         this.enemyButton = {
             // ==== OCUPAMOS ARREGLAR ESTE, ROMPE TODO EL JUEGO Y LO DEJA EN PANTALLA AZUL ========
             //=================================================================================
-            // x: this.king.position.x - this.king.size.x / 2,
-            // y: this.king.position.y - this.king.size.y / 2,
-            // width: this.king.size.x,
-            // height: this.king.size.y
-            x: canvasWidth / 2 - 50,
-            y: 100,
-            width: 100,
-            height: 50
+            x: this.king.position.x - this.king.size.x / 2,
+            y: this.king.position.y - this.king.size.y / 2,
+            width: this.king.size.x,
+            height: this.king.size.y,
         };
         this.youButton = {
             x: canvasWidth / 2 - 50,
@@ -425,6 +450,8 @@ class Game {
                 "../assets/images/Candles.png",
                 new Rect(1050, 70, 280, 570)
             );
+            this.isEnemyShowing = false;
+            this.isShowingDefeatedEnemy = true;
         }
     }
     enemyTurn() {
@@ -803,6 +830,13 @@ class Game {
 
         // DRAW BACKGROUND
         this.background.draw(ctx);
+        if (this.isEnemyShowing) {
+            this.king.draw(ctx);
+        }
+        
+        if (this.isShowingDefeatedEnemy) {
+            this.defeatedKing.draw(ctx);
+        }
         for (let c of this.characterCards) {
             if (c.showInfo) {
                 ctx.fillStyle = "white";
