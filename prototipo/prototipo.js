@@ -41,6 +41,8 @@ class Game {
         this.strengthActive = false;
         this.hermitActive = false;
         this.justiceActive = false;
+        this.enemyTurnBlocked = false;
+        this.enemyHandBlocked = false;
         // discard animation
         this.isDiscardSliding = false;
         this.discardCardType = "";
@@ -146,14 +148,14 @@ class Game {
             this.moonCount++;
         }
 }
-        // All 3 card definitions in the pool
+        // All card definitions in the pool
         this.allCards = this.buildAllCards();
 
         // Deal 3 random starting cards from the full pool
         //this.characterCards = this.dealStartingCards(3);
 
-        // Manually choose starting cards by index (0-2)
-        this.characterCards = this.chooseStartingCards([2, 1, 5]);
+        // Manually choose starting cards by index
+        this.characterCards = this.chooseStartingCards([9, 10, 11]);
 
         this.maindeck = {
             x: 273,
@@ -311,6 +313,27 @@ class Game {
                 infoText: "Win for double coins, but lose for double loss!",
                 action: () => { this.kingOfPentaclesActive = true; }
             },
+            {
+                name: "The Lovers",
+                sprite: { src: "../assets/images/Legendary Cards.png", rect: new Rect(20, 10, 210, 400) },
+                infoText: "Removing one Moon from the Great Deck...",
+                action: () => {
+                    const idx = this.greatDeck.indexOf("moon");
+                    if (idx !== -1) this.greatDeck.splice(idx, 1);
+                }
+            },
+            {
+                name: "The Hanged Man",
+                sprite: { src: "../assets/images/Legendary Cards.png", rect: new Rect(659, 10, 210, 400) },
+                infoText: "Enemy cannot use their Character Deck next turn!",
+                action: () => { this.enemyHandBlocked = true; }
+            },
+            {
+                name: "The Tower",
+                sprite: { src: "../assets/images/Legendary Cards.png", rect: new Rect(233, 10, 210, 400) },
+                infoText: "Enemy's next turn is blocked!",
+                action: () => { this.enemyTurnBlocked = true; }
+            },
         ];
     }
 
@@ -412,6 +435,13 @@ class Game {
         }
 
         if (this.greatDeck.length <= 0) {
+            return;
+        }
+
+        if (this.enemyTurnBlocked) {
+            this.enemyTurnBlocked = false;
+            this.showCards = true;
+            this.currentTurn = "player";
             return;
         }
 
