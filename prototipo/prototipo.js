@@ -45,6 +45,8 @@ class Game {
         this.lastPlayedName = "";
         this.enemyTurnBlocked = false;
         this.enemyHandBlocked = false;
+        this.showTwoPentaclesChoice = false;
+        this.twoPentaclesCards = [];
         // discard animation
         this.isDiscardSliding = false;
         this.discardCardType = "";
@@ -154,10 +156,9 @@ class Game {
         this.allCards = this.buildAllCards();
 
         // Deal 3 random starting cards from the full pool
-        //this.characterCards = this.dealStartingCards(3);
-
+        //this.characterCards = this.chooseStartingCards([Math.floor(Math.random() * this.allCards.length), Math.floor(Math.random() * this.allCards.length), Math.floor(Math.random() * this.allCards.length)]);
         // Manually choose starting cards by index
-        this.characterCards = this.chooseStartingCards([0, 13, 7]);
+        this.characterCards = this.chooseStartingCards([0, 1, 14]);
 
         this.maindeck = {
             x: 273,
@@ -183,6 +184,9 @@ class Game {
             width: 100,
             height: 50
         };
+
+        this.twoPentaclesLeft = { x: canvasWidth / 2 - 180, y: canvasHeight / 2 - 100, width: 120, height: 200 };
+        this.twoPentaclesRight = { x: canvasWidth / 2 + 60, y: canvasHeight / 2 - 100, width: 120, height: 200 };
 
         this.centerImage = new AnimatedObject(
 
@@ -291,6 +295,12 @@ class Game {
                 action: () => { this.strengthActive = true; }
             },
             {
+                name: "Two of Pentacles",
+                sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(1070, 20, 210, 400) },
+                infoText: "Drawing two cards - choose one to keep...",
+                action: () => { this.activateTwoPentacles(); }
+            },
+            {
                 name: "The High Priestess",
                 sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(20, 10, 210, 400) },
                 infoText: "See the next card from the Great Deck",
@@ -358,6 +368,7 @@ class Game {
                     this.updatePlayerCandles();
                 }
             },
+            
         ];
     }
 
@@ -389,6 +400,76 @@ class Game {
         const cards = indices.map(i => this.buildCharacterCardEntry(this.allCards[i]));
         this.repositionCardsArray(cards);
         return cards;
+    }
+
+    activateTwoPentacles() {
+        if (this.greatDeck.length < 2) return;
+        this.twoPentaclesCards = [this.greatDeck.shift(), this.greatDeck.shift()];
+        this.showTwoPentaclesChoice = true;
+        this.showCards = false;
+    }
+
+    resolveTwoPentacles(chosenIndex) {
+        this.currentGreatCard = this.twoPentaclesCards[chosenIndex];
+        this.showTwoPentaclesChoice = false;
+
+        this.discardCardType = this.twoPentaclesCards[1 - chosenIndex];
+        this.discardX = canvasWidth / 2;
+        this.discardY = canvasHeight / 2;
+        this.isDiscardSliding = true;
+
+        this.showFinalImage = true;
+        setTimeout(() => {
+            this.slideDirection = "down";
+            this.isCardSliding = true;
+        }, 500);
+
+        if (this.currentGreatCard === "moon") {
+            if (this.strengthActive) {
+                this.strengthActive = false;
+            } else {
+                this.playerLives--;
+                if (this.justiceActive) {
+                    this.enemyLives--;
+                    this.justiceActive = false;
+                    this.updateEnemyCandles();
+                }
+            }
+            this.currentTurn = "enemy";
+        }
+
+        if (this.currentGreatCard === "sun") {
+            this.currentTurn = "player";
+            this.sunMessage = true;
+            if (this.pageOfPentaclesActive) {
+                this.coins += this.kingOfPentaclesActive ? 100 : 50;
+                this.pageOfPentaclesActive = false;
+                this.kingOfPentaclesActive = false;
+            }
+            setTimeout(() => { this.sunMessage = false; }, 2000);
+        }
+
+        setTimeout(() => {
+            this.showFinalImage = false;
+            if (this.playerLives <= 0) {
+                if (this.starActive) {
+                    this.playerLives = 1;
+                    this.starActive = false;
+                    this.updatePlayerCandles();
+                    this.showCards = true;
+                    this.currentTurn = "player";
+                    return;
+                }
+                this.gameOver = true;
+                this.showCards = false;
+                return;
+            }
+            if (this.currentTurn === "enemy") {
+                this.enemyTurn();
+            } else {
+                this.showCards = true;
+            }
+        }, 3000);
     }
 
     updatePlayerCandles() {
@@ -534,6 +615,7 @@ class Game {
             }
             this.checkMainDeckClick(mouseX, mouseY);
             this.checkChoiceButtons(mouseX, mouseY);
+            this.checkTwoPentaclesClick(mouseX, mouseY);
 
         });
     }
@@ -625,6 +707,9 @@ class Game {
         if (this.showIntroText) {
             return;
         }
+        if (this.showTwoPentaclesChoice) {
+            return;
+        }
         let anyCardInfo = false;
         for (let c of this.characterCards) {
             if (c.showInfo) anyCardInfo = true;
@@ -656,6 +741,28 @@ class Game {
             this.showCenterImage = true;
             this.cardSound.play();
             this.showCards = false;
+        }
+    }
+
+    checkTwoPentaclesClick(mouseX, mouseY) {
+        if (!this.showTwoPentaclesChoice) return;
+
+        if (
+            mouseX >= this.twoPentaclesLeft.x &&
+            mouseX <= this.twoPentaclesLeft.x + this.twoPentaclesLeft.width &&
+            mouseY >= this.twoPentaclesLeft.y &&
+            mouseY <= this.twoPentaclesLeft.y + this.twoPentaclesLeft.height
+        ) {
+            this.resolveTwoPentacles(0);
+        }
+
+        if (
+            mouseX >= this.twoPentaclesRight.x &&
+            mouseX <= this.twoPentaclesRight.x + this.twoPentaclesRight.width &&
+            mouseY >= this.twoPentaclesRight.y &&
+            mouseY <= this.twoPentaclesRight.y + this.twoPentaclesRight.height
+        ) {
+            this.resolveTwoPentacles(1);
         }
     }
     checkChoiceButtons(mouseX, mouseY) {
@@ -776,6 +883,7 @@ class Game {
 
         // CHECK IF ENEMY LOST
         if (this.enemyLives <= 0) {
+            this.coins += 100;
 
             this.gameOver = true;
 
@@ -870,7 +978,7 @@ class Game {
             ctx.fillStyle = "gold";
             ctx.font = "24px MedievalSharp";
             ctx.textAlign = "left";
-            ctx.fillText("Coins: " + this.coins, 20, 30);
+            ctx.fillText("Coins: " + this.coins, 40, 190);
 
             ctx.textAlign = "center";
         }
@@ -904,6 +1012,45 @@ class Game {
             for (let c of this.characterCards) {
                 if (c.visible) c.object.draw(ctx);
             }
+        }
+
+        if (this.showTwoPentaclesChoice) {
+            ctx.fillStyle = "rgba(0,0,0,0.6)";
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+            ctx.fillStyle = "white";
+            ctx.font = "36px MedievalSharp";
+            ctx.textAlign = "center";
+            ctx.fillText("Choose a card", canvasWidth / 2, canvasHeight / 2 - 130);
+
+            const leftCx = this.twoPentaclesLeft.x + this.twoPentaclesLeft.width / 2;
+            const leftCy = this.twoPentaclesLeft.y + this.twoPentaclesLeft.height / 2;
+            if (this.twoPentaclesCards[0] === "moon") {
+                this.finalImage.position.x = leftCx;
+                this.finalImage.position.y = leftCy;
+                this.finalImage.draw(ctx);
+            } else {
+                this.sunImage.position.x = leftCx;
+                this.sunImage.position.y = leftCy;
+                this.sunImage.draw(ctx);
+            }
+
+            const rightCx = this.twoPentaclesRight.x + this.twoPentaclesRight.width / 2;
+            const rightCy = this.twoPentaclesRight.y + this.twoPentaclesRight.height / 2;
+            if (this.twoPentaclesCards[1] === "moon") {
+                this.finalImage.position.x = rightCx;
+                this.finalImage.position.y = rightCy;
+                this.finalImage.draw(ctx);
+            } else {
+                this.sunImage.position.x = rightCx;
+                this.sunImage.position.y = rightCy;
+                this.sunImage.draw(ctx);
+            }
+
+            this.finalImage.position.x = canvasWidth / 2;
+            this.finalImage.position.y = canvasHeight / 2;
+            this.sunImage.position.x = canvasWidth / 2;
+            this.sunImage.position.y = canvasHeight / 2;
         }
 
         // DISCARD SLIDE
