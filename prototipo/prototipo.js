@@ -158,7 +158,7 @@ class Game {
         // Deal 3 random starting cards from the full pool
         //this.characterCards = this.chooseStartingCards([Math.floor(Math.random() * this.allCards.length), Math.floor(Math.random() * this.allCards.length), Math.floor(Math.random() * this.allCards.length)]);
         // Manually choose starting cards by index
-        this.characterCards = this.chooseStartingCards([0, 1, 2]);
+        this.characterCards = this.chooseStartingCards([14, 0, 6]);
 
         this.maindeck = {
             x: 273,
