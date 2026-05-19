@@ -41,6 +41,8 @@ class Game {
         this.strengthActive = false;
         this.hermitActive = false;
         this.justiceActive = false;
+        this.lastPlayedAction = null;
+        this.lastPlayedName = "";
         this.enemyTurnBlocked = false;
         this.enemyHandBlocked = false;
         // discard animation
@@ -155,7 +157,7 @@ class Game {
         //this.characterCards = this.dealStartingCards(3);
 
         // Manually choose starting cards by index
-        this.characterCards = this.chooseStartingCards([9, 10, 11]);
+        this.characterCards = this.chooseStartingCards([0, 13, 7]);
 
         this.maindeck = {
             x: 273,
@@ -251,6 +253,14 @@ class Game {
     buildAllCards() {
         return [
             {
+                name: "The Magician",
+                sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(20, 20, 210, 400) },
+                infoText: "Repeating the last card played...",
+                action: () => {
+                    if (this.lastPlayedAction) this.lastPlayedAction();
+                }
+            },
+            {
                 name: "The Chariot",
                 sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(230, 20, 210, 400) },
                 infoText: "Throwing away the top card of the Great Deck...",
@@ -336,6 +346,17 @@ class Game {
                 sprite: { src: "../assets/images/Legendary Cards.png", rect: new Rect(233, 10, 210, 400) },
                 infoText: "Enemy's next turn is blocked!",
                 action: () => { this.enemyTurnBlocked = true; }
+            },
+            {
+                name: "The Devil",
+                sprite: { src: "../assets/images/Legendary Cards.png", rect: new Rect(446, 10, 210, 400) },
+                infoText: "Gained 2 lives! A Moon was added to the Great Deck.",
+                action: () => {
+                    this.playerLives += 2;
+                    this.greatDeck.push("moon");
+                    this.greatDeck.sort(() => Math.random() - 0.5);
+                    this.updatePlayerCandles();
+                }
             },
         ];
     }
@@ -549,6 +570,11 @@ class Game {
 
             cardEntry.showInfo = true;
             cardEntry.action();
+
+            if (cardEntry.name !== "The Magician") {
+                this.lastPlayedAction = cardEntry.action;
+                this.lastPlayedName = cardEntry.name;
+            }
 
             setTimeout(() => {
                 cardEntry.visible = false;
