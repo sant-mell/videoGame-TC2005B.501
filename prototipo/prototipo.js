@@ -35,6 +35,9 @@ class Game {
         this.sunMessage = false;
         // card effect states
         this.coins = 0;
+        this.pageOfPentaclesActive = false;
+        this.kingOfPentaclesActive = false;
+        this.starActive = false;
         // discard animation
         this.isDiscardSliding = false;
         this.discardCardType = "";
@@ -147,7 +150,7 @@ class Game {
         //this.characterCards = this.dealStartingCards(3);
 
         // Manually choose starting cards by index (0-2)
-        this.characterCards = this.chooseStartingCards([0, 1, 2]);
+        this.characterCards = this.chooseStartingCards([2, 1, 4]);
 
         this.maindeck = {
             x: 273,
@@ -252,6 +255,18 @@ class Game {
                 }
             },
             {
+                name: "Page of Pentacles",
+                sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(650, 20, 210, 400) },
+                infoText: "Win this round for a 50 coin bonus!",
+                action: () => { this.pageOfPentaclesActive = true; }
+            },
+            {
+                name: "The Star",
+                sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(440, 20, 210, 400) },
+                infoText: "You will be revived if you reach 0 lives!",
+                action: () => { this.starActive = true; }
+            },
+            {
                 name: "The High Priestess",
                 sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(20, 10, 210, 400) },
                 infoText: "See the next card from the Great Deck",
@@ -268,6 +283,12 @@ class Game {
                 sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(660, 10, 210, 400) },
                 infoText: "Shuffling the Great Deck...",
                 action: () => { this.greatDeck.sort(() => Math.random() - 0.5); }
+            },
+            {
+                name: "King of Pentacles",
+                sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(875, 10, 210, 400) },
+                infoText: "Win for double coins, but lose for double loss!",
+                action: () => { this.kingOfPentaclesActive = true; }
             },
         ];
     }
@@ -398,6 +419,15 @@ class Game {
             // DAMAGE PLAYER
             if (this.currentGreatCard === "moon") {
                 this.playerLives--;
+            }
+
+            // COIN BONUS FOR SUN
+            if (this.currentGreatCard === "sun") {
+                if (this.pageOfPentaclesActive) {
+                    this.coins += this.kingOfPentaclesActive ? 100 : 50;
+                    this.pageOfPentaclesActive = false;
+                    this.kingOfPentaclesActive = false;
+                }
             }
 
             // GAME OVER CHECK
@@ -595,6 +625,14 @@ class Game {
 
                 // GAME OVER CHECK
                 if (this.playerLives <= 0) {
+                    if (this.starActive) {
+                        this.playerLives = 1;
+                        this.starActive = false;
+                        this.updatePlayerCandles();
+                        this.showCards = true;
+                        this.currentTurn = "player";
+                        return;
+                    }
                     this.gameOver = true;
                     this.showCards = false;
                     this.showFinalImage = false;
