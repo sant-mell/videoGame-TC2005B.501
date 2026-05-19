@@ -38,6 +38,9 @@ class Game {
         this.pageOfPentaclesActive = false;
         this.kingOfPentaclesActive = false;
         this.starActive = false;
+        this.strengthActive = false;
+        this.hermitActive = false;
+        this.justiceActive = false;
         // discard animation
         this.isDiscardSliding = false;
         this.discardCardType = "";
@@ -150,7 +153,7 @@ class Game {
         //this.characterCards = this.dealStartingCards(3);
 
         // Manually choose starting cards by index (0-2)
-        this.characterCards = this.chooseStartingCards([2, 1, 4]);
+        this.characterCards = this.chooseStartingCards([2, 1, 5]);
 
         this.maindeck = {
             x: 273,
@@ -267,6 +270,12 @@ class Game {
                 action: () => { this.starActive = true; }
             },
             {
+                name: "Strength",
+                sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(860, 20, 210, 400) },
+                infoText: "You cannot die next round!",
+                action: () => { this.strengthActive = true; }
+            },
+            {
                 name: "The High Priestess",
                 sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(20, 10, 210, 400) },
                 infoText: "See the next card from the Great Deck",
@@ -277,6 +286,18 @@ class Game {
                     }
                     setTimeout(() => { this.showPeekCard = false; }, 2000);
                 }
+            },
+            {
+                name: "The Hermit",
+                sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(235, 10, 210, 400) },
+                infoText: "Your next draw phase will be skipped!",
+                action: () => { this.hermitActive = true; }
+            },
+            {
+                name: "Justice",
+                sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(448, 10, 210, 400) },
+                infoText: "If you lose a life next turn, so does the enemy!",
+                action: () => { this.justiceActive = true; }
             },
             {
                 name: "Wheel of Fortune",
@@ -569,6 +590,14 @@ class Game {
             mouseY >= this.maindeck.y &&
             mouseY <= this.maindeck.y + this.maindeck.height
         ) {
+            // HERMIT SKIP CHECK
+            if (this.hermitActive) {
+                this.hermitActive = false;
+                this.currentTurn = "enemy";
+                this.showCards = false;
+                setTimeout(() => { this.enemyTurn(); }, 1000);
+                return;
+            }
             // SHOW IMAGE
             this.showCenterImage = true;
             this.cardSound.play();
@@ -606,7 +635,16 @@ class Game {
 
             // IF MOON -> PLAYER TAKES DAMAGE
             if (this.currentGreatCard === "moon") {
-                this.playerLives--;
+                if (this.strengthActive) {
+                    this.strengthActive = false;
+                } else {
+                    this.playerLives--;
+                    if (this.justiceActive) {
+                        this.enemyLives--;
+                        this.justiceActive = false;
+                        this.updateEnemyCandles();
+                    }
+                }
                 this.currentTurn = "enemy";
             }
 
@@ -707,7 +745,7 @@ class Game {
     repositionCards() {
         const y = canvasHeight - 108;
         const spacing = 102;
-        const visible = [];
+        const visible = []; 
         for (let c of this.characterCards) {
             if (c.visible) visible.push(c.object);
         }
