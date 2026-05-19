@@ -6,7 +6,7 @@ const canvasHeight = 600;
 
 // Context of the Canvas
 let ctx;
- 
+
 // A variable to store the game object
 let game;
 // Variable to store the time at the previous frame
@@ -19,8 +19,8 @@ class Game {
         this.createEventListeners();
     }
     initObjects() {
-        
-        this.enemyLives = 1;
+
+        this.enemyLives = 3;
         this.playerLives = 3;
         this.currentTurn = "player";
         //card animation
@@ -33,8 +33,21 @@ class Game {
         this.gameOver = false;
         this.showStartButton = true;
         this.sunMessage = false;
-        this.isEnemyShowing = true;
-        this.isShowingDefeatedEnemy = false;
+        // card effect states
+        this.coins = 0;
+        this.pageOfPentaclesActive = false;
+        this.kingOfPentaclesActive = false;
+        this.starActive = false;
+        this.strengthActive = false;
+        this.hermitActive = false;
+        this.justiceActive = false;
+        this.enemyTurnBlocked = false;
+        this.enemyHandBlocked = false;
+        // discard animation
+        this.isDiscardSliding = false;
+        this.discardCardType = "";
+        this.discardX = canvasWidth / 2;
+        this.discardY = canvasHeight / 2;
         //audio
         this.startSound = new Audio("../assets/audio/easyEnemies.mpeg");
         this.startSound.volume = 0.2;
@@ -52,7 +65,6 @@ class Game {
         height: 80
         };
 
-        this.discardedCard = "";
         this.peekedCard = "";
         this.showPeekCard = false;
         // BACKGROUND
@@ -76,7 +88,7 @@ class Game {
 
             // SIZE
             90,
-            200, 
+            200,
 
             "gray",
             "card",
@@ -93,7 +105,7 @@ class Game {
 
             // SIZE
             90,
-            180, 
+            180,
 
             "gray",
             "card",
@@ -110,6 +122,13 @@ class Game {
             "moon",
             "moon",
             "moon",
+            "moon",
+            "moon",
+            "sun",
+            "sun",
+            "sun",
+            "sun",
+            "sun",
             "moon",
             "moon",
             "sun"
@@ -129,96 +148,14 @@ class Game {
             this.moonCount++;
         }
 }
-        this.king = new AnimatedObject(
-            new Vector(canvasWidth / 2, 151.5),
-            390,
-            260,
-            "gray",
-           "enemy",
-            45
-        );
+        // All card definitions in the pool
+        this.allCards = this.buildAllCards();
 
-        this.king.setSprite(
-            "../assets/images/The_King_new.png",
-            new Rect(10, 0, 835, 600)
-        );
-        this.defeatedKing = new AnimatedObject(
-            new Vector(canvasWidth / 2, 205),
-            270,
-            140,
-            "gray",
-            "enemy",
-            45
-        );
+        // Deal 3 random starting cards from the full pool
+        //this.characterCards = this.dealStartingCards(3);
 
-        this.defeatedKing.setSprite(
-            "../assets/images/DefeatedKing_new.png",
-            new Rect(0, 0, 380, 174)
-        );
-        this.card = new AnimatedObject(
-
-            // POSITION
-            new Vector(canvasWidth / 2 + 8, canvasHeight - 108),
-
-            // SIZE
-            100,
-            185, 
-
-            "gray",
-            "card",
-            1
-        );
-
-        this.card.setSprite(
-            "../assets/images/Common Cards.png",
-            new Rect(230, 20, 210, 400)
-        );
-
-
-
-        // =========================
-        // CARD 2
-        // =========================
-
-        this.card2 = new AnimatedObject(
-
-            // POSITION
-            new Vector(canvasWidth / 2 + 110, canvasHeight - 108),
-
-            // SIZE
-            100,
-            185,
-
-            "gray",
-            "card",
-            1
-        );
-
-        this.card2.setSprite(
-            "../assets/images/Rare Cards.png",
-            new Rect(20, 10, 210, 400)
-        );
-
-        // CARD 3
-
-        this.card3 = new AnimatedObject(
-
-            // POSITION
-            new Vector(canvasWidth / 2 - 94, canvasHeight - 108),
-
-            // SIZE
-            100,
-            185,
-
-            "gray",
-            "card",
-            1
-        );
-
-        this.card3.setSprite(
-            "../assets/images/Rare Cards.png",
-            new Rect(660, 10, 210, 400)
-        );
+        // Manually choose starting cards by index
+        this.characterCards = this.chooseStartingCards([9, 10, 11]);
 
         this.maindeck = {
             x: 273,
@@ -227,10 +164,16 @@ class Game {
             height: 95
         };
         this.enemyButton = {
-            x: this.king.position.x - this.king.size.x / 2,
-            y: this.king.position.y - this.king.size.y / 2,
-            width: this.king.size.x,
-            height: this.king.size.y
+            // ==== OCUPAMOS ARREGLAR ESTE, ROMPE TODO EL JUEGO Y LO DEJA EN PANTALLA AZUL ========
+            //=================================================================================
+            // x: this.king.position.x - this.king.size.x / 2,
+            // y: this.king.position.y - this.king.size.y / 2,
+            // width: this.king.size.x,
+            // height: this.king.size.y
+            x: canvasWidth / 2 - 50,
+            y: 100,
+            width: 100,
+            height: 50
         };
         this.youButton = {
             x: canvasWidth / 2 - 50,
@@ -238,20 +181,21 @@ class Game {
             width: 100,
             height: 50
         };
+
         this.centerImage = new AnimatedObject(
 
             // POSITION
             new Vector(canvasWidth / 2, canvasHeight / 2),
-        
+
             // SIZE
             120,
             200,
-        
+
             "gray",
             "image",
             1
         );
-        
+
         this.centerImage.setSprite(
             "../assets/images/backside_card.png",
             new Rect(0, 0, 550, 800)
@@ -272,20 +216,20 @@ class Game {
         this.finalImage.setSprite(
         "../assets/images/Sun and Moon.png",
         new Rect(50, 20, 220, 410)
-        ); 
+        );
         //sun IMAGE//
         this.sunImage = new AnimatedObject(
 
             new Vector(canvasWidth / 2, canvasHeight / 2),
-        
+
             120,
             200,
-        
+
             "gray",
             "image",
             1
         );
-        
+
         this.sunImage.setSprite(
             "../assets/images/Sun and Moon.png",
             new Rect(270, 20, 220, 410)
@@ -295,27 +239,145 @@ class Game {
         this.showCenterImage = false;
         this.showCards = false;
         this.showIntroText = false;
-        this.cardVisible = true;
-        this.card2Visible = true;
-        this.card3Visible = true;
-        this.showcard1info = false;
-        this.showcard2info = false;
-        this.showcard3info = false;
-
-        
 
         // OPTIONAL ACTORS ARRAY
         this.actors = [];
     }
+
+    // =========================
+    // BUILD ALL CARD DEFS
+    // =========================
+
+    buildAllCards() {
+        return [
+            {
+                name: "The Chariot",
+                sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(230, 20, 210, 400) },
+                infoText: "Throwing away the top card of the Great Deck...",
+                action: () => {
+                    if (this.greatDeck.length === 0) return;
+                    this.discardCardType = this.greatDeck.shift();
+                    this.discardX = canvasWidth / 2;
+                    this.discardY = canvasHeight / 2;
+                    this.isDiscardSliding = true;
+                }
+            },
+            {
+                name: "Page of Pentacles",
+                sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(650, 20, 210, 400) },
+                infoText: "Win this round for a 50 coin bonus!",
+                action: () => { this.pageOfPentaclesActive = true; }
+            },
+            {
+                name: "The Star",
+                sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(440, 20, 210, 400) },
+                infoText: "You will be revived if you reach 0 lives!",
+                action: () => { this.starActive = true; }
+            },
+            {
+                name: "Strength",
+                sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(860, 20, 210, 400) },
+                infoText: "You cannot die next round!",
+                action: () => { this.strengthActive = true; }
+            },
+            {
+                name: "The High Priestess",
+                sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(20, 10, 210, 400) },
+                infoText: "See the next card from the Great Deck",
+                action: () => {
+                    if (this.greatDeck.length > 0) {
+                        this.peekedCard = this.greatDeck[0];
+                        this.showPeekCard = true;
+                    }
+                    setTimeout(() => { this.showPeekCard = false; }, 2000);
+                }
+            },
+            {
+                name: "The Hermit",
+                sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(235, 10, 210, 400) },
+                infoText: "Your next draw phase will be skipped!",
+                action: () => { this.hermitActive = true; }
+            },
+            {
+                name: "Justice",
+                sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(448, 10, 210, 400) },
+                infoText: "If you lose a life next turn, so does the enemy!",
+                action: () => { this.justiceActive = true; }
+            },
+            {
+                name: "Wheel of Fortune",
+                sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(660, 10, 210, 400) },
+                infoText: "Shuffling the Great Deck...",
+                action: () => { this.greatDeck.sort(() => Math.random() - 0.5); }
+            },
+            {
+                name: "King of Pentacles",
+                sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(875, 10, 210, 400) },
+                infoText: "Win for double coins, but lose for double loss!",
+                action: () => { this.kingOfPentaclesActive = true; }
+            },
+            {
+                name: "The Lovers",
+                sprite: { src: "../assets/images/Legendary Cards.png", rect: new Rect(20, 10, 210, 400) },
+                infoText: "Removing one Moon from the Great Deck...",
+                action: () => {
+                    const idx = this.greatDeck.indexOf("moon");
+                    if (idx !== -1) this.greatDeck.splice(idx, 1);
+                }
+            },
+            {
+                name: "The Hanged Man",
+                sprite: { src: "../assets/images/Legendary Cards.png", rect: new Rect(659, 10, 210, 400) },
+                infoText: "Enemy cannot use their Character Deck next turn!",
+                action: () => { this.enemyHandBlocked = true; }
+            },
+            {
+                name: "The Tower",
+                sprite: { src: "../assets/images/Legendary Cards.png", rect: new Rect(233, 10, 210, 400) },
+                infoText: "Enemy's next turn is blocked!",
+                action: () => { this.enemyTurnBlocked = true; }
+            },
+        ];
+    }
+
+    // =========================
+    // CARD FACTORY
+    // =========================
+
+    buildCharacterCardEntry(cardDef) {
+        const obj = new AnimatedObject(
+            new Vector(canvasWidth / 2, canvasHeight - 108),
+            100, 185, "gray", "card", 1
+        );
+        obj.setSprite(cardDef.sprite.src, cardDef.sprite.rect);
+        return {
+            object: obj,
+            sprite: cardDef.sprite,
+            name: cardDef.name,
+            visible: true,
+            showInfo: false,
+            infoText: cardDef.infoText,
+            action: cardDef.action
+        };
+    }
+
+    // chooseStartingCards(indices)
+    // Pass an array of indices (0-2) to pick specific cards from allCards.
+    // Change the numbers in initObjects() to get different cards each run.
+    chooseStartingCards(indices) {
+        const cards = indices.map(i => this.buildCharacterCardEntry(this.allCards[i]));
+        this.repositionCardsArray(cards);
+        return cards;
+    }
+
     updatePlayerCandles() {
 
-        if (this.playerLives === 3) {
+        if (this.playerLives >= 3) {
             this.player_candles.setSprite(
                 "../assets/images/Candles.png",
                 new Rect(0, 0, 380, 500)
             );
         }
-    
         if (this.playerLives === 2) {
             this.player_candles.setSprite(
                 "../assets/images/Candles.png",
@@ -340,34 +402,29 @@ class Game {
     }
     updateEnemyCandles() {
 
-        if (this.enemyLives === 3) {
+        if (this.enemyLives >= 3) {
             this.enemy_candles.setSprite(
                 "../assets/images/Candles.png",
                 new Rect(0, 0, 380, 500)
             );
         }
-    
         if (this.enemyLives === 2) {
             this.enemy_candles.setSprite(
                 "../assets/images/Candles.png",
                 new Rect(385, 70, 280, 570)
             );
         }
-    
         if (this.enemyLives === 1) {
             this.enemy_candles.setSprite(
                 "../assets/images/Candles.png",
                 new Rect(710, 70, 280, 570)
             );
         }
-    
         if (this.enemyLives === 0) {
             this.enemy_candles.setSprite(
                 "../assets/images/Candles.png",
                 new Rect(1050, 70, 280, 570)
             );
-            this.isEnemyShowing = false;
-            this.isShowingDefeatedEnemy = true;
         }
     }
     enemyTurn() {
@@ -375,10 +432,18 @@ class Game {
         if (this.gameOver) {
             return;
         }
-    
+
         if (this.greatDeck.length <= 0) {
             return;
         }
+
+        if (this.enemyTurnBlocked) {
+            this.enemyTurnBlocked = false;
+            this.showCards = true;
+            this.currentTurn = "player";
+            return;
+        }
+
         this.showCards = false;
         this.currentTurn = "enemy";
 
@@ -386,15 +451,15 @@ class Game {
         setTimeout(() => {
         this.showCenterImage = true;
         }, 2000);
-    
+
         // WAIT 2 SECONDS BEFORE FLIPPING
         setTimeout(() => {
-    
+
             this.showCenterImage = false;
-    
+
             // DRAW TOP CARD
             this.currentGreatCard = this.greatDeck.shift();
-    
+
             this.showFinalImage = true;
             setTimeout(() => {
             this.slideDirection = "down";
@@ -404,22 +469,32 @@ class Game {
             if (this.currentGreatCard === "moon") {
                 this.playerLives--;
             }
+
+            // COIN BONUS FOR SUN
+            if (this.currentGreatCard === "sun") {
+                if (this.pageOfPentaclesActive) {
+                    this.coins += this.kingOfPentaclesActive ? 100 : 50;
+                    this.pageOfPentaclesActive = false;
+                    this.kingOfPentaclesActive = false;
+                }
+            }
+
             // GAME OVER CHECK
             if (this.playerLives <= 0) {
                 this.gameOver = true;
             }
             // HIDE RESULT AFTER 3 SECONDS
             setTimeout(() => {
-    
+
                 this.showFinalImage = false;
-    
+
                 if (!this.gameOver) {
                     this.showCards = true;
                     this.currentTurn = "player";
                 }
-    
+
             }, 3000);
-    
+
         }, 3000);
     }
     createEventListeners() {
@@ -433,41 +508,34 @@ class Game {
 
             this.checkStartButton(mouseX, mouseY);
 
-            this.checkCardClick(this.card, mouseX, mouseY);
-            this.checkCardClick(this.card2, mouseX, mouseY);
-            this.checkCardClick(this.card3, mouseX, mouseY);
+            for (let c of this.characterCards) {
+                this.checkCardClick(c, mouseX, mouseY);
+            }
             this.checkMainDeckClick(mouseX, mouseY);
             this.checkChoiceButtons(mouseX, mouseY);
-            
+
         });
     }
     // =========================
     // CHECK IF CARD WAS CLICKED
     // =========================
 
-    checkCardClick(card, mouseX, mouseY) {
+    checkCardClick(cardEntry, mouseX, mouseY) {
         if (this.showStartButton) {
             return;
         }
         if (this.showCenterImage) {
             return;
         }
-        if (card === this.card && !this.cardVisible) {
+        if (!cardEntry.visible) {
             return;
         }
-        
-        if (card === this.card2 && !this.card2Visible) {
-            return;
-        }
-        
-        if (card === this.card3 && !this.card3Visible) {
-            return;
-        }
-        const left = card.position.x - card.size.x / 2;
-        const right = card.position.x + card.size.x / 2;
 
-        const top = card.position.y - card.size.y / 2;
-        const bottom = card.position.y + card.size.y / 2;
+        const obj = cardEntry.object;
+        const left = obj.position.x - obj.size.x / 2;
+        const right = obj.position.x + obj.size.x / 2;
+        const top = obj.position.y - obj.size.y / 2;
+        const bottom = obj.position.y + obj.size.y / 2;
 
         if (
             mouseX >= left &&
@@ -475,47 +543,19 @@ class Game {
             mouseY >= top &&
             mouseY <= bottom
         ) {
-
             // MOVE CARD TO CENTER
-            card.position.x = canvasWidth / 2 + 8;
-            card.position.y = canvasHeight / 2;
-            if (card === this.card) {
-                this.showcard1info = true;
-                this.discardedCard = this.greatDeck.shift();
-            }
-            if (card === this.card2) {
-                this.showcard2info = true;
+            obj.position.x = canvasWidth / 2;
+            obj.position.y = canvasHeight / 2;
 
-                if (this.greatDeck.length > 0) {
-                    this.peekedCard = this.greatDeck[0];
-                    this.showPeekCard = true;
-                }
-                setTimeout(() => {
-                    this.showPeekCard = false;
-                }, 2000);
-            }
-            if (card === this.card3) {
-                this.showcard3info = true;
-                this.greatDeck.sort(() => Math.random() - 0.5);
-            }
+            cardEntry.showInfo = true;
+            cardEntry.action();
+
             setTimeout(() => {
-                if (card === this.card) {
-                    this.cardVisible = false;
-                    this.showcard1info = false;
-                }
-                if (card === this.card2) {
-                    this.card2Visible = false;
-                    this.showcard2info = false;
-                }
-                if (card === this.card3) {
-                    this.card3Visible = false;
-                    this.showcard3info = false;
-                }
-            
+                cardEntry.visible = false;
+                cardEntry.showInfo = false;
+                this.repositionCards();
             }, 2000);
         }
-        console.log(left, right, top, bottom);
-        console.log(mouseX, mouseY);
     }
 
     checkStartButton(mouseX, mouseY) {
@@ -525,23 +565,23 @@ class Game {
         if (!this.showStartButton) {
             return;
         }
-    
+
         if (
             mouseX >= this.startButton.x &&
             mouseX <= this.startButton.x + this.startButton.width &&
             mouseY >= this.startButton.y &&
             mouseY <= this.startButton.y + this.startButton.height
         ) {
-    
+
             this.showStartButton = false;
-    
+
             this.showIntroText = true;
-    
+
             setTimeout(() => {
-    
+
                 this.showIntroText = false;
                 this.showCards = true;
-    
+
             }, 5000);
         }
     }
@@ -559,11 +599,11 @@ class Game {
         if (this.showIntroText) {
             return;
         }
-        if (
-            this.showcard1info ||
-            this.showcard2info ||
-            this.showcard3info
-        ) {
+        let anyCardInfo = false;
+        for (let c of this.characterCards) {
+            if (c.showInfo) anyCardInfo = true;
+        }
+        if (anyCardInfo) {
             return;
         }
         if (this.showFinalImage) {
@@ -578,7 +618,14 @@ class Game {
             mouseY >= this.maindeck.y &&
             mouseY <= this.maindeck.y + this.maindeck.height
         ) {
-    
+            // HERMIT SKIP CHECK
+            if (this.hermitActive) {
+                this.hermitActive = false;
+                this.currentTurn = "enemy";
+                this.showCards = false;
+                setTimeout(() => { this.enemyTurn(); }, 1000);
+                return;
+            }
             // SHOW IMAGE
             this.showCenterImage = true;
             this.cardSound.play();
@@ -604,52 +651,67 @@ class Game {
 
             this.showCenterImage = false;
 
-        // DRAW TOP CARD
-        this.currentGreatCard = this.greatDeck.shift();
+            // DRAW TOP CARD
+            this.currentGreatCard = this.greatDeck.shift();
 
-        this.showFinalImage = true;
-
-        setTimeout(() => {
-            this.slideDirection = "down";
-            this.isCardSliding = true;
-        }, 1000);
-
-        // IF MOON -> PLAYER TAKES DAMAGE
-        if (this.currentGreatCard === "moon") {
-            this.playerLives--;
-            this.currentTurn = "enemy";
-        }
-
-        // IF SUN -> PLAYER GETS ANOTHER TURN
-        if (this.currentGreatCard === "sun") {
-            this.currentTurn = "player";
-            this.sunMessage = true;
+            this.showFinalImage = true;
 
             setTimeout(() => {
-                this.sunMessage = false;
-            }, 2000);
-        }
-        setTimeout(() => {
-        this.showFinalImage = false;
-        this.showCards = true;
+                this.slideDirection = "down";
+                this.isCardSliding = true;
+            }, 1000);
 
-        // GAME OVER CHECK
-        if (this.playerLives <= 0) {
-            this.gameOver = true;
-            this.showCards = false;
-            this.showFinalImage = false;
-            this.showCenterImage = false;
-    
-            return;
-        }
-        if (this.currentTurn === "enemy") {
-            this.enemyTurn();
-        }
+            // IF MOON -> PLAYER TAKES DAMAGE
+            if (this.currentGreatCard === "moon") {
+                if (this.strengthActive) {
+                    this.strengthActive = false;
+                } else {
+                    this.playerLives--;
+                    if (this.justiceActive) {
+                        this.enemyLives--;
+                        this.justiceActive = false;
+                        this.updateEnemyCandles();
+                    }
+                }
+                this.currentTurn = "enemy";
+            }
 
-        }, 3000);
+            // IF SUN -> PLAYER GETS ANOTHER TURN
+            if (this.currentGreatCard === "sun") {
+                this.currentTurn = "player";
+                this.sunMessage = true;
+
+                setTimeout(() => {
+                    this.sunMessage = false;
+                }, 2000);
+            }
+            setTimeout(() => {
+                this.showFinalImage = false;
+                this.showCards = true;
+
+                // GAME OVER CHECK
+                if (this.playerLives <= 0) {
+                    if (this.starActive) {
+                        this.playerLives = 1;
+                        this.starActive = false;
+                        this.updatePlayerCandles();
+                        this.showCards = true;
+                        this.currentTurn = "player";
+                        return;
+                    }
+                    this.gameOver = true;
+                    this.showCards = false;
+                    this.showFinalImage = false;
+                    this.showCenterImage = false;
+
+                    return;
+                }
+                if (this.currentTurn === "enemy") {
+                    this.enemyTurn();
+                }
+
+            }, 3000);
         }
-        // EnemyButton
-        // ENEMY BUTTON
         if (
         mouseX >= this.enemyButton.x &&
         mouseX <= this.enemyButton.x + this.enemyButton.width &&
@@ -677,7 +739,7 @@ class Game {
 
         // IF MOON -> ENEMY TAKES DAMAGE
         if (this.currentGreatCard === "moon") {
-        this.enemyLives--;
+            this.enemyLives--;
         }
 
         // PLAYER TURN ALWAYS ENDS
@@ -690,14 +752,14 @@ class Game {
         if (this.enemyLives <= 0) {
 
             this.gameOver = true;
-        
+
             setTimeout(() => {
                 this.showCards = false;
                 this.showFinalImage = false;
                 this.showCenterImage = false;
-        
+
             }, 2000);
-        
+
             return;
         }
 
@@ -708,36 +770,53 @@ class Game {
         }
     }
 
+    repositionCards() {
+        const y = canvasHeight - 108;
+        const spacing = 102;
+        const visible = []; 
+        for (let c of this.characterCards) {
+            if (c.visible) visible.push(c.object);
+        }
+        const n = visible.length;
+        if (n === 0) return;
+        const startX = canvasWidth / 2 - ((n - 1) * spacing) / 2;
+        for (let i = 0; i < n; i++) {
+            visible[i].position.x = startX + i * spacing;
+            visible[i].position.y = y;
+        }
+    }
+
+    repositionCardsArray(cards) {
+        const y = canvasHeight - 108;
+        const spacing = 102;
+        const visible = cards.filter(c => c.visible).map(c => c.object);
+        const n = visible.length;
+        if (n === 0) return;
+        const startX = canvasWidth / 2 - ((n - 1) * spacing) / 2;
+        for (let i = 0; i < n; i++) {
+            visible[i].position.x = startX + i * spacing;
+            visible[i].position.y = y;
+        }
+    }
+
     draw(ctx) {
 
         // DRAW BACKGROUND
         this.background.draw(ctx);
-
-        if (this.isEnemyShowing){
-        this.king.draw(ctx);
-        }
-        if (this.isShowingDefeatedEnemy){
-             this.defeatedKing.draw(ctx);
-     }
-
-        if (this.showcard1info) {
-
-            ctx.fillStyle = "white";
-            ctx.font = "40px MedievalSharp";
-            ctx.textAlign = "center";
-        
-            ctx.fillText(
-                "Throwing away the top card of the Great Deck...",
-                canvasWidth / 2,
-                100
-            );
+        for (let c of this.characterCards) {
+            if (c.showInfo) {
+                ctx.fillStyle = "white";
+                ctx.font = "40px MedievalSharp";
+                ctx.textAlign = "center";
+                ctx.fillText(c.infoText, canvasWidth / 2, 100);
+            }
         }
         if (this.showIntroText) {
 
             ctx.fillStyle = "white";
             ctx.font = "50px MedievalSharp";
             ctx.textAlign = "center";
-        
+
             ctx.fillText(
                 this.sunCount + " Sun, " + this.moonCount + " Moon",
                 canvasWidth / 2,
@@ -754,37 +833,20 @@ class Game {
             ctx.fillStyle = "white";
             ctx.font = "30px MedievalSharp";
             ctx.textAlign = "center";
-        
+
             // TOP TEXT
             this.enemy_candles.draw(ctx)
-        
+
             // BOTTOM TEXT
             this.player_candles.draw(ctx)
 
-        }
-        if (this.showcard2info) {
+            // COIN DISPLAY
+            ctx.fillStyle = "gold";
+            ctx.font = "24px MedievalSharp";
+            ctx.textAlign = "left";
+            ctx.fillText("Coins: " + this.coins, 20, 30);
 
-            ctx.fillStyle = "white";
-            ctx.font = "40px MedievalSharp";
             ctx.textAlign = "center";
-        
-            ctx.fillText(
-                "See the next card from the Great Deck",
-                canvasWidth / 2,
-                100
-            );
-        }
-        if (this.showcard3info) {
-
-            ctx.fillStyle = "white";
-            ctx.font = "40px MedievalSharp";
-            ctx.textAlign = "center";
-        
-            ctx.fillText(
-                "Shuffling the Great Deck...",
-                canvasWidth / 2,
-                100
-            );
         }
         if (this.showStartButton) {
             this.drawCustomHitbox(ctx, this.startButton);
@@ -794,7 +856,6 @@ class Game {
             ctx.fillStyle = "white";
             ctx.font = "40px MedievalSharp";
             ctx.textAlign = "center";
-        
             ctx.fillText(
                 "Lucky guess.",
                 canvasWidth / 2,
@@ -814,33 +875,43 @@ class Game {
 
         // DRAW CARDS
         if (this.showCards) {
-            if (this.cardVisible) {
-                this.card.draw(ctx);
-            }
-            
-            if (this.card2Visible) {
-                this.card2.draw(ctx);
-            }
-            
-            if (this.card3Visible) {
-                this.card3.draw(ctx);
+            for (let c of this.characterCards) {
+                if (c.visible) c.object.draw(ctx);
             }
         }
+
+        // DISCARD SLIDE
+        if (this.isDiscardSliding) {
+            if (this.discardCardType === "moon") {
+                this.finalImage.position.x = this.discardX;
+                this.finalImage.position.y = this.discardY;
+                this.finalImage.draw(ctx);
+                this.finalImage.position.x = canvasWidth / 2;
+                this.finalImage.position.y = canvasHeight / 2;
+            } else {
+                this.sunImage.position.x = this.discardX;
+                this.sunImage.position.y = this.discardY;
+                this.sunImage.draw(ctx);
+                this.sunImage.position.x = canvasWidth / 2;
+                this.sunImage.position.y = canvasHeight / 2;
+            }
+        }
+
         if (this.showPeekCard) {
 
             if (this.peekedCard === "moon") {
-        
+
                 this.finalImage.position.x = 250;
                 this.finalImage.position.y = 250;
-        
+
                 this.finalImage.draw(ctx);
             }
-        
+
             if (this.peekedCard === "sun") {
-        
+
                 this.sunImage.position.x = 250;
                 this.sunImage.position.y = 250;
-        
+
                 this.sunImage.draw(ctx);
             }
         }
@@ -860,11 +931,10 @@ class Game {
         }
 
             if (this.showFinalImage) {
-                
                     if (this.currentGreatCard === "moon") {
                         this.finalImage.draw(ctx);
                     }
-                
+
                     if (this.currentGreatCard === "sun") {
                         this.sunImage.draw(ctx);
                     }
@@ -875,7 +945,7 @@ class Game {
                     ctx.fillStyle = "white";
                 ctx.font = "70px MedievalSharp";
                 ctx.textAlign = "center";
-            
+
                 ctx.fillText(
                     "FATE HAS SPOKEN: YOU LOST",
                     canvasWidth / 2,
@@ -886,7 +956,7 @@ class Game {
                 ctx.fillStyle = "white";
                 ctx.font = "70px MedievalSharp";
                 ctx.textAlign = "center";
-            
+
                 ctx.fillText(
                     "FATE HAS SPOKEN: YOU WON",
                     canvasWidth / 2,
@@ -899,7 +969,7 @@ class Game {
         if (hitbox === this.startButton) {
 
             ctx.fillStyle = "gray";
-    
+
             ctx.fillRect(
                 hitbox.x,
                 hitbox.y,
@@ -931,7 +1001,7 @@ class Game {
 
         ctx.strokeStyle = "red";
         ctx.lineWidth = 2;
-    
+
         ctx.strokeRect(
             hitbox.x,
             hitbox.y,
@@ -943,6 +1013,17 @@ class Game {
 
     update(deltaTime) {
         let dt = deltaTime / 1000;
+
+        // DISCARD SLIDE
+        if (this.isDiscardSliding) {
+            this.discardX += this.slideSpeed * dt;
+            if (this.discardX >= canvasWidth + 80) {
+                this.isDiscardSliding = false;
+                this.discardX = canvasWidth / 2;
+                this.discardY = canvasHeight / 2;
+            }
+        }
+
         if (this.isCardSliding) {
 
             // MOON CARD
@@ -950,92 +1031,91 @@ class Game {
 
                 // UP
                 if (this.slideDirection === "up") {
-            
+
                     this.finalImage.position.y -= this.slideSpeed * dt;
-            
+
                     if (this.finalImage.position.y <= this.uptargetY) {
-            
+
                         this.finalImage.position.y = this.uptargetY;
                         this.updateEnemyCandles();
                         this.isCardSliding = false;
-            
+
                         setTimeout(() => {
-            
+
                             this.showFinalImage = false;
-            
+
                             this.finalImage.position.x = canvasWidth / 2;
                             this.finalImage.position.y = canvasHeight / 2;
-            
+
                         }, 300);
                     }
                 }
-            
+
                 // DOWN
                 if (this.slideDirection === "down") {
-            
+
                     this.finalImage.position.y += this.slideSpeed * dt;
-            
+
                     if (this.finalImage.position.y >= this.downtargetY) {
-            
+
                         this.sunImage.position.y = this.downtargetY;
                         this.updatePlayerCandles();
                         this.isCardSliding = false;
-            
+
                         setTimeout(() => {
-            
+
                             this.showFinalImage = false;
-            
+
                             this.finalImage.position.x = canvasWidth / 2;
                             this.finalImage.position.y = canvasHeight / 2;
-            
+
                         }, 300);
                     }
                 }
             }
-    
             // SUN CARD
             if (this.currentGreatCard === "sun") {
 
                 // UP
                 if (this.slideDirection === "up") {
-            
+
                     this.sunImage.position.y -= this.slideSpeed * dt;
-            
+
                     if (this.sunImage.position.y <= this.uptargetY) {
-            
+
                         this.sunImage.position.y = this.uptargetY;
-            
+
                         this.isCardSliding = false;
-            
+
                         setTimeout(() => {
-            
+
                             this.showFinalImage = false;
-            
+
                             this.sunImage.position.x = canvasWidth / 2;
                             this.sunImage.position.y = canvasHeight / 2;
-            
+
                         }, 300);
                     }
                 }
-            
+
                 // DOWN
                 if (this.slideDirection === "down") {
-            
+
                     this.sunImage.position.y += this.slideSpeed * dt;
-            
+
                     if (this.sunImage.position.y >= this.downtargetY)  {
-            
+
                         this.finalImage.position.y = this.downtargetY;
-            
+
                         this.isCardSliding = false;
-            
+
                         setTimeout(() => {
-            
+
                             this.showFinalImage = false;
-            
+
                             this.sunImage.position.x = canvasWidth / 2;
                             this.sunImage.position.y = canvasHeight / 2;
-            
+
                         }, 300);
                     }
                 }
@@ -1051,10 +1131,10 @@ class Game {
 
         const left = card.position.x - card.size.x / 2;
         const top = card.position.y - card.size.y / 2;
-    
+
         ctx.strokeStyle = "red";
         ctx.lineWidth = 3;
-    
+
         ctx.strokeRect(
             left,
             top,
