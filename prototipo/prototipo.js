@@ -1,5 +1,5 @@
 "use strict";
-let hola=0;
+
 // Global variables
 const canvasWidth = 1200;
 const canvasHeight = 600;
@@ -214,6 +214,8 @@ class Game {
             7,  // Hermit
             1   // Chariot
         ]);
+
+        this.repositionEnemyCards();
 
         this.maindeck = {
             x: 273,
@@ -757,6 +759,7 @@ class Game {
                     randomIndex,
                     1
                 );
+                this.repositionEnemyCards();
 
             }, 2000);
 
@@ -806,15 +809,6 @@ class Game {
                     this.justiceActive = false;
             
                     this.updateEnemyCandles();
-                }
-            }
-
-            // COIN BONUS FOR SUN
-            if (this.currentGreatCard === "sun") {
-                if (this.pageOfPentaclesActive) {
-                    this.coins += this.kingOfPentaclesActive ? 100 : 50;
-                    this.pageOfPentaclesActive = false;
-                    this.kingOfPentaclesActive = false;
                 }
             }
 
@@ -1211,6 +1205,40 @@ class Game {
         }
     }
 
+    repositionEnemyCards() {
+
+        const y = 95;
+
+        const spacing = 102;
+
+        const visible = [];
+
+        for (let c of this.enemyCharacterCards) {
+
+            if (c.visible !== false) {
+
+                visible.push(c.object);
+            }
+        }
+
+        const n = visible.length;
+
+        if (n === 0) {
+            return;
+        }
+
+        const startX =
+            canvasWidth / 2 - ((n - 1) * spacing) / 2;
+
+        for (let i = 0; i < n; i++) {
+
+            visible[i].position.x =
+                startX + i * spacing;
+
+            visible[i].position.y = y;
+        }
+    }
+
     draw(ctx) {
 
         // DRAW BACKGROUND
@@ -1358,12 +1386,18 @@ class Game {
                     c.object.draw(ctx);
                 }
             }
+            //ENEMY CARDS
+            if (
+                !this.showStartButton &&
+                !this.showIntroText
+            ) {
 
-            // ENEMY CARDS
-            for (let c of this.enemyCharacterCards) {
+                for (let c of this.enemyCharacterCards) {
 
-                if (c.showInfo) {
-                    c.object.draw(ctx);
+                    if (c.visible !== false) {
+
+                        c.object.draw(ctx);
+                    }
                 }
             }
         }
