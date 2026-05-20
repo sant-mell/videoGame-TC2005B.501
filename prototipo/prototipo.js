@@ -1,5 +1,5 @@
 "use strict";
-let hola=0;
+
 // Global variables
 const canvasWidth = 1200;
 const canvasHeight = 600;
@@ -204,6 +204,18 @@ class Game {
 
         // Manually choose starting cards by index
         this.characterCards = this.chooseStartingCards([0, 5, 10]);
+
+        // Enemy character cards
+        this.enemyCharacterCards = this.chooseEnemyCards([
+            11, // Lovers
+            14, // Devil
+            12, // Hanged Man
+            9,  // Wheel of Fortune
+            7,  // Hermit
+            1   // Chariot
+        ]);
+
+        this.repositionEnemyCards();
 
         this.maindeck = {
             x: 273,
@@ -481,6 +493,16 @@ class Game {
         this.repositionCardsArray(cards);
         return cards;
     }
+
+    chooseEnemyCards(indices) {
+
+        const cards = indices.map(i =>
+            this.buildCharacterCardEntry(this.allCards[i])
+        );
+
+        return cards;
+    }
+
     activateTwoPentacles() {
 
         if (this.greatDeck.length < 2) {
@@ -700,6 +722,62 @@ class Game {
         this.showCards = false;
         this.currentTurn = "enemy";
 
+        // ENEMY CHARACTER CARD
+        if (
+            !this.enemyHandBlocked &&
+            this.enemyCharacterCards.length > 0
+        ) {
+
+            const randomIndex = Math.floor(
+                Math.random() *
+                this.enemyCharacterCards.length
+            );
+
+            const enemyCard =
+                this.enemyCharacterCards[randomIndex];
+
+            // MOVE CARD TO CENTER
+            enemyCard.object.position.x =
+                canvasWidth / 2;
+
+            enemyCard.object.position.y =
+                canvasHeight / 2;
+
+            // SHOW CARD TEXT
+            enemyCard.showInfo = true;
+
+            // SHOW CARD
+            this.showCards = true;
+
+            // APPLY EFFECT
+            setTimeout(() => {
+
+                enemyCard.action();
+
+                // REMOVE CARD FROM ENEMY DECK
+                this.enemyCharacterCards.splice(
+                    randomIndex,
+                    1
+                );
+                this.repositionEnemyCards();
+
+            }, 2000);
+
+            // HIDE CARD
+            setTimeout(() => {
+
+                enemyCard.showInfo = false;
+
+                this.showCards = false;
+
+            }, 4000);
+        }
+
+        if (this.enemyHandBlocked) {
+
+            this.enemyHandBlocked = false;
+        }
+
         // SHOW BACKSIDE CARD FIRST
         setTimeout(() => {
         this.showCenterImage = true;
@@ -731,15 +809,6 @@ class Game {
                     this.justiceActive = false;
             
                     this.updateEnemyCandles();
-                }
-            }
-
-            // COIN BONUS FOR SUN
-            if (this.currentGreatCard === "sun") {
-                if (this.pageOfPentaclesActive) {
-                    this.coins += this.kingOfPentaclesActive ? 100 : 50;
-                    this.pageOfPentaclesActive = false;
-                    this.kingOfPentaclesActive = false;
                 }
             }
 
@@ -1136,6 +1205,40 @@ class Game {
         }
     }
 
+    repositionEnemyCards() {
+
+        const y = 95;
+
+        const spacing = 102;
+
+        const visible = [];
+
+        for (let c of this.enemyCharacterCards) {
+
+            if (c.visible !== false) {
+
+                visible.push(c.object);
+            }
+        }
+
+        const n = visible.length;
+
+        if (n === 0) {
+            return;
+        }
+
+        const startX =
+            canvasWidth / 2 - ((n - 1) * spacing) / 2;
+
+        for (let i = 0; i < n; i++) {
+
+            visible[i].position.x =
+                startX + i * spacing;
+
+            visible[i].position.y = y;
+        }
+    }
+
     draw(ctx) {
 
         // DRAW BACKGROUND
@@ -1195,6 +1298,14 @@ class Game {
             }
         }
         for (let c of this.characterCards) {
+            if (c.showInfo) {
+                ctx.fillStyle = "white";
+                ctx.font = "40px MedievalSharp";
+                ctx.textAlign = "center";
+                ctx.fillText(c.infoText, canvasWidth / 2, 100);
+            }
+        }
+        for (let c of this.enemyCharacterCards) {
             if (c.showInfo) {
                 ctx.fillStyle = "white";
                 ctx.font = "40px MedievalSharp";
@@ -1267,12 +1378,30 @@ class Game {
             actor.draw(ctx);
         }
 
-        // DRAW CARDS
         if (this.showCards) {
+            // PLAYER CARDS
             for (let c of this.characterCards) {
-                if (c.visible) c.object.draw(ctx);
+
+                if (c.visible) {
+                    c.object.draw(ctx);
+                }
+            }
+            //ENEMY CARDS
+            if (
+                !this.showStartButton &&
+                !this.showIntroText
+            ) {
+
+                for (let c of this.enemyCharacterCards) {
+
+                    if (c.visible !== false) {
+
+                        c.object.draw(ctx);
+                    }
+                }
             }
         }
+
         if (this.showTwoPentaclesChoice) {
 
             ctx.fillStyle = "rgba(0,0,0,0.6)";
