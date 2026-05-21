@@ -99,7 +99,7 @@ class Game {
         );
         
         this.king.setSprite(
-            "../assets/images/The_King_new.png",
+            "../assets/images/The_king_new.png",
             new Rect(10, 0, 835, 600)
         );
         
