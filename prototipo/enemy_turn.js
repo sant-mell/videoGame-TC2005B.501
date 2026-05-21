@@ -44,6 +44,9 @@ Game.prototype.enemyTurn = function() {
                     if (enemyCard.name === "The Star") {
                         enemyCard.infoText = "The enemy will be revived if they reach 0 lives!";
                     }
+                    if (enemyCard.name === "The Hermit") {
+                        enemyCard.infoText = "Your turn will be blocked!";
+                    }
                     enemyCard.showInfo = true;
                 }, 2000);
     
@@ -120,13 +123,39 @@ Game.prototype.resolveEnemyDeckDraw = function() {
         }
     
         setTimeout(() => {
+
             this.showFinalImage = false;
             this.justiceActive = false;
-            if (!this.gameOver) {
-                this.showPlayerCards = true;
-                this.showEnemyCards = true;
-                this.currentTurn = "player";
+        
+            if (this.gameOver) {
+                return;
             }
+            console.log("BEFORE BLOCK CHECK", this.playerTurnBlocked);
+            // PLAYER TURN BLOCKED
+            if (this.playerTurnBlocked) {
+                console.log("BLOCK Works", this.playerTurnBlocked);
+                this.playerTurnBlocked = false;
+        
+                this.currentTurn = "enemy";
+        
+                this.turnBlockedMessage = true;
+        
+                setTimeout(() => {
+        
+                    this.turnBlockedMessage = false;
+        
+                    this.enemyTurn();
+        
+                }, 2000);
+        
+                return;
+            }
+        
+            // NORMAL FLOW
+            this.showPlayerCards = true;
+            this.showEnemyCards = true;
+            this.currentTurn = "player";
+        
         }, 3000);
     
 };

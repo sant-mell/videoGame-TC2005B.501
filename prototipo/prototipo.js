@@ -40,6 +40,7 @@ class Game {
         this.isEnemyShowing = true;
         this.isShowingDefeatedEnemy = false;
         this.strengthMessage = false;
+        this.turnBlockedMessage = false;
         // card effect states
         this.coins = 0;
         this.pageOfPentaclesActive = false;
@@ -55,6 +56,7 @@ class Game {
         this.showTwoPentaclesChoice = false;
         this.twoPentaclesCards = [];
         this.enemyTurnBlocked = false;
+        this.playerTurnBlocked = false;
         this.enemyHandBlocked = false;
         // discard animation
         this.isDiscardSliding = false;
@@ -215,13 +217,13 @@ class Game {
             //11, // Lovers
             //14, // Devil
             //12, // Hanged Man
-            //9,  // Wheel of Fortune
+            //9  Wheel of Fortune
            // 7,  // Hermit
-           // chariot (find number)
+           // 1, chariot
            //0 not fixed yet, depends on other cards, check last
             //3 DONE
-            //4 DONE
-            //7 
+            // DONE
+            7 
             //8,
             //14,
             //12,

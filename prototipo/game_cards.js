@@ -106,7 +106,15 @@ Game.prototype.buildAllCards = function() {
                 sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(235, 10, 210, 400) },
                 infoText: "Enemy's next turn is blocked!",
                 description: "Blocks the enemy's next turn",
-                action: () => { this.enemyTurnBlocked = true; }
+                action: () => {
+                        if (this.currentTurn === "enemy") {
+                            this.playerTurnBlocked = true;
+                            console.log("HERMIT PLAYER ACTION", this.currentTurn);
+                        } else {
+                            this.enemyTurnBlocked = true;
+                            console.log("HERMIT ENEMY ACTION", this.currentTurn);
+                        }
+                }
             },
             {
                 //8
@@ -204,7 +212,39 @@ Game.prototype.activateStarPower = function(target) {
         setTimeout(() => { this.starMessage = false; }, 2000);
         return true;
 };
+Game.prototype.activateStrengthPower = function(target) {
 
+    if (target === "enemy") {
+
+        if (!this.enemyStrengthActive) {
+            return false;
+        }
+
+        this.enemyStrengthActive = false;
+
+        this.strengthMessage = true;
+
+        setTimeout(() => {
+            this.strengthMessage = false;
+        }, 2000);
+
+        return true;
+    }
+
+    if (!this.playerStrengthActive) {
+        return false;
+    }
+
+    this.playerStrengthActive = false;
+
+    this.strengthMessage = true;
+
+    setTimeout(() => {
+        this.strengthMessage = false;
+    }, 2000);
+
+    return true;
+};
 Game.prototype.buildCharacterCardEntry = function(cardDef) {
         const obj = new AnimatedObject(
             new Vector(canvasWidth / 2, canvasHeight - 180),

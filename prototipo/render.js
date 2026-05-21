@@ -112,6 +112,18 @@ Game.prototype.draw = function(ctx) {
                 canvasHeight / 2 - 100
             );
         }
+        if (this.turnBlockedMessage) {
+
+            ctx.font = "40px serif";
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+        
+            ctx.fillText(
+                "Your turn is blocked!",
+                canvasWidth / 2,
+                canvasHeight / 2 + 250
+            );
+        }
         if (!this.showStartButton && !this.showIntroText) {
 
             ctx.fillStyle = "white";
