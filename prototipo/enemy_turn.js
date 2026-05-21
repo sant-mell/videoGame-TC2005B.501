@@ -49,6 +49,9 @@ Game.prototype.enemyTurn = function() {
                     if (enemyCard.name === "The Hermit") {
                         enemyCard.infoText = "Your turn will be blocked!";
                     }
+                    if (enemyCard.name === "Strength") {
+                        enemyCard.infoText = "Enemy can't die this round!";
+                    }
                     if (enemyCard.name === "Justice") {
                         enemyCard.infoText = "If the enemy loses a life on this turn or the next one so do you!";
                     }

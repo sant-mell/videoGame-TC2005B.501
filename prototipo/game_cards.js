@@ -175,9 +175,11 @@ Game.prototype.buildAllCards = function() {
                 //13
                 name: "The Tower",
                 sprite: { src: "../assets/images/Legendary Cards.png", rect: new Rect(228, 10, 210, 400) },
-                description: "Enemy's next turn will be blocked",
-                infoText: "Enemy's next turn is blocked!",
-                action: () => { this.enemyTurnBlocked = true; }
+                description: "Destroys half of your opponents character cards",
+                infoText: "Destroyed half of the enemy's cards!",
+                action: () => {
+                    this.destroyHalfOpponentCards();
+                }
             },
             {
                 //14
@@ -203,6 +205,24 @@ Game.prototype.buildAllCards = function() {
             },
         ];
     
+};
+Game.prototype.destroyHalfOpponentCards = function() {
+    const targetCards = this.currentTurn === "enemy"
+        ? this.characterCards
+        : this.enemyCharacterCards;
+
+    const amountToDestroy = Math.floor(targetCards.length / 2);
+
+    for (let i = 0; i < amountToDestroy; i++) {
+        const randomIndex = Math.floor(Math.random() * targetCards.length);
+        targetCards.splice(randomIndex, 1);
+    }
+
+    if (this.currentTurn === "enemy") {
+        this.repositionCards();
+    } else {
+        this.repositionEnemyCards();
+    }
 };
 
 Game.prototype.activateStarPower = function(target) {

@@ -44,6 +44,7 @@ class Game {
         this.justiceMessageUntil = 0; //este era booleano
         this.playerHandBlocked = false;
         this.playerHandBlockedMessage = false;
+        this.maxLivesMessage = false;
         // card effect states
         this.coins = 0;
         this.pageOfPentaclesActive = false;
@@ -229,23 +230,23 @@ class Game {
         //this.characterCards = this.dealStartingCards(3);
 
         // Manually choose starting cards by index
-        this.characterCards = this.chooseStartingCards([12, 6, 14]);
+        this.characterCards = this.chooseStartingCards([0, 6, 14]);
 
         // Enemy character cards
         this.enemyCharacterCards = this.chooseEnemyCards([
-            //11, // Lovers
-            //14, // Devil
-            //12, // Hanged Man
-            //9  Wheel of Fortune
-           // 7,  // Hermit
-           // 1, chariot
-           //0 not fixed yet, depends on other cards, check last
+            11, // Lovers
+            14, // Devil
+            12, // Hanged Man
+            9, //Wheel of Fortune
+            7,  // Hermit
+            1,//chariot
+           0 //not fixed yet, depends on other cards, check last
             //3 DONE
-            //4 DONE
-            //7 //DONE
-            //8 //DONE
-            //14 //DONE
-            12
+            //4, //DONE
+            //7, //DONE
+            //8, //DONE
+            //14, //DONE
+            //12 //DONE
             //13
         ]);
 

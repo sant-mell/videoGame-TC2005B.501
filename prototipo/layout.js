@@ -1,4 +1,21 @@
 Game.prototype.updatePlayerCandles = function() {
+        if (this.playerLives > 6){
+            this.maxLivesMessage = true;
+            this.playerLives = 6;
+            setTimeout(() => {
+                this.maxLivesMessage = false;
+            }, 2000);
+        }
+        if (this.playerLives === 6){
+                this.player_candles.setSprite(
+                "../assets/images/Candles.png",
+                new Rect(50, 70, 280, 570)
+                );
+            this.extra_player_candles.setSprite(
+                "../assets/images/Candles.png",
+                new Rect(50, 70, 280, 570)
+            );
+        }
         if (this.playerLives === 5){
             this.player_candles.setSprite(
                 "../assets/images/Candles.png",
@@ -50,6 +67,23 @@ Game.prototype.updatePlayerCandles = function() {
 };
 
 Game.prototype.updateEnemyCandles = function() {
+    if (this.enemyLives > 6){
+        this.maxLivesMessage = true;
+        this.enemyLives = 6;
+        setTimeout(() => {
+            this.maxLivesMessage = false;
+        }, 2000);
+    }
+    if (this.enemyLives === 6){
+        this.enemy_candles.setSprite(
+            "../assets/images/Candles.png",
+            new Rect(50, 70, 280, 570)
+        );
+        this.extra_enemy_candles.setSprite(
+            "../assets/images/Candles.png",
+            new Rect(50, 70, 280, 570)
+        );
+    }
     if (this.enemyLives === 5){
         this.enemy_candles.setSprite(
             "../assets/images/Candles.png",

@@ -122,6 +122,38 @@ Game.prototype.draw = function(ctx) {
                 canvasHeight - 100
             );
         }
+        if (this.maxLivesMessage) {
+            if (this.currentTurn === "player"){
+            ctx.fillStyle = "white";
+            ctx.font = "25px MedievalSharp";
+            ctx.textAlign = "center";
+            ctx.fillText(
+                "Reached Maximum",
+                canvasWidth - 340,
+                canvasHeight - 310
+            );
+            ctx.fillText(
+                "number of lives.",
+                canvasWidth - 340,
+                canvasHeight - 280
+            );
+            }
+            else {
+                ctx.fillStyle = "white";
+            ctx.font = "25px MedievalSharp";
+            ctx.textAlign = "center";
+            ctx.fillText(
+                "Reached Maximum",
+                canvasWidth / 2 - 390,
+                canvasHeight / 2 - 80
+            );
+            ctx.fillText(
+                "number of lives.",
+                canvasWidth /2 - 390,
+                canvasHeight /2 - 50
+            );
+            }
+        }
         if (this.turnBlockedMessage) {
 
             ctx.font = "40px serif";
