@@ -122,7 +122,13 @@ Game.prototype.buildAllCards = function() {
                 sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(448, 10, 210, 400) },
                 infoText: "If you lose a life next turn, so does the enemy!",
                 description: "Makes your enemy lose a life if you lose a life on this or next turn",
-                action: () => { this.justiceActive = true; }
+                action: () => {
+                    if (this.currentTurn === "enemy") {
+                        this.enemyJusticeActive = true;
+                    } else {
+                        this.playerJusticeActive = true;
+                    }
+                }
             },
             {
                 //9
@@ -157,7 +163,13 @@ Game.prototype.buildAllCards = function() {
                 sprite: { src: "../assets/images/Legendary Cards.png", rect: new Rect(659, 10, 210, 400) },
                 infoText: "Enemy cannot use their Character Deck next turn!",
                 description: "Blocks the enemy from using their Character Deck next turn",
-                action: () => { this.enemyHandBlocked = true; }
+                action: () => {
+                    if (this.currentTurn === "enemy") {
+                        this.playerHandBlocked = true;
+                    } else {
+                        this.enemyHandBlocked = true;
+                    }
+                }
             },
             {
                 //13

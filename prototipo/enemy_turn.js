@@ -15,15 +15,17 @@ Game.prototype.enemyTurn = function() {
         this.showPlayerCards = false;
         this.currentTurn = "enemy";
     
-        if (this.enemyHandBlocked) {
-            this.enemyHandBlocked = false;
-        }
+        const skipEnemyCharacterCard = this.enemyHandBlocked;
+
+            if (this.enemyHandBlocked) {
+                this.enemyHandBlocked = false;
+            }
     
         setTimeout(() => {
     
             const randomIndex = Math.floor(Math.random() * this.enemyCharacterCards.length);
             const enemyCard = this.enemyCharacterCards[randomIndex];
-            const hasCharacterCard = this.enemyCharacterCards.length > 0 && enemyCard != null;
+            const hasCharacterCard = !skipEnemyCharacterCard && this.enemyCharacterCards.length > 0 && enemyCard != null;
     
             if (hasCharacterCard) {
     
@@ -47,8 +49,14 @@ Game.prototype.enemyTurn = function() {
                     if (enemyCard.name === "The Hermit") {
                         enemyCard.infoText = "Your turn will be blocked!";
                     }
+                    if (enemyCard.name === "Justice") {
+                        enemyCard.infoText = "If the enemy loses a life on this turn or the next one so do you!";
+                    }
+                    if (enemyCard.name === "The Hanged Man") {
+                        enemyCard.infoText = "The enemy has blocked your hand for the next turn.";
+                    }
                     enemyCard.showInfo = true;
-                }, 2000);
+                }, 1500);
     
                 // apply effect and remove card
                 setTimeout(() => {
@@ -63,17 +71,17 @@ Game.prototype.enemyTurn = function() {
                     this.activeEnemyCard = null;
                     this.enemyCharacterCards.splice(randomIndex, 1);
                     this.repositionEnemyCards();
-                }, 3000);
+                }, 5000);
     
                 // after character card resolves, draw from main deck
                 setTimeout(() => {
                     this.showCenterImage = true;
-                }, 5000);
+                }, 7000);
     
                 setTimeout(() => {
                     this.showCenterImage = false;
                     this.resolveEnemyDeckDraw();
-                }, 7000);
+                }, 8000);
     
             } else {
     
@@ -85,7 +93,7 @@ Game.prototype.enemyTurn = function() {
                 setTimeout(() => {
                     this.showCenterImage = false;
                     this.resolveEnemyDeckDraw();
-                }, 2500);
+                }, 4000);
             }
     
         }, 500);
@@ -106,14 +114,14 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             if (!this.activateStrengthPower("player")) {
                 this.playerLives--;
             }
-            if (this.justiceActive) {
+            if (this.playerJusticeActive) {
                 if (!this.activateStrengthPower("enemy")) {
                     this.enemyLives--;
                 }
-                if (this.enemyLives <= 0 && !this.activateStarPower("enemy")) {
-                    this.gameOver = true;
-                }
-                this.justiceActive = false;
+            
+                this.justiceMessageUntil = performance.now() + 3000;
+            
+                this.playerJusticeActive = false;
                 this.updateEnemyCandles();
             }
         }
@@ -125,7 +133,6 @@ Game.prototype.resolveEnemyDeckDraw = function() {
         setTimeout(() => {
 
             this.showFinalImage = false;
-            this.justiceActive = false;
         
             if (this.gameOver) {
                 return;
@@ -152,9 +159,15 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             }
         
             // NORMAL FLOW
-            this.showPlayerCards = true;
-            this.showEnemyCards = true;
             this.currentTurn = "player";
+            this.showEnemyCards = true;
+
+            if (this.playerHandBlocked) {
+                this.showPlayerCards = false;
+                this.playerHandBlockedMessage = true;
+            } else {
+                this.showPlayerCards = true;
+            }
         
         }, 3000);
     

@@ -50,7 +50,26 @@ Game.prototype.updatePlayerCandles = function() {
 };
 
 Game.prototype.updateEnemyCandles = function() {
-
+    if (this.enemyLives === 5){
+        this.enemy_candles.setSprite(
+            "../assets/images/Candles.png",
+            new Rect(50, 70, 280, 570)
+        );
+        this.extra_enemy_candles.setSprite(
+            "../assets/images/Candles.png",
+            new Rect(385, 70, 280, 570)
+        );
+    }
+    if (this.enemyLives === 4){
+        this.enemy_candles.setSprite(
+            "../assets/images/Candles.png",
+            new Rect(50, 70, 280, 570)
+        );
+        this.extra_enemy_candles.setSprite(
+            "../assets/images/Candles.png",
+            new Rect(710, 70, 280, 570)
+        );
+    }
         if (this.enemyLives >= 3) {
             this.enemy_candles.setSprite(
                 "../assets/images/Candles.png",

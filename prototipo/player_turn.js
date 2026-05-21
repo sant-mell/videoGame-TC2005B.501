@@ -41,13 +41,13 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
             if (!this.activateStrengthPower("player")) {
                 this.playerLives--;
     
-                if (this.justiceActive) {
+                if (this.playerJusticeActive) {
     
                     if (!this.activateStrengthPower("enemy")) {
                         this.enemyLives--;
                     }
     
-                    this.justiceActive = false;
+                    this.playerJusticeActive = false;
     
                     this.updateEnemyCandles();
 
@@ -116,6 +116,15 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
 };
 
 Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
+        if (this.currentTurn !== "player") {
+            return;
+        }
+        if (!this.showPlayerCards) {
+            return;
+        }
+        if (this.playerHandBlocked) {
+            return;
+        }
         if (this.showStartButton) {
             return;
         }
@@ -187,7 +196,7 @@ Game.prototype.checkMainDeckClick = function(mouseX, mouseY) {
         if (this.showFinalImage) {
             return;
         }
-        if (!this.showPlayerCards) {
+        if (!this.showPlayerCards && !this.playerHandBlocked) {
             return;
         }
         if (
@@ -198,6 +207,8 @@ Game.prototype.checkMainDeckClick = function(mouseX, mouseY) {
         ) {
             // SHOW IMAGE
             this.showCenterImage = true;
+            this.playerHandBlocked = false;
+            this.playerHandBlockedMessage = false;
             this.showEnemyCards = false;
             this.cardSound.play();
             this.showPlayerCards = false;
@@ -266,11 +277,11 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
             if (this.currentGreatCard === "moon") {
                 if (!this.activateStrengthPower("player")) {
                     this.playerLives--;
-                    if (this.justiceActive) {
+                    if (this.playerJusticeActive) {
                         if (!this.activateStrengthPower("enemy")) {
                             this.enemyLives--;
                         }
-                        this.justiceActive = false;
+                        this.playerJusticeActive = false;
                         if (!this.isCardSliding){
                         this.updateEnemyCandles();
                         }
@@ -309,6 +320,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
 
                     return;
                 }
+                this.enemyJusticeActive = false;
                 if (this.currentTurn === "enemy") {
                     this.enemyTurn();
                 }
@@ -344,6 +356,17 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         if (this.currentGreatCard === "moon") {
             if (!this.activateStrengthPower("enemy")) {
                 this.enemyLives--;
+        
+                if (this.enemyJusticeActive) {
+                    if (!this.activateStrengthPower("player")) {
+                        this.playerLives--;
+                    }
+                
+                    this.justiceMessageUntil = performance.now() + 3000;
+                
+                    this.enemyJusticeActive = false;
+                    this.updatePlayerCandles();
+                }
             }
         }
 
@@ -373,6 +396,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         }
 
         // ENEMY TURN STARTS
+        this.enemyJusticeActive = false;
         this.enemyTurn();
 
         }, 3000);

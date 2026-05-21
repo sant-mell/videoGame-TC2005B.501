@@ -41,6 +41,9 @@ class Game {
         this.isShowingDefeatedEnemy = false;
         this.strengthMessage = false;
         this.turnBlockedMessage = false;
+        this.justiceMessageUntil = 0; //este era booleano
+        this.playerHandBlocked = false;
+        this.playerHandBlockedMessage = false;
         // card effect states
         this.coins = 0;
         this.pageOfPentaclesActive = false;
@@ -50,7 +53,8 @@ class Game {
         this.starMessage = false;
         this.playerStrengthActive = false;
         this.enemyStrengthActive = false;
-        this.justiceActive = false;
+        this.playerJusticeActive = false;
+        this.enemyJusticeActive = false;
         this.lastPlayedAction = null;
         this.lastPlayedName = "";
         this.showTwoPentaclesChoice = false;
@@ -139,6 +143,21 @@ class Game {
             "../assets/images/Candles.png",
             new Rect(0, 0, 380, 500)
         );
+        this.extra_enemy_candles = new AnimatedObject(
+
+            new Vector(canvasWidth / 2 - 208 , 217),
+        
+            90,
+            200,
+        
+            "gray",
+            "card",
+            1
+        );
+        this.extra_enemy_candles.setSprite(
+            "../assets/images/Candles.png",
+            new Rect(0, 0, 380, 500)
+        );
         this.player_candles = new AnimatedObject(
 
             // POSITION
@@ -163,7 +182,7 @@ class Game {
 
             // SIZE
             90,
-            180,
+            200,
 
             "gray",
             "card",
@@ -210,7 +229,7 @@ class Game {
         //this.characterCards = this.dealStartingCards(3);
 
         // Manually choose starting cards by index
-        this.characterCards = this.chooseStartingCards([7, 6, 14]);
+        this.characterCards = this.chooseStartingCards([12, 6, 14]);
 
         // Enemy character cards
         this.enemyCharacterCards = this.chooseEnemyCards([
@@ -222,11 +241,11 @@ class Game {
            // 1, chariot
            //0 not fixed yet, depends on other cards, check last
             //3 DONE
-            // DONE
-            7 
-            //8,
-            //14,
-            //12,
+            //4 DONE
+            //7 //DONE
+            //8 //DONE
+            //14 //DONE
+            12
             //13
         ]);
 

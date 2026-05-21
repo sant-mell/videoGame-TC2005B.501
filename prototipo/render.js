@@ -112,6 +112,16 @@ Game.prototype.draw = function(ctx) {
                 canvasHeight / 2 - 100
             );
         }
+        if (this.playerHandBlockedMessage) {
+            ctx.fillStyle = "white";
+            ctx.font = "32px MedievalSharp";
+            ctx.textAlign = "center";
+            ctx.fillText(
+                "The enemy has blocked your hand for this turn.",
+                canvasWidth / 2,
+                canvasHeight - 100
+            );
+        }
         if (this.turnBlockedMessage) {
 
             ctx.font = "40px serif";
@@ -130,10 +140,10 @@ Game.prototype.draw = function(ctx) {
             ctx.font = "30px MedievalSharp";
             ctx.textAlign = "center";
 
-            // TOP TEXT
             this.enemy_candles.draw(ctx)
-
-            // BOTTOM TEXT
+            if (this.enemyLives > 3) {
+                this.extra_enemy_candles.draw(ctx);
+            }
             this.player_candles.draw(ctx)
             if (this.playerLives > 3) {
                 this.extra_player_candles.draw(ctx);
@@ -342,6 +352,12 @@ Game.prototype.draw = function(ctx) {
                     canvasHeight / 2
                 );
                 }
+            }
+            if (performance.now() < this.justiceMessageUntil) {
+                ctx.fillStyle = "white";
+                ctx.font = "40px MedievalSharp";
+                ctx.textAlign = "center";
+                ctx.fillText("Justice activated", canvasWidth / 2, canvasHeight / 2);
             }
     
 };
