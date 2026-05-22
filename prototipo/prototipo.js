@@ -45,6 +45,7 @@ class Game {
         this.playerHandBlocked = false;
         this.playerHandBlockedMessage = false;
         this.maxLivesMessage = false;
+        this.candleBurnPlayed = false;
         // card effect states
         this.coins = 0;
         this.pageOfPentaclesActive = false;
@@ -70,7 +71,7 @@ class Game {
         this.discardY = canvasHeight / 2;
         //audio
         this.startSound = new Audio("../assets/audio/hardEnemies (1).mov");
-        this.startSound.volume = 0.2;
+        this.startSound.volume = 0;
         this.candleburn = new Audio("../assets/audio/candle_burning.mov");
         this.candleburn.volume = 0.8;
         this.candleblow = new Audio("../assets/audio/candle_blow.mov");
@@ -194,35 +195,9 @@ class Game {
             new Rect(50, 70, 280, 570)
         );
 
-        this.greatDeck = [
-            "sun",
-            "sun",
-            "moon",
-            "moon",
-            "moon",
-            "moon",
-            "moon",
-            "moon",
-            "moon",
-            "moon",
-            "sun",
-            "sun"
-        ];
-        this.greatDeck.sort(() => Math.random() - 0.5);
-
         this.currentGreatCard = "";
-        this.sunCount = 0;
-        this.moonCount = 0;
+        this.buildGreatDeck();
 
-        for (let card of this.greatDeck) {
-
-        if (card === "sun") {
-            this.sunCount++;
-        }
-        if (card === "moon") {
-            this.moonCount++;
-        }
-}
         // All card definitions in the pool
         this.allCards = this.buildAllCards();
 
@@ -230,7 +205,7 @@ class Game {
         //this.characterCards = this.dealStartingCards(3);
 
         // Manually choose starting cards by index
-        this.characterCards = this.chooseStartingCards([0, 6, 14]);
+        this.characterCards = this.chooseStartingCards([0, 6, 14, 1, 13]);
 
         // Enemy character cards
         this.enemyCharacterCards = this.chooseEnemyCards([

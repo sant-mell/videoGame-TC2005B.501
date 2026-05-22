@@ -365,6 +365,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
                     this.justiceMessageUntil = performance.now() + 3000;
                 
                     this.enemyJusticeActive = false;
+                    this.candleBurnPlayed = false;
                     this.updatePlayerCandles();
                 }
             }

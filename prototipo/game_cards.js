@@ -175,7 +175,7 @@ Game.prototype.buildAllCards = function() {
                 //13
                 name: "The Tower",
                 sprite: { src: "../assets/images/Legendary Cards.png", rect: new Rect(228, 10, 210, 400) },
-                description: "Destroys half of your opponents character cards",
+                description: "Destroys half of your opponent's character cards",
                 infoText: "Destroyed half of the enemy's cards!",
                 action: () => {
                     this.destroyHalfOpponentCards();
@@ -198,7 +198,7 @@ Game.prototype.buildAllCards = function() {
                     this.greatDeck.push("moon");
             
                     this.greatDeck.sort(() => Math.random() - 0.5);
-            
+                    this.candleBurnPlayed = false;
                     this.updatePlayerCandles();
                     this.updateEnemyCandles();
                 }
@@ -224,7 +224,23 @@ Game.prototype.destroyHalfOpponentCards = function() {
         this.repositionEnemyCards();
     }
 };
+Game.prototype.buildGreatDeck = function() {
+    const sunCount = Math.floor(Math.random() * 4) +1;
+    const moonCount = Math.floor(Math.random() * 4) +1;
 
+    this.greatDeck = [];
+    for (let i = 0; i < sunCount; i++) this.greatDeck.push("sun");
+    for (let i = 0; i < moonCount; i++) this.greatDeck.push("moon");
+    this.greatDeck.sort(() => Math.random() - 0.5);
+
+    this.sunCount = sunCount;
+    this.moonCount = moonCount;
+    this.showIntroText = true;
+
+    setTimeout(() => {
+        this.showIntroText = false;
+    }, 5000);
+};
 Game.prototype.activateStarPower = function(target) {
         if (target === "enemy") {
             if (!this.enemyStarActive || this.enemyLives > 0) return false;
@@ -237,6 +253,7 @@ Game.prototype.activateStarPower = function(target) {
 
             this.playerLives = 1;
             this.playerStarActive = false;
+            this.candleBurnPlayed = false;
             this.updatePlayerCandles();
         }
 

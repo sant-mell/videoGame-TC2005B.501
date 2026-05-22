@@ -47,21 +47,30 @@ Game.prototype.updatePlayerCandles = function() {
                 "../assets/images/Candles.png",
                 new Rect(385, 70, 280, 570)
             );
-            this.candleburn.play();
+            if (!this.candleBurnPlayed) {
+                this.candleburn.play();
+                this.candleBurnPlayed = true;
+            }
         }
         if (this.playerLives === 1) {
             this.player_candles.setSprite(
                 "../assets/images/Candles.png",
                 new Rect(710, 70, 280, 570)
             );
-            this.candleburn.play();
+            if (!this.candleBurnPlayed) {
+                this.candleburn.play();
+                this.candleBurnPlayed = true;
+            }
         }
         if (this.playerLives === 0) {
             this.player_candles.setSprite(
                 "../assets/images/Candles.png",
                 new Rect(1050, 70, 280, 570)
             );
-            this.candleblow.play();
+            if (!this.candleBurnPlayed) {
+                this.candleburn.play();
+                this.candleBurnPlayed = true;
+            }
         }
     
 };

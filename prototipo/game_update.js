@@ -1,5 +1,9 @@
 Game.prototype.update = function(deltaTime) {
+    if (this.greatDeck.length === 0 && !this.gameOver) {
+        this.buildGreatDeck();
+    }
         let dt = deltaTime / 1000;
+        
 
         // DISCARD SLIDE
         if (this.isDiscardSliding) {
@@ -42,23 +46,22 @@ Game.prototype.update = function(deltaTime) {
                 if (this.slideDirection === "down") {
 
                     this.finalImage.position.y += this.slideSpeed * dt;
-
+                
                     if (this.finalImage.position.y >= this.downtargetY) {
-
-                        this.sunImage.position.y = this.downtargetY;
+                
+                        this.finalImage.position.y = this.downtargetY;
+                        this.isCardSliding = false;  // SET THIS FIRST
+                        this.candleBurnPlayed = false;
                         this.updatePlayerCandles();
-                        this.isCardSliding = false;
-
+                
                         setTimeout(() => {
-
                             this.showFinalImage = false;
-
                             this.finalImage.position.x = canvasWidth / 2;
                             this.finalImage.position.y = canvasHeight / 2;
-
                         }, 300);
                     }
                 }
+                
             }
             // SUN CARD
             if (this.currentGreatCard === "sun") {
