@@ -15,6 +15,28 @@ const NODE_FRAMES = [
     { sx: 632, sy: 0, sw: 314, sh: 362, dw: 78, dh: 78 }  //portal
 ];
 
+const FOOL_COLS = 3;
+const FOOL_FRAME_W = 256; // 768 / 3
+const FOOL_FRAME_H = 341.25; // 1365 / 4
+
+// this is from spritesheets in TC2005B
+const foolMotion = { //each direction of frames with status for playing it
+    left: {
+        status: false,
+        repeat: true,
+        duration: 150,
+        moveFrames: [3, 5],
+        idleFrames: [4, 4],
+    },
+    right: {
+        status: false,
+        repeat: true,
+        duration: 150,
+        moveFrames: [9, 11],
+        idleFrames: [10, 10],
+    },
+};
+
 // random numbers for the node sprites so it is different each time
 function randomRange(max, min = 0) {
     return Math.floor(Math.random() * max) + min;
@@ -30,6 +52,84 @@ class Fool {
         this.moving = false;
         this.arrived = false;
         this.speed = 240;
+        this.direction = "down"; // where the fool faces it will be the direction it is moving
+        this.motion = foolMotion;
+
+        // same as TC2005 sprite.js
+        this.frame = 0;
+        this.minFrame = 0;
+        this.maxFrame = 0;
+        this.sheetCols = FOOL_COLS;
+        this.repeat = true;
+        this.frameDuration = 150;
+        this.totalTime = 0;
+
+        // from GameObject,
+        this.spriteImage = undefined;
+        this.spriteRect = undefined;
+    }
+    
+    setSprite(imagePath, rect) {
+        this.spriteImage = new Image();
+        this.spriteImage.src = imagePath;
+        if (rect) {
+            this.spriteRect = rect;
+        }
+    }
+
+    // same as AnimatedObject.setAnimation
+    setAnimation(minFrame, maxFrame, repeat, duration) {
+        this.minFrame = minFrame;
+        this.maxFrame = maxFrame;
+        this.frame = minFrame;
+        this.repeat = repeat;
+        this.totalTime = 0;
+        this.frameDuration = duration;
+    }
+
+    // same as AnimatedObject.updateFrame
+    updateFrame(deltaTime) {
+        this.totalTime += deltaTime;
+        if (this.totalTime > this.frameDuration) {
+            let restartFrame = this.minFrame;
+            this.frame = this.frame == this.maxFrame ? restartFrame : this.frame + 1;
+            this.spriteRect.x = this.frame % this.sheetCols * this.spriteRect.width;
+            this.spriteRect.y = Math.floor(this.frame / this.sheetCols) * this.spriteRect.height;
+            this.totalTime = 0;
+        }
+    }
+
+    // same as AnimatedPlayer.startMovement
+    startMovement(direction) {
+        const dirData = this.motion[direction];
+        if (!dirData.status) {
+            dirData.status = true;
+            this.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
+        }
+    }
+
+    // same as AnimatedPlayer.stopMovement. After stopping, it will do animations 6, 7 for idle
+    stopMovement(direction) {
+        const dirData = this.motion[direction];
+        dirData.status = false;
+        this.setAnimation(6, 7, true, 150);
+    }
+
+    getDirection(dx, dy) { // where it is moving more, it will face that direction.
+        if (Math.abs(dy) >= Math.abs(dx)) {
+            return dy < 0 ? "up" : "down";
+        } else {
+            return dx < 0 ? "left" : "right";
+        }
+    }
+
+    // finds target node and walks there with the animmation
+    setTarget(tx, ty) {
+        this.tx = tx;
+        this.ty = ty;
+        this.direction = this.getDirection(tx - this.x, ty - this.y);
+        this.moving = true;
+        this.startMovement(this.direction);
     }
 
     update(deltaTime) {
@@ -39,39 +139,32 @@ class Fool {
             let dx = this.tx - this.x;
             let dy = this.ty - this.y;
             let d = Math.sqrt(dx * dx + dy * dy);
-            // if it gets close it will stop when it arrives 
+            // if it gets close it will stop when it arrives and do the stop movement for idle animation
             if (d < 2) { //d is distance in pixels
                 this.x = this.tx;
                 this.y = this.ty;
                 this.moving = false;
                 this.arrived = true;
+                this.stopMovement(this.direction);
             } else {
                 // constant speed diagonally like in class
                 this.x += (dx / d) * this.speed * dt;
                 this.y += (dy / d) * this.speed * dt;
             }
         }
+        // always tick for idle animation to alter
+        this.updateFrame(deltaTime);
     }
 
-    // draws the fool as F, 
-    //=========================
-    // HAY QUE AGREGAR FOOL SPRITE
-    //==========================
     draw(ctx) {
-        ctx.save();
-        ctx.strokeStyle = "#ffd700";
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 18, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.fillStyle = "#ffcc00";
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 13, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = "#1a0a00";
-        ctx.font = "bold 13px Arial";
-        ctx.fillText("F", this.x, this.y + 4.5);
-        ctx.restore();
+        ctx.drawImage(this.spriteImage,
+                      this.spriteRect.x,
+                      this.spriteRect.y,
+                      this.spriteRect.width,
+                      this.spriteRect.height,
+                      this.x - 24,
+                      this.y - 32,
+                      48, 64);
         if (showBBox) this.drawBoundingBox(ctx);
     }
 
@@ -79,11 +172,11 @@ class Fool {
     drawBoundingBox(ctx) {
         ctx.globalCompositeOperation = "screen";
         ctx.fillStyle = "rgb(0.5, 0.5, 0.5, 0.3)";
-        ctx.fillRect(this.x - 18, this.y - 18, 36, 36);
+        ctx.fillRect(this.x - 24, this.y - 32, 48, 64);
         ctx.globalCompositeOperation = "source-over";
         ctx.strokeStyle = "red";
         ctx.beginPath();
-        ctx.rect(this.x - 18, this.y - 18, 36, 36);
+        ctx.rect(this.x - 24, this.y - 32, 48, 64);
         ctx.stroke();
         ctx.fillStyle = "red";
         ctx.fillRect(this.x - 2, this.y - 2, 4, 4);
@@ -181,6 +274,10 @@ class Game {
                 n.sprite = this.sprites.nodes;
             }
         }
+        // set fool sprite and initialize to idle facing down
+        this.fool.setSprite('../assets/images/Sprite Fool Final.png',
+                            { x: 0, y: 0, width: FOOL_FRAME_W, height: FOOL_FRAME_H });
+        this.fool.setAnimation(6, 7, true, 150); // start on front-facing idle
     }
 
     update(deltaTime) {
@@ -269,15 +366,24 @@ class Game {
         });
     }
 
-    checkNodeClick(n, mouseX, mouseY) { // if it is 40 pixels away from the node, it will counta s click
+    checkNodeClick(n, mouseX, mouseY) { // if it is 40 pixels away from the node, it will count as a click
         if (this.fool.moving) return;
         let dx = mouseX - n.x;
         let dy = mouseY - n.y;
-        if (Math.sqrt(dx * dx + dy * dy) <= 40 && n.state === "available") {
+        // check both directions in the edge list so the fool can also return left
+        let isConnected = false;
+        for (let i = 0; i < this.edges.length; i++) {
+            let from = this.edges[i][0];
+            let to = this.edges[i][1];
+            if ((from === this.currentId && to === n.id) ||
+                (to === this.currentId && from === n.id)) {
+                isConnected = true;
+                break;
+            }
+        }
+        if (Math.sqrt(dx * dx + dy * dy) <= 40 && n.id !== this.currentId && isConnected) {
             console.log("node clicked: " + n.id);
-            this.fool.tx = n.x;
-            this.fool.ty = n.y;
-            this.fool.moving = true;
+            this.fool.setTarget(n.x, n.y);
         }
     }
 }
