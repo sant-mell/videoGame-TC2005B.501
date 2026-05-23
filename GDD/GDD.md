@@ -283,7 +283,7 @@ Negative fortunes:
 
 #### Rare Cards
 - *The High Priestess:* Can see the next card from the [Great Deck](#great-deck).
-- *The Hermit:* Blocks enemy's turn. 
+- *The Hermit:* Blocks enemy's turn.  
 - *Justice:* If you lose a life during your next turn, your opponent loses one too.
 - *Wheel of Fortune:* Shuffles the [Great Deck](#great-deck).
 - *King of Pentacles:* If you win the award money doubles, but if you lose the loss money does too.
@@ -330,7 +330,7 @@ The player will start with zero cards and money. They must [duel](#duel) a commo
 ## Map
 The map will be a procedurally generated directed graph, similar to the one used in *Slay the Spire*, but stylized to match the pixelated tarot style.
 
-1. **Nodes:** Each node will include an enemy, upgrade or rest site
+1. **Nodes:** Each node will include an enemy, upgrade or rest site:
     - *Enemy:* Refer to the [enemy specifications](#opponents)
     - *Upgrade:* Refer to the [upgrade specifications](#upgrades)
     - *Rest:* Similar to Monopoly rest stops, they do nothing, but give the player time to rethink their strategy.
