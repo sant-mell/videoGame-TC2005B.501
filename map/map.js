@@ -238,14 +238,27 @@ class Game {
     constructor() {
         this.initObjects();
         this.createEventListeners();
+
+        this.mapMusic = new Audio("../assets/audio/travel map.mp3");
+        this.mapMusic.volume = 0.4;
+        this.mapMusic.loop = true;
     }
 
     initObjects() {
+        // pool of node types like said in GDD
+        let nodePool = [NODE_FRAMES[0], NODE_FRAMES[1]]; // 0 is enemy, 1 is gear, 2 is rest node
+        for (let i = nodePool.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            let temp = nodePool[i];
+            nodePool[i] = nodePool[j];
+            nodePool[j] = temp;
+        }
+
         // starting node is already visited, the two branches are available at the start
         this.nodes = [
             new Node(0, 120, 300, "visited", SMALL_CASTLE, "castle"),
-            new Node(1, 360, 180, "available", NODE_FRAMES[randomRange(3)], "nodes"),
-            new Node(2, 360, 420, "available", NODE_FRAMES[randomRange(3)], "nodes")
+            new Node(1, 360, 180, "available", nodePool[0], "nodes"),
+            new Node(2, 360, 420, "available", nodePool[1], "nodes")
         ];
         // edges say which nodes are connected, [from, to]
         this.edges = [[0, 1], [0, 2]];
@@ -295,6 +308,9 @@ class Game {
                 this.currentId = n.id;
                 n.state = "visited";
                 this.updateAvailable();
+                if (n.frame === NODE_FRAMES[0]) {
+                    window.location.href = "../prototipo/prototipo.html";
+                }
                 break;
             }
         }
@@ -357,6 +373,7 @@ class Game {
         });
         // click on an available node to send the fool there
         window.addEventListener("click", (event) => {
+            if (this.mapMusic.paused) this.mapMusic.play();
             const rect = ctx.canvas.getBoundingClientRect();
             const mouseX = event.clientX - rect.left;
             const mouseY = event.clientY - rect.top;

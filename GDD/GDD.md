@@ -283,7 +283,7 @@ Negative fortunes:
 
 #### Rare Cards
 - *The High Priestess:* Can see the next card from the [Great Deck](#great-deck).
-- *The Hermit:* Skips your next draw phase entirely. 
+- *The Hermit:* Blocks enemy's turn. 
 - *Justice:* If you lose a life during your next turn, your opponent loses one too.
 - *Wheel of Fortune:* Shuffles the [Great Deck](#great-deck).
 - *King of Pentacles:* If you win the award money doubles, but if you lose the loss money does too.
