@@ -266,7 +266,7 @@ Negative fortunes:
 
 
 #### Common Cards
-- *The Magician:* Repeats the effect of the last card played by the character during this combat.
+- *The Magician:* Repeats the effect of the last card played during this combat.
 - *The Chariot:* Throws away the top card of the [Great Deck](#great-deck). 
 - *The Star:* When you reach 0 lives it revives you with a singular extra life.
 - *Page of Pentacles:* If you win in the next round it gives you a coin bonus.
@@ -349,8 +349,6 @@ The encounters will be easier on the beginning, where a calculation to prioritiz
 
 ## Duel
 
-
-The duel starts with the cards that were not used on last round.
 The progression as described in [gameplay](#gameplay) is made in the following manner:
 
 
@@ -363,13 +361,13 @@ The progression as described in [gameplay](#gameplay) is made in the following m
 5. The enemy repeats the process.
 7. Repeat.
 
-When the [Great Deck](#great-deck) gets depleted, duel participants will get more character cards in the following manner:
-- 2 for common enemies
-- 3 for rare enemies
-- 4 for epic enemies
-- 5 for legendary enemies
+The Character Cards for the player are the ones left from the past duel, plus new ones given randomly in the beginning each duel, the quantity is the following:
+- 3 for common enemies
+- 4 for rare enemies
+- 5 for epic enemies
+- 6 for legendary enemies
 
-Choosing a card from your character deck will discard it from your hand.
+Choosing a card from your character deck during your turn in a duel will discard it from your hand.
 
 
 ## Items and Currencies
@@ -407,9 +405,9 @@ On the map, one of the enemies of each difficulty will appear, those are also ra
 
 
 
-These characters lack any real combat training, they only manage to play a basic common card every other turn, giving you plenty of time to find your footing.
+These characters lack any real combat training, they only manage to play a basic common card every other turn, giving you plenty of time to find your footing. They have a 40% probability they attack you, 60% they target themselves. 
 
-
+- **Deck composition:** Magician, Chariot, Star, Strength
 
 
 #### Rare Enemies:
@@ -419,20 +417,14 @@ These characters lack any real combat training, they only manage to play a basic
 
 - "Crazy Jester"
 ![Rare Enemies](../assets/images/Jester.png)
-Cards Included: The Magician, The Chariot.
-
-
 
 
 - "Bounded Knight"
 ![Rare Enemies](../assets/images/Knight.png)
-Cards Included: The Star, Page of Pentacles.
 
+These are a bit more seasoned but still have their openings. While they’ve added some rare cards to their deck, they aren't perfectly consistent, they’ll skip an action every third turn, offering you a brief window to strike back. They have a 50% probability they attack you, 50% they target themselves. 
 
-
-
-These are a bit more seasoned but still have their openings. While they’ve added some rare cards to their deck, they aren't perfectly consistent, they’ll skip an action every third turn, offering you a brief window to strike back.
-
+- **Deck composition:** Hermit, Justice, Wheel of Fortune, Chariot, Strength
 
 
 
@@ -443,19 +435,17 @@ These are a bit more seasoned but still have their openings. While they’ve add
 
 - "Killer Queen"
 ![Epic Enemies](../assets/images/Queen.png)
-Cards Included: Strength, Two of Pentacles, The High Priestess, The Hermit.
-
-
 
 
 - "Mad Monarch"
 ![Epic Enemies](../assets/images/The_king.png)
-Cards Included: Justice, Wheel of Fortune, King of Pentacles.
 
 
 
 
-These are relentless fighters who never miss a beat, playing a card every single turn. Their decks are packed with epic cards, meaning you’ll need to stay sharp just to keep up with their constant pressure.
+These are relentless fighters who never miss a beat, playing a card every single turn. Their decks are packed with epic cards, meaning you’ll need to stay sharp just to keep up with their constant pressure. They have a 60% probability they attack you, 40% they target themselves. 
+
+- **Deck composition:** Lovers, Devil, Hanged Man, Wheel of Fortune, Hermit, Chariot
 
 
 #### Legendary and Final Enemy:
@@ -465,14 +455,15 @@ These are relentless fighters who never miss a beat, playing a card every single
 
 - "The Dealer"
 ![Final Boss](../assets/images/Dealer.png)
-Cards Included: The Lovers, The Tower, The Devil, The Hanged Man
 
 
 
 
-He doesn’t just play the game, he MAKES it. Holding the only Legendary card in existence, he’s capable of overwhelming you by dropping two cards at once every few turns. To beat him, you’ll have to survive a level of aggression unlike anything else you have seen before.
 
 
+He doesn’t just play the game, he MAKES it. Holding the only Legendary card in existence, he’s capable of overwhelming you by dropping two cards at once every few turns. To beat him, you’ll have to survive a level of aggression unlike anything else you have seen before. They have a 70% probability they attack you, 30% they target themselves. 
+
+- **Deck composition:** Fool, Lovers, Hanged Man, Justice, Hermit, Magician, Star
 
 
 ## Mindset
@@ -517,7 +508,7 @@ Graph map with nodes:
 
 -  **Boss**: Will start the duel with an enemy.
 
--  **Mystery**: Here the player will be given a random choice out of three possibilities: Card Binding, Life Extension or an Extra Card. For more info, refer to upgrades.
+-  **Upgrade**: Here the player can buy: Card Binding, Life Extension or an Extra Card. For more info, refer to upgrades.
 
 -  **Rest:** The player will just be given a free node to move more freely. Standing on it will not do anything.
 
@@ -525,7 +516,7 @@ Graph map with nodes:
 
 ### Controls
 
-- 10 card slots for Character Cards: The player will be able to hover over them to see their info, and click on them to choose the card they are going to use.
+- Card slots for Character Cards: The player will be able to hover over them to see their info, and click on them to choose the card they are going to use.
 
 - Shared deck: Includes sun and moon cards. These will be facing down and the only thing the player will be able to do is click on them.
 
@@ -538,40 +529,34 @@ Graph map with nodes:
 
 
 ### Duel Mechanics
-Each player has 3 lives. When a participant reaches 0 lives, they will lose the game. The player will start with 0 character cards but they will be added after the Great Deck has been depleted and given the enemy difficulty. The player is first able to see the total amount of sun and moon cards on the main deck before being shuffled and placed down, then they will be given the opportunity to choose from their character deck (if there are no cards on the character deck, this step is skipped). Then they will have to choose the target of the curret card on top of the main deck. It can be either themselves or the enemy. The effects of the card will be revealed after an animation of it being placed on the crystal ball and it's result will be revealed after said animation. After the effects are applied, the enemy will do the same.
+Each player starts with 3 lives. When a participant reaches 0 lives, they lose the duel. At the start of each duel, the player receives a number of character cards determined by the enemy's difficulty tier (see [Duel](#duel)). Before play begins, the total number of Sun and Moon cards in the [Great Deck](#great-deck) is briefly shown to both players. The Great Deck is then shuffled and placed face-down on the table. On their turn, the player may first play a character card from their hand (this step is skipped if the hand is empty). They then draw the top card of the Great Deck and choose a target: either themselves or the enemy. The card's effect is revealed after a brief animation over the crystal ball. After the player's turn resolves, the enemy takes their turn following the same sequence. When the Great Deck runs out of cards, a new one is automatically built and shuffled, and play continues, until someone wins.
 
 Steps:
 
-1. Show main deck contents (sun/moon counts).
-2. Shuffle the main deck and place it face-down on the table.
-3. Choose a character card from your hand (if available).
-4. Choose the target for the current top card (self or enemy).
-5. Apply the top card's effect.
-6. Enemy's turn: They follow the same sequence.
+1. Show Great Deck contents (sun/moon counts) briefly at the start.
+2. Shuffle the Great Deck and place it face-down on the table.
+3. Optionally play a character card from your hand.
+4. Draw the top card of the Great Deck and choose a target (self or enemy).
+5. Apply the card's effect.
+6. Enemy's turn: they follow the same sequence.
 7. Repeat until one duelist reaches 0 lives.
- 
-
 
 ### Prophecy Deck
-- Deck Size: `S = base + random(0,2)`
-- Moon cards: `random distribution 'M = random(1, S-1)`
-
+At the start of each duel (or when the deck is rebuilt after being emptied), the Great Deck is generated with a random number of Sun cards (between 1 and 4) and a random number of Moon cards (between 1 and 4). Both counts are shown to the player before the deck is shuffled. This means each round can have anywhere from 2 to 8 cards total, keeping the risk and probability calculations fresh each time.
 
 ### Effects
-- Moon: Damage
-- Sun: Provides a turn
+- **Moon:** The targeted player loses one life.
+- **Sun:** The player who drew the card gets an extra turn (only meaningful when targeting yourself; sending a Sun at the enemy grants no benefit to either side).
 
-### Up Removes a life
-A text offering to provide an upgrade from buttons: 
-- [Exit Upgrade]: The offer will be rejected and the window will be closed so the player can move to another node.
-- [Accept & pay]: The amount of money asked will be withdrawn from the player and they will be given the [upgrade](#upgrades).
+### Upgrade Screen
+When the player lands on an upgrade node, a window appears offering an upgrade in exchange for coins:
+- **[Exit Upgrade]:** Reject the offer and close the window.
+- **[Accept & Pay]:** Spend the listed coin cost to receive the [upgrade](#upgrades).
 
 ![UpgradeMenu](../assets/images/UpgradeMenu.png)
 
 ### Health System
-The health system is represented by candles, where a candle will melt in three sections to represent each base life. When the candle is completely melted, the player has lost all of their lives and thus the game, prompting them to start a new run. If a health upgrade is accepted, a second candle will be added proportional to the HP increase, still divided in 3 sections. When the extra candle runs out, the original one will start melting.
-
-`Health = 3 * candles + (3 - current candle section)`
+Lives are represented visually by candles on the table. Each player starts with 3 lives, shown as a single lit candle with three visible melt states (full, half-melted, nearly gone). When all 3 lives are lost the candle is shown fully extinguished. If a player's lives exceed 3 (for example by playing The Devil card), a second candle appears beside the first to represent the extra lives, using the same three-state visual. The maximum number of lives is capped at 6 (two full candles). Extra lives are consumed first; the original candle only begins to melt once the extra one is gone.
 
 ---
 
