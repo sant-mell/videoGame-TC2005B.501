@@ -71,7 +71,7 @@ class Game {
         this.discardY = canvasHeight / 2;
         //audio
         this.startSound = new Audio("../assets/audio/hardEnemies (1).mov");
-        this.startSound.volume = 0;
+        this.startSound.volume = 0.2;
         this.candleburn = new Audio("../assets/audio/candle_burning.mov");
         this.candleburn.volume = 0.8;
         this.candleblow = new Audio("../assets/audio/candle_blow.mov");
