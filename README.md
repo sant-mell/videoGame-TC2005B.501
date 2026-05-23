@@ -117,6 +117,7 @@ All controls depend on the cursor. For debugging, `y` shows hitboxes.
 - Save state and statistics database are not functional yet
 - The Fool legendary card is not in rotation yet
 - Statistics page does not pull data yet
+- *Page of Pentacles* gives a coin bonus when you draw a Sun after playing it, and *King of Pentacles* doubles that bonus. Both cards are in the game, but since coins are not persistent yet, no coins are actually given
 
 ---
 
