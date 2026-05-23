@@ -215,7 +215,7 @@ class Game {
             9, //Wheel of Fortune
             7,  // Hermit
             1,//chariot
-           0 //not fixed yet, depends on other cards, check last
+           //0 //not fixed yet, depends on other cards, check last
             //3 DONE
             //4, //DONE
             //7, //DONE
