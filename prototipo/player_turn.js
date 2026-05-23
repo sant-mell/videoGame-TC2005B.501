@@ -165,7 +165,7 @@ Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
                 cardEntry.showInfo = false;
                 this.showEnemyCards = true;
                 this.repositionCards();
-            }, 2000);
+            }, 2000);;
         }
     
 };
@@ -365,7 +365,6 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
                     this.justiceMessageUntil = performance.now() + 3000;
                 
                     this.enemyJusticeActive = false;
-                    this.candleBurnPlayed = false;
                     this.updatePlayerCandles();
                 }
             }

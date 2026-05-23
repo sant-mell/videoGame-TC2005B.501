@@ -23,8 +23,50 @@ Game.prototype.enemyTurn = function() {
     
         setTimeout(() => {
     
-            const randomIndex = Math.floor(Math.random() * this.enemyCharacterCards.length);
-            const enemyCard = this.enemyCharacterCards[randomIndex];
+            let enemyCard;
+
+            // Uses The Devil if they have one live left
+            if (this.enemyLives === 1) {
+                enemyCard = this.enemyCharacterCards.find(
+                    card => card.name === "The Devil"
+                );
+            }
+
+            // Uses The Hermit if the player has one live left
+            if (!enemyCard && this.playerLives === 1) {
+                enemyCard = this.enemyCharacterCards.find(
+                    card => card.name === "The Hermit"
+                );
+            }
+
+            // It's random the rest of the time
+            if (!enemyCard) {
+                
+                let availableCards = this.enemyCharacterCards;
+
+                if (this.enemyLives !== 1) {
+                    availableCards = availableCards.filter(
+                        card => card.name !== "The Devil"
+                    );
+                }
+
+                if (this.playerLives !== 1) {
+                    availableCards = availableCards.filter(
+                        card => card.name !== "The Hermit"
+                    );
+                }
+
+                if (availableCards.length <= 0) {
+                    availableCards = this.enemyCharacterCards;
+                }
+
+                enemyCard = availableCards[
+                    Math.floor(Math.random() * availableCards.length)
+                ];
+            }
+
+            const chosenIndex = this.enemyCharacterCards.indexOf(enemyCard);
+
             const hasCharacterCard = !skipEnemyCharacterCard && this.enemyCharacterCards.length > 0 && enemyCard != null;
     
             if (hasCharacterCard) {
@@ -72,7 +114,7 @@ Game.prototype.enemyTurn = function() {
                     enemyCard.object.size.x = 50;
                     enemyCard.object.size.y = 90;
                     this.activeEnemyCard = null;
-                    this.enemyCharacterCards.splice(randomIndex, 1);
+                    this.enemyCharacterCards.splice(chosenIndex, 1);
                     this.repositionEnemyCards();
                 }, 5000);
     
@@ -104,16 +146,38 @@ Game.prototype.enemyTurn = function() {
 };
 
 Game.prototype.resolveEnemyDeckDraw = function() {
-    
-        this.currentGreatCard = this.greatDeck.shift();
-        this.showFinalImage = true;
-    
-        setTimeout(() => {
-            this.slideDirection = "down";
-            this.isCardSliding = true;
-        }, 500);
-    
-        if (this.currentGreatCard === "moon") {
+
+    this.currentGreatCard = this.greatDeck.shift();
+    this.showFinalImage = true;
+
+    // Probability: 60% they attack you, 40% they choose themselves
+    const enemyTargetsSelf = Math.random() < 0.40;
+
+    setTimeout(() => {
+        this.slideDirection = enemyTargetsSelf ? "up" : "down";
+        this.isCardSliding = true;
+    }, 500);
+
+    if (this.currentGreatCard === "moon") {
+
+        if (enemyTargetsSelf) {
+            if (!this.activateStrengthPower("enemy")) {
+                this.enemyLives--;
+                this.updateEnemyCandles();
+            }
+            if (this.enemyJusticeActive) {
+                if (!this.activateStrengthPower("player")) {
+                    this.playerLives--;
+                }
+                this.justiceMessageUntil = performance.now() + 3000;
+                this.enemyJusticeActive = false;
+                this.updatePlayerCandles();
+            }
+            if (this.enemyLives <= 0 && !this.activateStarPower("enemy")) {
+                this.gameOver = true;
+            }
+
+        } else {
             if (!this.activateStrengthPower("player")) {
                 this.playerLives--;
             }
@@ -121,47 +185,37 @@ Game.prototype.resolveEnemyDeckDraw = function() {
                 if (!this.activateStrengthPower("enemy")) {
                     this.enemyLives--;
                 }
-            
                 this.justiceMessageUntil = performance.now() + 3000;
-            
                 this.playerJusticeActive = false;
                 this.updateEnemyCandles();
             }
+            if (this.playerLives <= 0 && !this.activateStarPower("player")) {
+                this.gameOver = true;
+            }
         }
-    
-        if (this.playerLives <= 0 && !this.activateStarPower("player")) {
-            this.gameOver = true;
-        }
-    
-        setTimeout(() => {
+    }
 
-            this.showFinalImage = false;
-        
-            if (this.gameOver) {
+    if (this.currentGreatCard === "sun") {
+        if (enemyTargetsSelf) {
+            this.sunMessage = true;
+            setTimeout(() => { this.sunMessage = false; }, 2000);
+        }
+    }
+
+    setTimeout(() => {
+        this.showFinalImage = false;
+
+        if (this.gameOver) return;
+
+        // If the enemy targeted themselves and it was a sun, they also get another turn
+        if (enemyTargetsSelf) {
+
+            if (this.currentGreatCard === "sun") {
+                this.enemyTurn();
                 return;
             }
-            console.log("BEFORE BLOCK CHECK", this.playerTurnBlocked);
-            // PLAYER TURN BLOCKED
-            if (this.playerTurnBlocked) {
-                console.log("BLOCK Works", this.playerTurnBlocked);
-                this.playerTurnBlocked = false;
-        
-                this.currentTurn = "enemy";
-        
-                this.turnBlockedMessage = true;
-        
-                setTimeout(() => {
-        
-                    this.turnBlockedMessage = false;
-        
-                    this.enemyTurn();
-        
-                }, 2000);
-        
-                return;
-            }
-        
-            // NORMAL FLOW
+
+            // If they targeted themselves and it was a moon, it's now the players turn
             this.currentTurn = "player";
             this.showEnemyCards = true;
 
@@ -171,7 +225,32 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             } else {
                 this.showPlayerCards = true;
             }
-        
-        }, 3000);
-    
+            return;
+        }
+
+        if (this.playerTurnBlocked) {
+            this.playerTurnBlocked = false;
+            this.currentTurn = "enemy";
+            this.turnBlockedMessage = true;
+
+            setTimeout(() => {
+                this.turnBlockedMessage = false;
+                this.enemyTurn();
+            }, 2000);
+
+            return;
+        }
+
+        this.currentTurn = "player";
+        this.showEnemyCards = true;
+
+        if (this.playerHandBlocked) {
+            this.showPlayerCards = false;
+            this.playerHandBlockedMessage = true;
+        } else {
+            this.showPlayerCards = true;
+        }
+
+    }, 3000);
+
 };

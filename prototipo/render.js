@@ -3,7 +3,17 @@ Game.prototype.draw = function(ctx) {
         // DRAW BACKGROUND
         this.background.draw(ctx);
         if (this.isEnemyShowing) {
+
+            // Glow only when attackable
+            if (this.showCenterImage && this.currentTurn === "player") {
+                ctx.shadowColor = "#8b5cf6";
+                ctx.shadowBlur = 20;
+            }
+
             this.king.draw(ctx);
+
+            ctx.shadowBlur = 0;
+            ctx.shadowColor = "transparent";
         }
         
         if (this.isShowingDefeatedEnemy) {
@@ -185,7 +195,7 @@ Game.prototype.draw = function(ctx) {
             ctx.fillStyle = "gold";
             ctx.font = "24px MedievalSharp";
             ctx.textAlign = "left";
-            ctx.fillText("Coins: " + this.coins, 20, 30);
+            ctx.fillText("Coins: $" + this.coins, 140, 55);
 
             ctx.textAlign = "center";
         }
@@ -397,7 +407,9 @@ Game.prototype.draw = function(ctx) {
 Game.prototype.drawCustomHitbox = function(ctx, hitbox) {
         if (hitbox === this.startButton) {
 
-            ctx.fillStyle = "gray";
+            ctx.fillStyle = "#2a1d3f";
+            ctx.shadowColor = "#8b5cf6";
+            ctx.shadowBlur = 25;
 
             ctx.fillRect(
                 hitbox.x,
@@ -408,29 +420,42 @@ Game.prototype.drawCustomHitbox = function(ctx, hitbox) {
             ctx.fillStyle = "white";
             ctx.font = "30px MedievalSharp";
             ctx.textAlign = "center";
+            ctx.strokeStyle = "#c9a44c";
+            ctx.lineWidth = 4;
 
             ctx.fillText(
             "START",
             hitbox.x + hitbox.width / 2,
             hitbox.y + hitbox.height / 2 + 10
             );
+            ctx.shadowBlur = 0;
+            ctx.shadowColor = "transparent";
         }
         if (hitbox === this.youButton) {
+            
+            ctx.fillStyle = "#2a1d3f";
+            ctx.shadowColor = "#8b5cf6";
+            ctx.shadowBlur = 30;
 
+            ctx.fillRect(
+                hitbox.x,
+                hitbox.y,
+                hitbox.width,
+                hitbox.height
+            );
             ctx.fillStyle = "white";
             ctx.font = "25px MedievalSharp";
             ctx.textAlign = "center";
         
             ctx.fillText(
-                "Fool",
-                hitbox.x + hitbox.width / 2,
-                hitbox.y + hitbox.height / 2 + 8
+            "Us",
+            hitbox.x + hitbox.width / 2,
+            hitbox.y + hitbox.height / 2 + 8
             );
+            ctx.shadowBlur = 0;
+            ctx.shadowColor = "transparent";
         }
-
-        ctx.strokeStyle = "red";
-        ctx.lineWidth = 2;
-
+        
         ctx.strokeRect(
             hitbox.x,
             hitbox.y,
@@ -445,7 +470,7 @@ Game.prototype.drawHitbox = function(ctx, card) {
         const left = card.position.x - card.size.x / 2;
         const top = card.position.y - card.size.y / 2;
 
-        ctx.strokeStyle = "red";
+        //ctx.strokeStyle = "red";
         ctx.lineWidth = 3;
 
         ctx.strokeRect(
