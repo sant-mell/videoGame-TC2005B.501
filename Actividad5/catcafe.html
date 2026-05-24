@@ -1,1 +1,52 @@
+<!DOCTYPE html>
 
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<title>Cat Café</title>
+<link rel="stylesheet" href="catcafe.css">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet">
+<script src="catcafe.js" defer></script>
+</head>
+
+<body>
+<h1>Cat Café</h1>
+
+<div class="contenedor">
+
+    <div class="menu-lado lado">
+        <h2>Menú</h2>
+        <select onchange="cambiarMenu(this.value)">
+            <option value="lunes">Lunes</option>
+            <option value="martes">Martes</option>
+            <option value="miercoles">Miércoles</option>
+            <option value="jueves">Jueves</option>
+            <option value="viernes">Viernes</option>
+            <option value="sabado">Sábado</option>
+        </select>
+        <div class="menu" id="menu"></div>
+        <img id="imagen">
+    </div>
+
+    <div class="visitanos lado">
+        <h2>Visítanos</h2>
+        <h3><b>Horario:</b></h3>
+        <p>Lunes a Sábado: 9:00 - 19:00</p>
+        <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3764.2735788455034!2d-99.2599099!3d19.3573033!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d200c0fa04d82b%3A0x5e726f97d5cf3c8b!2sTecnol%C3%B3gico%20de%20Monterrey%20Campus%20Santa%20Fe!5e0!3m2!1ses!2smx!4v1777330075126!5m2!1ses!2smx"
+            height="275px" 
+            style="border-radius:15px;">
+        </iframe>
+    </div>
+
+</div>
+
+<h2>Nuestros gatos</h2>
+
+<div class="gatos" id="gatos"></div>
+
+</div>
+</body>
+
+</html>
