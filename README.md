@@ -74,7 +74,7 @@ The prototype starts at the duel scene (`prototipo/prototipo.html`). Click the *
 
 ## Controls
 
-All controls depend on the cursor.
+All controls depend on the cursor. For debugging, `y` shows hitboxes.
 
 - **Start the game:** click the Start button at the center of the screen
 - **Play a character card:** click a card from your hand at the bottom of the screen
@@ -109,7 +109,7 @@ All controls depend on the cursor.
 ### In Progress
 
 - Map and duel are not connected yet, they run as separate scenes
-- Players start with cards defined by the array in the code called `startingHand`
+- Players start with cards in their hand, but it is not yet connected to game progression.
 - Only the Mad Monarch is active; other enemies are not yet selectable
 - Map generation is not procedural yet
 - Upgrade and rest nodes on the map are not implemented
@@ -117,6 +117,7 @@ All controls depend on the cursor.
 - Save state and statistics database are not functional yet
 - The Fool legendary card is not in rotation yet
 - Statistics page does not pull data yet
+- *Page of Pentacles* gives a coin bonus when you draw a Sun after playing it, and *King of Pentacles* doubles that bonus. Both cards are in the game, but since coins are not persistent yet, no coins are actually given
 
 ---
 
