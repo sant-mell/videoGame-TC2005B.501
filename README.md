@@ -16,6 +16,8 @@ The Fool's Descent is a roguelike card game where you navigate a map, fight enem
 
 ## How to Run the Game
 
+##You can simply click on the [link](https://foolsdescent.netlify.app/web/menu) to play online or play it locally
+
 ### 1. Clone the repository
 
 ```bash
