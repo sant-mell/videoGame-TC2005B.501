@@ -9,11 +9,17 @@ let oldTime = 0;
 let showBBox = false; // y for hitbox 
 // s is for sheet location, d is for drawing dimensions
 const SMALL_CASTLE = { sx: 0, sy: 0, sw: 331, sh: 444, dw: 62, dh: 75 }; // Castle Nodes.png left sprite
+const BIG_CASTLE = { sx: 331, sy: 0, sw: 516, sh: 444, dw: 100, dh: 86 }; // boss castle
 const NODE_FRAMES = [
     { sx: 0, sy: 0, sw: 305, sh: 362, dw: 78, dh: 78 }, //diamond
     { sx: 305, sy: 0, sw: 327, sh: 362, dw: 78, dh: 78 }, //gear
     { sx: 632, sy: 0, sw: 314, sh: 362, dw: 78, dh: 78 }  //portal
 ];
+
+const NODE_REST = 0;
+const NODE_ENEMY = 1;
+const NODE_UPGRADE = 2;
+const NODE_BOSS = 3;
 
 const FOOL_COLS = 3;
 const FOOL_FRAME_W = 256; // 768 / 3
@@ -41,6 +47,7 @@ const foolMotion = { //each direction of frames with status for playing it
 function randomRange(max, min = 0) {
     return Math.floor(Math.random() * max) + min;
 }
+
 
 // fool sliding to nodes
 class Fool {
@@ -115,11 +122,12 @@ class Fool {
         this.setAnimation(6, 7, true, 150);
     }
 
-    getDirection(dx, dy) { // where it is moving more, it will face that direction.
-        if (Math.abs(dy) >= Math.abs(dx)) {
-            return dy < 0 ? "up" : "down";
+    getDirection(dx, dy) {
+        // map is horizontal so the fool only ever faces left or right
+        if (dx < 0) {
+            return "left";
         } else {
-            return dx < 0 ? "left" : "right";
+            return "right";
         }
     }
 
@@ -185,13 +193,14 @@ class Fool {
 
 // each node on the map. can be visited, available or locked
 class Node {
-    constructor(id, x, y, state, frame, sheet) {
+    constructor(id, x, y, state, frame, sheet, type) {
         this.id = id;
         this.x = x;
         this.y = y;
         this.state = state; // visited, available or locked
         this.frame = frame; // which part of the spritesheet to use
         this.sheet = sheet; // castles or nodes spritesheet
+        this.type = type; // NODE_REST=0, NODE_ENEMY=1, NODE_UPGRADE=2, NODE_BOSS=3
         this.sprite = null; // to assign sprite later
     }
 
@@ -245,27 +254,123 @@ class Game {
     }
 
     initObjects() {
-        // pool of node types like said in GDD
-        let nodePool = [NODE_FRAMES[0], NODE_FRAMES[1]]; // 0 is enemy, 1 is gear, 2 is rest node
-        for (let i = nodePool.length - 1; i > 0; i--) {
-            let j = Math.floor(Math.random() * (i + 1));
-            let temp = nodePool[i];
-            nodePool[i] = nodePool[j];
-            nodePool[j] = temp;
+        // fill middle 6 nodes, 1 enemy and 1 upgrade per column
+        let pool = [];
+        for (let i = 0; i < 3; i++) {
+            if (Math.random() < 0.5) {
+                pool.push({ frame: NODE_FRAMES[0], sheet: "nodes", type: NODE_ENEMY });
+                pool.push({ frame: NODE_FRAMES[1], sheet: "nodes", type: NODE_UPGRADE });
+            } else {
+                pool.push({ frame: NODE_FRAMES[1], sheet: "nodes", type: NODE_UPGRADE });
+                pool.push({ frame: NODE_FRAMES[0], sheet: "nodes", type: NODE_ENEMY });
+            }
         }
 
-        // starting node is already visited, the two branches are available at the start
+        let n1 = pool[0], n2 = pool[1], n3 = pool[2], n4 = pool[3], n5 = pool[4], n6 = pool[5];
         this.nodes = [
-            new Node(0, 120, 300, "visited", SMALL_CASTLE, "castle"),
-            new Node(1, 360, 180, "available", nodePool[0], "nodes"),
-            new Node(2, 360, 420, "available", nodePool[1], "nodes")
+            new Node(0, 120, 300, "visited", NODE_FRAMES[2], "nodes", NODE_REST),
+            new Node(1, 360, 180, "available", n1.frame, n1.sheet, n1.type),
+            new Node(2, 360, 420, "available", n2.frame, n2.sheet, n2.type),
+            new Node(3, 600, 180, "locked", n3.frame, n3.sheet, n3.type),
+            new Node(4, 600, 420, "locked", n4.frame, n4.sheet, n4.type),
+            new Node(5, 840, 180, "locked", n5.frame, n5.sheet, n5.type),
+            new Node(6, 840, 420, "locked", n6.frame, n6.sheet, n6.type),
+            new Node(7, 1080, 300, "locked", BIG_CASTLE, "castle", NODE_BOSS),
         ];
-        // edges say which nodes are connected, [from, to]
-        this.edges = [[0, 1], [0, 2]];
-        this.currentId = 0; // which node the fool is currently on
 
+        this.edges = [];
+        this.edges.push([0, 1]);
+        this.edges.push([0, 2]);
+
+        // col1 to col2, cross if straight puts two upgrades next to each other
+        let col2top = 3;
+        let col2bot = 4;
+        if (this.nodes[1].type === NODE_UPGRADE) {
+            if (this.nodes[3].type === NODE_UPGRADE) {
+                col2top = 4;
+                col2bot = 3;
+            }
+        }
+        if (this.nodes[2].type === NODE_UPGRADE) {
+            if (this.nodes[4].type === NODE_UPGRADE) {
+                col2top = 4;
+                col2bot = 3;
+            }
+        }
+        this.edges.push([1, col2top]);
+        this.edges.push([2, col2bot]);
+        if (Math.random() < 0.5) {
+            let from;
+            let to;
+            if (Math.random() < 0.5) { from = 1; } else { from = 2; }
+            if (Math.random() < 0.5) { to = 3; } else { to = 4; }
+            let duplicate = false;
+            for (let i = 0; i < this.edges.length; i++) {
+                if (this.edges[i][0] === from) {
+                    if (this.edges[i][1] === to) {
+                        duplicate = true;
+                        break;
+                    }
+                }
+            }
+            if (!duplicate) {
+                if (this.nodes[from].type === NODE_UPGRADE) {
+                    if (this.nodes[to].type !== NODE_UPGRADE) {
+                        this.edges.push([from, to]);
+                    }
+                } else {
+                    this.edges.push([from, to]);
+                }
+            }
+        }
+
+        // col2 to col3
+        let col3top = 5;
+        let col3bot = 6;
+        if (this.nodes[3].type === NODE_UPGRADE) {
+            if (this.nodes[5].type === NODE_UPGRADE) {
+                col3top = 6;
+                col3bot = 5;
+            }
+        }
+        if (this.nodes[4].type === NODE_UPGRADE) {
+            if (this.nodes[6].type === NODE_UPGRADE) {
+                col3top = 6;
+                col3bot = 5;
+            }
+        }
+        this.edges.push([3, col3top]);
+        this.edges.push([4, col3bot]);
+        if (Math.random() < 0.5) {
+            let from;
+            let to;
+            if (Math.random() < 0.5) { from = 3; } else { from = 4; }
+            if (Math.random() < 0.5) { to = 5; } else { to = 6; }
+            let alreadyIn = false;
+            for (let i = 0; i < this.edges.length; i++) {
+                if (this.edges[i][0] === from) {
+                    if (this.edges[i][1] === to) {
+                        alreadyIn = true;
+                        break;
+                    }
+                }
+            }
+            if (!alreadyIn) {
+                if (this.nodes[from].type === NODE_UPGRADE) {
+                    if (this.nodes[to].type !== NODE_UPGRADE) {
+                        this.edges.push([from, to]);
+                    }
+                } else {
+                    this.edges.push([from, to]);
+                }
+            }
+        }
+
+        this.edges.push([5, 7]);
+        this.edges.push([6, 7]);
+
+        this.currentId = 0;
         this.fool = new Fool(120, 300);
-
         this.sprites = {};
         this.loadSprites();
     }
@@ -279,9 +384,8 @@ class Game {
         this.sprites.nodes.src = "../assets/images/map/Map Nodes.png";
         this.sprites.rope = new Image();
         this.sprites.rope.src = "../assets/images/map/Cuerda.png";
-        // give each node a reference to its spritesheet
         for (let n of this.nodes) {
-            if (n.sheet == "castle") {
+            if (n.sheet === "castle") {
                 n.sprite = this.sprites.castle;
             } else {
                 n.sprite = this.sprites.nodes;
@@ -308,7 +412,9 @@ class Game {
                 this.currentId = n.id;
                 n.state = "visited";
                 this.updateAvailable();
-                if (n.frame === NODE_FRAMES[0]) {
+                if (n.type === NODE_ENEMY) {
+                    window.location.href = "../prototipo/prototipo.html";
+                } else if (n.type === NODE_BOSS) {
                     window.location.href = "../prototipo/prototipo.html";
                 }
                 break;
@@ -392,15 +498,25 @@ class Game {
         for (let i = 0; i < this.edges.length; i++) {
             let from = this.edges[i][0];
             let to = this.edges[i][1];
-            if ((from === this.currentId && to === n.id) ||
-                (to === this.currentId && from === n.id)) {
-                isConnected = true;
-                break;
+            if (from === this.currentId) {
+                if (to === n.id) {
+                    isConnected = true;
+                    break;
+                }
+            } else if (to === this.currentId) {
+                if (from === n.id) {
+                    isConnected = true;
+                    break;
+                }
             }
         }
-        if (Math.sqrt(dx * dx + dy * dy) <= 40 && n.id !== this.currentId && isConnected) {
-            console.log("node clicked: " + n.id);
-            this.fool.setTarget(n.x, n.y);
+        if (Math.sqrt(dx * dx + dy * dy) <= 40) {
+            if (n.id !== this.currentId) {
+                if (isConnected) {
+                    console.log("node clicked: " + n.id);
+                    this.fool.setTarget(n.x, n.y);
+                }
+            }
         }
     }
 }
