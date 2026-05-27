@@ -26,6 +26,9 @@ loginButton.addEventListener("click", async () => {
 
     if (data.success) {
 
+        localStorage.setItem("userId", data.userId);
+        localStorage.setItem("continueRun", "false");
+
         alert("Login successful!");
 
         window.location.href = "menu.html";

@@ -6,7 +6,7 @@ const canvasHeight = 600;
 let ctx;
 let game;
 let oldTime = 0;
-let showBBox = false; // y for hitbox 
+let showBBox = false; // y for hitbox
 // s is for sheet location, d is for drawing dimensions
 const SMALL_CASTLE = { sx: 0, sy: 0, sw: 331, sh: 444, dw: 62, dh: 75 }; // Castle Nodes.png left sprite
 const BIG_CASTLE = { sx: 331, sy: 0, sw: 516, sh: 444, dw: 100, dh: 86 }; // boss castle
@@ -75,7 +75,7 @@ class Fool {
         this.spriteImage = undefined;
         this.spriteRect = undefined;
     }
-    
+
     setSprite(imagePath, rect) {
         this.spriteImage = new Image();
         this.spriteImage.src = imagePath;
@@ -193,7 +193,7 @@ class Fool {
 
 // each node on the map. can be visited, available or locked
 class Node {
-    constructor(id, x, y, state, frame, sheet, type) {
+    constructor(id, x, y, state, frame, sheet, type, upgradeType = null) {
         this.id = id;
         this.x = x;
         this.y = y;
@@ -201,6 +201,7 @@ class Node {
         this.frame = frame; // which part of the spritesheet to use
         this.sheet = sheet; // castles or nodes spritesheet
         this.type = type; // NODE_REST=0, NODE_ENEMY=1, NODE_UPGRADE=2, NODE_BOSS=3
+        this.upgradeType = upgradeType; // UPGRADE_BINDING=0, UPGRADE_LIFE=1, UPGRADE_CARD=2, null for non-upgrade nodes
         this.sprite = null; // to assign sprite later
     }
 
@@ -254,27 +255,38 @@ class Game {
     }
 
     initObjects() {
+        let upgradeTypes = [UPGRADE_BINDING, UPGRADE_LIFE, UPGRADE_CARD];
+        let r = randomRange(3);
+        let temp = upgradeTypes[0];
+        upgradeTypes[0] = upgradeTypes[r];
+        upgradeTypes[r] = temp;
+        r = randomRange(3);
+        temp = upgradeTypes[1];
+        upgradeTypes[1] = upgradeTypes[r];
+        upgradeTypes[r] = temp;
+
         // fill middle 6 nodes, 1 enemy and 1 upgrade per column
         let pool = [];
         for (let i = 0; i < 3; i++) {
+            let uType = upgradeTypes[i];
             if (Math.random() < 0.5) {
-                pool.push({ frame: NODE_FRAMES[0], sheet: "nodes", type: NODE_ENEMY });
-                pool.push({ frame: NODE_FRAMES[1], sheet: "nodes", type: NODE_UPGRADE });
+                pool.push({ frame: NODE_FRAMES[0], sheet: "nodes", type: NODE_ENEMY, upgradeType: null });
+                pool.push({ frame: UPGRADE_FRAMES[uType], sheet: "upgradeNodes", type: NODE_UPGRADE, upgradeType: uType });
             } else {
-                pool.push({ frame: NODE_FRAMES[1], sheet: "nodes", type: NODE_UPGRADE });
-                pool.push({ frame: NODE_FRAMES[0], sheet: "nodes", type: NODE_ENEMY });
+                pool.push({ frame: UPGRADE_FRAMES[uType], sheet: "upgradeNodes", type: NODE_UPGRADE, upgradeType: uType });
+                pool.push({ frame: NODE_FRAMES[0], sheet: "nodes", type: NODE_ENEMY, upgradeType: null });
             }
         }
 
         let n1 = pool[0], n2 = pool[1], n3 = pool[2], n4 = pool[3], n5 = pool[4], n6 = pool[5];
         this.nodes = [
             new Node(0, 120, 300, "visited", NODE_FRAMES[2], "nodes", NODE_REST),
-            new Node(1, 360, 180, "available", n1.frame, n1.sheet, n1.type),
-            new Node(2, 360, 420, "available", n2.frame, n2.sheet, n2.type),
-            new Node(3, 600, 180, "locked", n3.frame, n3.sheet, n3.type),
-            new Node(4, 600, 420, "locked", n4.frame, n4.sheet, n4.type),
-            new Node(5, 840, 180, "locked", n5.frame, n5.sheet, n5.type),
-            new Node(6, 840, 420, "locked", n6.frame, n6.sheet, n6.type),
+            new Node(1, 360, 180, "available", n1.frame, n1.sheet, n1.type, n1.upgradeType),
+            new Node(2, 360, 420, "available", n2.frame, n2.sheet, n2.type, n2.upgradeType),
+            new Node(3, 600, 180, "locked", n3.frame, n3.sheet, n3.type, n3.upgradeType),
+            new Node(4, 600, 420, "locked", n4.frame, n4.sheet, n4.type, n4.upgradeType),
+            new Node(5, 840, 180, "locked", n5.frame, n5.sheet, n5.type, n5.upgradeType),
+            new Node(6, 840, 420, "locked", n6.frame, n6.sheet, n6.type, n6.upgradeType),
             new Node(7, 1080, 300, "locked", BIG_CASTLE, "castle", NODE_BOSS),
         ];
 
@@ -373,6 +385,15 @@ class Game {
         this.fool = new Fool(120, 300);
         this.sprites = {};
         this.loadSprites();
+
+        this.upgradeOpen = false;
+        this.currentUpgradeType = null;
+        this.exitBtnRect = null;
+        this.cardPickerOpen = false;
+        this.cardCellRects = [];
+        this.cardBackRect = null;
+
+        this.upgradeNames = ["Card Binding", "Life Extension", "Extra Card"];
     }
 
     loadSprites() {
@@ -384,9 +405,13 @@ class Game {
         this.sprites.nodes.src = "../assets/images/map/Map Nodes.png";
         this.sprites.rope = new Image();
         this.sprites.rope.src = "../assets/images/map/Cuerda.png";
+        this.sprites.upgradeNodes = new Image();
+        this.sprites.upgradeNodes.src = "../assets/images/map/Upgrade Nodes.png";
         for (let n of this.nodes) {
             if (n.sheet === "castle") {
                 n.sprite = this.sprites.castle;
+            } else if (n.sheet === "upgradeNodes") {
+                n.sprite = this.sprites.upgradeNodes;
             } else {
                 n.sprite = this.sprites.nodes;
             }
@@ -395,6 +420,50 @@ class Game {
         this.fool.setSprite('../assets/images/Sprite Fool Final.png',
                             { x: 0, y: 0, width: FOOL_FRAME_W, height: FOOL_FRAME_H });
         this.fool.setAnimation(6, 7, true, 150); // start on front-facing idle
+    }
+
+    getSaveData() {
+        return {
+            currentId: this.currentId,
+            fool: {
+                x: this.fool.x,
+                y: this.fool.y
+            },
+            nodes: this.nodes.map(node => ({
+                id: node.id,
+                x: node.x,
+                y: node.y,
+                state: node.state,
+                sheet: node.sheet,
+                type: node.type,
+                upgradeType: node.upgradeType
+            })),
+            edges: this.edges
+        };
+    }
+
+    loadSaveData(data) {
+        this.currentId = data.currentId;
+        this.edges = data.edges;
+        this.nodes = data.nodes.map(node => {
+            let frame;
+            if (node.type === NODE_REST) {
+                frame = NODE_FRAMES[2];
+            } else if (node.type === NODE_ENEMY) {
+                frame = NODE_FRAMES[0];
+            } else if (node.type === NODE_UPGRADE) {
+                frame = node.upgradeType != null ? UPGRADE_FRAMES[node.upgradeType] : NODE_FRAMES[1];
+            } else {
+                frame = BIG_CASTLE;
+            }
+
+            return new Node(node.id, node.x, node.y, node.state, frame, node.sheet, node.type, node.upgradeType);
+        });
+        this.fool.x = data.fool.x;
+        this.fool.y = data.fool.y;
+        this.fool.tx = data.fool.x;
+        this.fool.ty = data.fool.y;
+        this.loadSprites();
     }
 
     update(deltaTime) {
@@ -406,16 +475,20 @@ class Game {
     }
 
     // called when the fool reaches a node, marks it visited and updates what's available
-    arrive() {
+    async arrive() {
         for (let n of this.nodes) {
             if (n.x === this.fool.tx && n.y === this.fool.ty) {
                 this.currentId = n.id;
                 n.state = "visited";
                 this.updateAvailable();
+                await saveProgress(this);
                 if (n.type === NODE_ENEMY) {
                     window.location.href = "../prototipo/prototipo.html";
                 } else if (n.type === NODE_BOSS) {
                     window.location.href = "../prototipo/prototipo.html";
+                } else if (n.type === NODE_UPGRADE) {
+                    this.currentUpgradeType = n.upgradeType;
+                    this.upgradeOpen = true;
                 }
                 break;
             }
@@ -446,6 +519,11 @@ class Game {
         this.drawEdges(ctx);
         for (let n of this.nodes) n.draw(ctx);
         this.fool.draw(ctx);
+        if (this.upgradeOpen) {
+            this.drawUpgradePanel(ctx);
+        } else if (this.cardPickerOpen) {
+            this.drawCardPicker(ctx);
+        }
     }
 
     // draws the rope connecting each pair of nodes
@@ -483,6 +561,14 @@ class Game {
             const rect = ctx.canvas.getBoundingClientRect();
             const mouseX = event.clientX - rect.left;
             const mouseY = event.clientY - rect.top;
+            if (this.upgradeOpen) {
+                this.checkUpgradeClick(mouseX, mouseY);
+                return;
+            }
+            if (this.cardPickerOpen) {
+                this.checkCardPickerClick(mouseX, mouseY);
+                return;
+            }
             for (let n of this.nodes) {
                 this.checkNodeClick(n, mouseX, mouseY);
             }
@@ -522,12 +608,25 @@ class Game {
 }
 
 // sets up the canvas and starts the game
-function main() {
+async function main() {
     const canvas = document.getElementById('canvas');
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
     ctx = canvas.getContext('2d');
     game = new Game();
+    if (localStorage.getItem("continueRun") === "true") {
+        const loaded = await loadGame(game);
+        if (!loaded) {
+            // DB unavailable or not logged in, restore from local backup if it exists
+            if (!loadMapLocally(game)) {
+                await saveNewDescent(game);
+            }
+        }
+    }
+    else {
+        await saveNewDescent(game);
+        localStorage.setItem("continueRun", "true");
+    }
     drawScene(0);
 }
 

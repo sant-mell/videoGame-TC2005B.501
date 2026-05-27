@@ -1,0 +1,67 @@
+function saveMapLocally(game) {
+    localStorage.setItem("mapData", JSON.stringify(game.getSaveData()));
+}
+
+function loadMapLocally(game) {
+    const raw = localStorage.getItem("mapData");
+    if (!raw) return false;
+    game.loadSaveData(JSON.parse(raw));
+    return true;
+}
+
+async function saveNewDescent(game) { // saves a new descent run to the server, returns true if successful
+    saveMapLocally(game);
+    const saveData = game.getSaveData();
+    try {
+        const response = await fetch("http://localhost:3000/new-descent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userId: localStorage.getItem("userId"),
+                mapData: saveData
+            })
+        });
+        return response.ok;
+    } catch (err) {
+        return false;
+    }
+}
+
+async function saveProgress(game) { 
+    saveMapLocally(game);
+    const saveData = game.getSaveData();
+    try {
+        const response = await fetch("http://localhost:3000/save-progress", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userId: localStorage.getItem("userId"),
+                currentCoins: 0,
+                mapData: saveData
+            })
+        });
+        return response.ok;
+    } catch (err) {
+        return false;
+    }
+}
+
+async function loadGame(game) {
+    try {
+        const response = await fetch("http://localhost:3000/load-game", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userId: localStorage.getItem("userId")
+            })
+        });
+        const data = await response.json();
+        if (data.success) {
+            game.loadSaveData(data.saveData.mapData);
+            return true;
+        }
+        return false;
+    } catch (err) {
+        return false;
+    }
+}
