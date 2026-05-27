@@ -1,6 +1,6 @@
 # The Fool's Descent
 
-![Logo Juego](/assets/images/Gemini_Generated_Image_om4mquom4mquom4m.png)
+![Logo Juego](FoolsDescent/assets/images/Gemini_Generated_Image_om4mquom4mquom4m.png)
 
 **© 2026 Arcana Studios. All rights reserved.**
 
@@ -25,52 +25,52 @@ git clone https://github.com/sant-mell/videoGame-TC2005B.501.git
 cd videoGame-TC2005B.501
 ```
 
-### 2. Open the prototype (duel scene)
+### 2. Open the duel scene
 
-Open `prototipo/prototipo.html` in your browser:
+Open `FoolsDescent/client/scenes/duel/duel.html` in your browser:
 
 ```bash
 # Brave
-brave-browser prototipo/prototipo.html
+brave-browser FoolsDescent/client/scenes/duel/duel.html
 
 # Chrome
-google-chrome prototipo/prototipo.html
+google-chrome FoolsDescent/client/scenes/duel/duel.html
 
 # Firefox
-firefox prototipo/prototipo.html
+firefox FoolsDescent/client/scenes/duel/duel.html
 ```
 
 ### 3. (Optional) Open the map scene
 
 ```bash
 # Brave
-brave-browser map/map.html
+brave-browser FoolsDescent/client/scenes/map/map.html
 
 # Chrome
-google-chrome map/map.html
+google-chrome FoolsDescent/client/scenes/map/map.html
 
 # Firefox
-firefox map/map.html
+firefox FoolsDescent/client/scenes/map/map.html
 ```
 
 ### 4. (Optional) Open the main menu
 
 ```bash
 # Brave
-brave-browser "The Fools Descent Web/menu.html"
+brave-browser FoolsDescent/client/frontend/menu.html
 
 # Chrome
-google-chrome "The Fools Descent Web/menu.html"
+google-chrome FoolsDescent/client/frontend/menu.html
 
 # Firefox
-firefox "The Fools Descent Web/menu.html"
+firefox FoolsDescent/client/frontend/menu.html
 ```
 
 ---
 
 ## Starting Scene
 
-The prototype starts at the duel scene (`prototipo/prototipo.html`). Click the **Start** button to begin. The game will show the Great Deck contents for a few seconds, then the duel against the Mad Monarch begins.
+The prototype starts at the duel scene (`FoolsDescent/client/scenes/duel/duel.html`). Click the **Start** button to begin. The game will show the Great Deck contents for a few seconds, then the duel against the Mad Monarch begins.
 
 ---
 
@@ -126,9 +126,13 @@ All controls depend on the cursor. For debugging, `y` shows hitboxes.
 ## Project Structure
 
 ```
-prototipo/ # Duel prototype (main playable scene)
-map/ # Map scene
-The Fools Descent Web/ # Web frontend
-assets/ # Images and audio
-GDD/ # Game Design Document
+FoolsDescent/client/scenes/duel/ # Duel scene (main playable scene)
+FoolsDescent/client/scenes/map/ # Map scene
+FoolsDescent/client/frontend/ # Web frontend (menu, login, tutorial, statistics)
+FoolsDescent/client/scripts/ # Frontend JS scripts
+FoolsDescent/backend/ # Express server
+FoolsDescent/assets/ # Images and audio
+FoolsDescent/database/ # SQL schema
+FoolsDescent/docs/ # GDD and database docs
+activities/ # In-class assignments
 ```
