@@ -3,7 +3,7 @@ Game.prototype.buildAllCards = function() {
             {
                 //0
                 name: "The Magician",
-                sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(15, 20, 210, 400) },
+                sprite: { src: "../../../assets/images/Common Cards.png", rect: new Rect(15, 20, 210, 400) },
                 infoText: "Repeating the last card played...",
                 description: "Repeats the effect of your last played card",
                 action: () => {
@@ -20,7 +20,7 @@ Game.prototype.buildAllCards = function() {
             {
                 //1
                 name: "The Chariot",
-                sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(230, 20, 210, 400) },
+                sprite: { src: "../../../assets/images/Common Cards.png", rect: new Rect(230, 20, 210, 400) },
                 infoText: "Throwing away the top card of the Great Deck...",
                 description: "Throws away the top card of the Great Deck",
                 action: () => {
@@ -34,7 +34,7 @@ Game.prototype.buildAllCards = function() {
             {
                 //2
                 name: "Page of Pentacles",
-                sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(661, 20, 210, 400) },
+                sprite: { src: "../../../assets/images/Common Cards.png", rect: new Rect(661, 20, 210, 400) },
                 infoText: "Win this round for a 50 coin bonus!",
                 description: "Gives you a 50 coin bonus if you win",
                 action: () => { this.pageOfPentaclesActive = true; }
@@ -42,7 +42,7 @@ Game.prototype.buildAllCards = function() {
             {
                 //3
                 name: "The Star",
-                sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(440, 20, 210, 400) },
+                sprite: { src: "../../../assets/images/Common Cards.png", rect: new Rect(440, 20, 210, 400) },
                 infoText: "You will be revived if you reach 0 lives!",
                 description: "If your lives reach 0, you will be revived with one life remaining",
                 action: () => {
@@ -56,7 +56,7 @@ Game.prototype.buildAllCards = function() {
             {
                 //4
                 name: "Strength",
-                sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(872, 20, 210, 400) },
+                sprite: { src: "../../../assets/images/Common Cards.png", rect: new Rect(872, 20, 210, 400) },
                 infoText: "You cannot die next round!",
                 description: "Prevents you from dying next round",
                 action: () => { 
@@ -72,7 +72,7 @@ Game.prototype.buildAllCards = function() {
             {
                 //5
                 name: "Two of Pentacles",
-                sprite: { src: "../assets/images/Common Cards.png", rect: new Rect(1087, 20, 210, 400) },
+                sprite: { src: "../../../assets/images/Common Cards.png", rect: new Rect(1087, 20, 210, 400) },
                 infoText: "Drawing two cards - choose one to keep...",
                 description: "Draws two cards, choose one to apply to yourself",
                 action: () => {
@@ -82,7 +82,7 @@ Game.prototype.buildAllCards = function() {
             {
                 //6
                 name: "The High Priestess",
-                sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(20, 10, 210, 400) },
+                sprite: { src: "../../../assets/images/Rare Cards.png", rect: new Rect(20, 10, 210, 400) },
                 infoText: "See the next card from the Great Deck",
                 description: "Shows you the next card in the Great Deck",
                 action: () => {
@@ -103,7 +103,7 @@ Game.prototype.buildAllCards = function() {
             {
                 //7
                 name: "The Hermit",
-                sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(235, 10, 210, 400) },
+                sprite: { src: "../../../assets/images/Rare Cards.png", rect: new Rect(235, 10, 210, 400) },
                 infoText: "Enemy's next turn is blocked!",
                 description: "Blocks the enemy's next turn",
                 action: () => {
@@ -119,7 +119,7 @@ Game.prototype.buildAllCards = function() {
             {
                 //8
                 name: "Justice",
-                sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(448, 10, 210, 400) },
+                sprite: { src: "../../../assets/images/Rare Cards.png", rect: new Rect(448, 10, 210, 400) },
                 infoText: "If you lose a life next turn, so does the enemy!",
                 description: "Makes your enemy lose a life if you lose a life on this or next turn",
                 action: () => {
@@ -133,7 +133,7 @@ Game.prototype.buildAllCards = function() {
             {
                 //9
                 name: "Wheel of Fortune",
-                sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(660, 10, 210, 400) },
+                sprite: { src: "../../../assets/images/Rare Cards.png", rect: new Rect(660, 10, 210, 400) },
                 infoText: "Shuffling the Great Deck...",
                 description: "Shuffles the Great Deck",
                 action: () => { this.greatDeck.sort(() => Math.random() - 0.5); }
@@ -141,7 +141,7 @@ Game.prototype.buildAllCards = function() {
             {
                 //10
                 name: "King of Pentacles",
-                sprite: { src: "../assets/images/Rare Cards.png", rect: new Rect(875, 10, 210, 400) },
+                sprite: { src: "../../../assets/images/Rare Cards.png", rect: new Rect(875, 10, 210, 400) },
                 infoText: "Win for double coins, but lose for double coin loss!",
                 description: "Doubles your gained coins if you win, but also doubles your lost coins if you lose",
                 action: () => { this.kingOfPentaclesActive = true; }
@@ -149,7 +149,7 @@ Game.prototype.buildAllCards = function() {
             {
                 //11
                 name: "The Lovers",
-                sprite: { src: "../assets/images/Legendary Cards.png", rect: new Rect(20, 10, 210, 400) },
+                sprite: { src: "../../../assets/images/Legendary Cards.png", rect: new Rect(20, 10, 210, 400) },
                 infoText: "Removing one Moon from the Great Deck...",
                 description: "Removes one Moon card from the Great Deck",
                 action: () => {
@@ -160,7 +160,7 @@ Game.prototype.buildAllCards = function() {
             {
                 //12
                 name: "The Hanged Man",
-                sprite: { src: "../assets/images/Legendary Cards.png", rect: new Rect(659, 10, 210, 400) },
+                sprite: { src: "../../../assets/images/Legendary Cards.png", rect: new Rect(659, 10, 210, 400) },
                 infoText: "Enemy cannot use their Character Deck next turn!",
                 description: "Blocks the enemy from using their Character Deck next turn",
                 action: () => {
@@ -174,7 +174,7 @@ Game.prototype.buildAllCards = function() {
             {
                 //13
                 name: "The Tower",
-                sprite: { src: "../assets/images/Legendary Cards.png", rect: new Rect(228, 10, 210, 400) },
+                sprite: { src: "../../../assets/images/Legendary Cards.png", rect: new Rect(228, 10, 210, 400) },
                 description: "Destroys half of your opponent's character cards",
                 infoText: "Destroyed half of the enemy's cards!",
                 action: () => {
@@ -184,7 +184,7 @@ Game.prototype.buildAllCards = function() {
             {
                 //14
                 name: "The Devil",
-                sprite: { src: "../assets/images/Legendary Cards.png", rect: new Rect(444, 10, 213, 400) },
+                sprite: { src: "../../../assets/images/Legendary Cards.png", rect: new Rect(444, 10, 213, 400) },
                 description: "Gain 2 lives, but a new moon card will be added to the Great Deck",
                 infoText: "Gained 2 lives! A Moon was added to the Great Deck.",
                 action: () => {

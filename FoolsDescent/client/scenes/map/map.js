@@ -249,7 +249,7 @@ class Game {
         this.initObjects();
         this.createEventListeners();
 
-        this.mapMusic = new Audio("../assets/audio/travel map.mp3");
+        this.mapMusic = new Audio("../../../assets/audio/travel map.mp3");
         this.mapMusic.volume = 0.4;
         this.mapMusic.loop = true;
     }
@@ -398,15 +398,15 @@ class Game {
 
     loadSprites() {
         this.sprites.bg = new Image();
-        this.sprites.bg.src = "../assets/images/map/Map Background.png";
+        this.sprites.bg.src = "../../../assets/images/map/Map Background.png";
         this.sprites.castle = new Image();
-        this.sprites.castle.src = "../assets/images/map/Castle Nodes.png";
+        this.sprites.castle.src = "../../../assets/images/map/Castle Nodes.png";
         this.sprites.nodes = new Image();
-        this.sprites.nodes.src = "../assets/images/map/Map Nodes.png";
+        this.sprites.nodes.src = "../../../assets/images/map/Map Nodes.png";
         this.sprites.rope = new Image();
-        this.sprites.rope.src = "../assets/images/map/Cuerda.png";
+        this.sprites.rope.src = "../../../assets/images/map/Cuerda.png";
         this.sprites.upgradeNodes = new Image();
-        this.sprites.upgradeNodes.src = "../assets/images/map/Upgrade Nodes.png";
+        this.sprites.upgradeNodes.src = "../../../assets/images/map/Upgrade Nodes.png";
         for (let n of this.nodes) {
             if (n.sheet === "castle") {
                 n.sprite = this.sprites.castle;
@@ -417,7 +417,7 @@ class Game {
             }
         }
         // set fool sprite and initialize to idle facing down
-        this.fool.setSprite('../assets/images/Sprite Fool Final.png',
+        this.fool.setSprite('../../../assets/images/Sprite Fool Final.png',
                             { x: 0, y: 0, width: FOOL_FRAME_W, height: FOOL_FRAME_H });
         this.fool.setAnimation(6, 7, true, 150); // start on front-facing idle
     }
@@ -483,9 +483,9 @@ class Game {
                 this.updateAvailable();
                 await saveProgress(this);
                 if (n.type === NODE_ENEMY) {
-                    window.location.href = "../prototipo/prototipo.html";
+                    window.location.href = "../duel/duel.html";
                 } else if (n.type === NODE_BOSS) {
-                    window.location.href = "../prototipo/prototipo.html";
+                    window.location.href = "../duel/duel.html";
                 } else if (n.type === NODE_UPGRADE) {
                     this.currentUpgradeType = n.upgradeType;
                     this.upgradeOpen = true;

@@ -8,43 +8,43 @@ Game.prototype.updatePlayerCandles = function() {
         }
         if (this.playerLives === 6){
                 this.player_candles.setSprite(
-                "../assets/images/Candles.png",
+                "../../../assets/images/Candles.png",
                 new Rect(50, 70, 280, 570)
                 );
             this.extra_player_candles.setSprite(
-                "../assets/images/Candles.png",
+                "../../../assets/images/Candles.png",
                 new Rect(50, 70, 280, 570)
             );
         }
         if (this.playerLives === 5){
             this.player_candles.setSprite(
-                "../assets/images/Candles.png",
+                "../../../assets/images/Candles.png",
                 new Rect(50, 70, 280, 570)
             );
             this.extra_player_candles.setSprite(
-                "../assets/images/Candles.png",
+                "../../../assets/images/Candles.png",
                 new Rect(385, 70, 280, 570)
             );
         }
         if (this.playerLives === 4){
             this.player_candles.setSprite(
-                "../assets/images/Candles.png",
+                "../../../assets/images/Candles.png",
                 new Rect(50, 70, 280, 570)
             );
             this.extra_player_candles.setSprite(
-                "../assets/images/Candles.png",
+                "../../../assets/images/Candles.png",
                 new Rect(710, 70, 280, 570)
             );
         }
         if (this.playerLives === 3) {
             this.player_candles.setSprite(
-                "../assets/images/Candles.png",
+                "../../../assets/images/Candles.png",
                 new Rect(50, 70, 280, 570)
             );
         }
         if (this.playerLives === 2) {
             this.player_candles.setSprite(
-                "../assets/images/Candles.png",
+                "../../../assets/images/Candles.png",
                 new Rect(385, 70, 280, 570)
             );
             if (!this.candleBurnPlayed) {
@@ -54,7 +54,7 @@ Game.prototype.updatePlayerCandles = function() {
         }
         if (this.playerLives === 1) {
             this.player_candles.setSprite(
-                "../assets/images/Candles.png",
+                "../../../assets/images/Candles.png",
                 new Rect(710, 70, 280, 570)
             );
             if (!this.candleBurnPlayed) {
@@ -64,7 +64,7 @@ Game.prototype.updatePlayerCandles = function() {
         }
         if (this.playerLives === 0) {
             this.player_candles.setSprite(
-                "../assets/images/Candles.png",
+                "../../../assets/images/Candles.png",
                 new Rect(1050, 70, 280, 570)
             );
             if (!this.candleBurnPlayed) {
@@ -85,55 +85,55 @@ Game.prototype.updateEnemyCandles = function() {
     }
     if (this.enemyLives === 6){
         this.enemy_candles.setSprite(
-            "../assets/images/Candles.png",
+            "../../../assets/images/Candles.png",
             new Rect(50, 70, 280, 570)
         );
         this.extra_enemy_candles.setSprite(
-            "../assets/images/Candles.png",
+            "../../../assets/images/Candles.png",
             new Rect(50, 70, 280, 570)
         );
     }
     if (this.enemyLives === 5){
         this.enemy_candles.setSprite(
-            "../assets/images/Candles.png",
+            "../../../assets/images/Candles.png",
             new Rect(50, 70, 280, 570)
         );
         this.extra_enemy_candles.setSprite(
-            "../assets/images/Candles.png",
+            "../../../assets/images/Candles.png",
             new Rect(385, 70, 280, 570)
         );
     }
     if (this.enemyLives === 4){
         this.enemy_candles.setSprite(
-            "../assets/images/Candles.png",
+            "../../../assets/images/Candles.png",
             new Rect(50, 70, 280, 570)
         );
         this.extra_enemy_candles.setSprite(
-            "../assets/images/Candles.png",
+            "../../../assets/images/Candles.png",
             new Rect(710, 70, 280, 570)
         );
     }
         if (this.enemyLives >= 3) {
             this.enemy_candles.setSprite(
-                "../assets/images/Candles.png",
+                "../../../assets/images/Candles.png",
                 new Rect(50, 70, 280, 570)
             );
         }
         if (this.enemyLives === 2) {
             this.enemy_candles.setSprite(
-                "../assets/images/Candles.png",
+                "../../../assets/images/Candles.png",
                 new Rect(385, 70, 280, 570)
             );
         }
         if (this.enemyLives === 1) {
             this.enemy_candles.setSprite(
-                "../assets/images/Candles.png",
+                "../../../assets/images/Candles.png",
                 new Rect(710, 70, 280, 570)
             );
         }
         if (this.enemyLives === 0) {
             this.enemy_candles.setSprite(
-                "../assets/images/Candles.png",
+                "../../../assets/images/Candles.png",
                 new Rect(1050, 70, 280, 570)
             );
             if (!this.enemyStarActive){

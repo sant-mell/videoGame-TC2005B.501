@@ -70,13 +70,13 @@ class Game {
         this.discardX = canvasWidth / 2;
         this.discardY = canvasHeight / 2;
         //audio
-        this.startSound = new Audio("../assets/audio/hardEnemies (1).mov");
+        this.startSound = new Audio("../../../assets/audio/hardEnemies (1).mov");
         this.startSound.volume = 0.2;
-        this.candleburn = new Audio("../assets/audio/candle_burning.mov");
+        this.candleburn = new Audio("../../../assets/audio/candle_burning.mov");
         this.candleburn.volume = 0.8;
-        this.candleblow = new Audio("../assets/audio/candle_blow.mov");
+        this.candleblow = new Audio("../../../assets/audio/candle_blow.mov");
         this.candleblow.volume = 0.4;
-        this.cardSound = new Audio("../assets/audio/card.mpeg");
+        this.cardSound = new Audio("../../../assets/audio/card.mpeg");
         this.cardSound.volume = 0.3;
 
         this.startButton = {
@@ -99,7 +99,7 @@ class Game {
         );
 
         this.background.setSprite(
-            "../assets/images/new_table.png",
+            "../../../assets/images/new_table.png",
             new Rect(0, 0, 1690, 928)
         );
         this.king = new AnimatedObject(
@@ -112,7 +112,7 @@ class Game {
         );
         
         this.king.setSprite(
-            "../assets/images/The_king_new.png",
+            "../../../assets/images/The_king_new.png",
             new Rect(10, 0, 835, 600)
         );
         
@@ -126,7 +126,7 @@ class Game {
         );
         
         this.defeatedKing.setSprite(
-            "../assets/images/DefeatedKing_new.png",
+            "../../../assets/images/DefeatedKing_new.png",
             new Rect(0, 0, 380, 174)
         );
         this.extra_player_candles = new AnimatedObject(
@@ -142,7 +142,7 @@ class Game {
         );
         
         this.extra_player_candles.setSprite(
-            "../assets/images/Candles.png",
+            "../../../assets/images/Candles.png",
             new Rect(0, 0, 380, 500)
         );
         this.extra_enemy_candles = new AnimatedObject(
@@ -157,7 +157,7 @@ class Game {
             1
         );
         this.extra_enemy_candles.setSprite(
-            "../assets/images/Candles.png",
+            "../../../assets/images/Candles.png",
             new Rect(0, 0, 380, 500)
         );
         this.player_candles = new AnimatedObject(
@@ -174,7 +174,7 @@ class Game {
             1
         );
         this.player_candles.setSprite(
-            "../assets/images/Candles.png",
+            "../../../assets/images/Candles.png",
             new Rect(50, 70, 280, 570)
         );
         this.enemy_candles = new AnimatedObject(
@@ -191,7 +191,7 @@ class Game {
             1
         );
         this.enemy_candles.setSprite(
-            "../assets/images/Candles.png",
+            "../../../assets/images/Candles.png",
             new Rect(50, 70, 280, 570)
         );
 
@@ -272,7 +272,7 @@ class Game {
         );
 
         this.centerImage.setSprite(
-            "../assets/images/backside_card.png",
+            "../../../assets/images/backside_card.png",
             new Rect(0, 0, 550, 800)
         );
         // FINAL IMAGE
@@ -289,7 +289,7 @@ class Game {
         );
 
         this.finalImage.setSprite(
-        "../assets/images/Sun and Moon.png",
+        "../../../assets/images/Sun and Moon.png",
         new Rect(50, 20, 220, 410)
         );
         //sun IMAGE//
@@ -306,7 +306,7 @@ class Game {
         );
 
         this.sunImage.setSprite(
-            "../assets/images/Sun and Moon.png",
+            "../../../assets/images/Sun and Moon.png",
             new Rect(270, 20, 220, 410)
         );
 
