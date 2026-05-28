@@ -9,7 +9,9 @@ Game.prototype.buildAllCards = function() {
                 action: () => {
                     if (this.lastPlayedAction) {
                         this.magicianHadLastCard = true;
-                        this.lastPlayedAction();
+                        this.magicianRepeating = true;
+                        this.pendingMagicianAction = this.lastPlayedAction;
+                        this.pendingMagicianInfoText = this.lastPlayedInfoText || "";
                     } else {
                         this.magicianHadLastCard = false;
                         this.magicianMessage = true;
@@ -267,12 +269,15 @@ Game.prototype.activateStarPower = function(target) {
 Game.prototype.activateStrengthPower = function(target) {
 
     if (target === "enemy") {
-
         if (!this.enemyStrengthActive) {
             return false;
         }
 
         this.enemyStrengthActive = false;
+
+        if (this.enemyLives !== 1) {
+            return false;
+        }
 
         this.strengthMessage = true;
 
@@ -288,6 +293,10 @@ Game.prototype.activateStrengthPower = function(target) {
     }
 
     this.playerStrengthActive = false;
+
+    if (this.playerLives !== 1) {
+        return false;
+    }
 
     this.strengthMessage = true;
 
