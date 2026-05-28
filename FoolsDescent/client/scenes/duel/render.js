@@ -90,12 +90,12 @@ Game.prototype.draw = function(ctx) {
             ctx.fillText(
                 this.sunCount + " Sun, " + this.moonCount + " Moon",
                 canvasWidth / 2,
-                490
+                300
             );
             ctx.fillText(
                 "Good Luck",
                 canvasWidth / 2,
-                540
+                355
             );
         }
         if (this.magicianMessage) {
@@ -120,16 +120,6 @@ Game.prototype.draw = function(ctx) {
                 "Strength power activated",
                 canvasWidth / 2,
                 canvasHeight / 2 - 100
-            );
-        }
-        if (this.playerHandBlockedMessage) {
-            ctx.fillStyle = "white";
-            ctx.font = "32px MedievalSharp";
-            ctx.textAlign = "center";
-            ctx.fillText(
-                "The enemy has blocked your hand for this turn.",
-                canvasWidth / 2,
-                canvasHeight - 100
             );
         }
         if (this.maxLivesMessage) {
@@ -176,8 +166,9 @@ Game.prototype.draw = function(ctx) {
                 canvasHeight / 2 + 250
             );
         }
-        if (!this.showStartButton && !this.showIntroText) {
-
+        if (!this.showStartButton)  {
+            
+            // then draw the deck image on top as normal
             ctx.fillStyle = "white";
             ctx.font = "30px MedievalSharp";
             ctx.textAlign = "center";
@@ -222,6 +213,16 @@ Game.prototype.draw = function(ctx) {
                 "You get another turn",
                 canvasWidth / 2,
                 140
+            );
+        }
+        if (this.playerHandBlockedMessage) {
+            ctx.fillStyle = "white";
+            ctx.font = "32px MedievalSharp";
+            ctx.textAlign = "center";
+            ctx.fillText(
+                "The enemy has blocked your hand for this turn.",
+                canvasWidth / 2,
+                canvasHeight - 100
             );
         }
 
@@ -409,7 +410,6 @@ Game.prototype.draw = function(ctx) {
             }
     
 };
-
 Game.prototype.drawCustomHitbox = function(ctx, hitbox) {
         if (hitbox === this.startButton) {
 
@@ -454,7 +454,7 @@ Game.prototype.drawCustomHitbox = function(ctx, hitbox) {
             ctx.textAlign = "center";
         
             ctx.fillText(
-            "Us",
+            "You",
             hitbox.x + hitbox.width / 2,
             hitbox.y + hitbox.height / 2 + 8
             );

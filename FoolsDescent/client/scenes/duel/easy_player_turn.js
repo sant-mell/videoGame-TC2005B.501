@@ -147,6 +147,8 @@ Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
             mouseY >= top &&
             mouseY <= bottom
         ) {
+            this.hoveredCard = null;
+            cardEntry.isHovered = false;
             // MOVE CARD TO CENTER
 
             obj.position.x = canvasWidth / 2;

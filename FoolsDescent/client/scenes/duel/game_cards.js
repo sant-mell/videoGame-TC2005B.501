@@ -246,6 +246,48 @@ Game.prototype.destroyHalfOpponentCards = function() {
         this.repositionEnemyCards();
     }
 };
+
+Game.prototype.isPlayerTurnInputLocked = function() {
+    return Boolean(
+        this.playerInputLocked ||
+        this.pendingRewardCard ||
+        this.isRewardCardSliding
+    );
+};
+
+Game.prototype.finishRewardCardSlide = function() {
+    this.pendingRewardCard = false;
+    this.playerInputLocked = false;
+    this.isRewardCardSliding = false;
+    this.rewardCard = null;
+};
+
+Game.prototype.startPendingRewardCard = function() {
+    if (!this.pendingRewardCard || this.rewardCard || this.isRewardCardSliding) {
+        return;
+    }
+
+    if (
+        this.gameOver ||
+        this.currentTurn !== "player" ||
+        this.showStartButton ||
+        this.showIntroText ||
+        this.showCenterImage ||
+        this.showFinalImage ||
+        this.showTwoPentaclesChoice
+    ) {
+        return;
+    }
+
+    if (!this.playerHandBlocked) {
+        this.showPlayerCards = true;
+    }
+
+    if (!this.addPlayerCardFromPool()) {
+        this.finishRewardCardSlide();
+    }
+};
+
 Game.prototype.buildGreatDeck = function(awardPlayerCard = false) {
     const sunCount = Math.floor(Math.random() * 4) +1;
     const moonCount = Math.floor(Math.random() * 4) +1;
@@ -259,10 +301,17 @@ Game.prototype.buildGreatDeck = function(awardPlayerCard = false) {
     this.moonCount = moonCount;
     this.showIntroText = true;
 
+    if (awardPlayerCard) {
+        this.pendingRewardCard = true;
+        this.playerInputLocked = true;
+    }
+
     setTimeout(() => {
         this.showIntroText = false;
-        if (awardPlayerCard && !this.gameOver) {
-            this.addPlayerCardFromPool();
+        if (awardPlayerCard && this.gameOver) {
+            this.finishRewardCardSlide();
+        } else if (awardPlayerCard) {
+            this.startPendingRewardCard();
         }
     }, 5000);
 };
@@ -357,8 +406,23 @@ Game.prototype.addPlayerCardFromPool = function() {
             return false;
         }
 
-        this.characterCards.push(this.buildCharacterCardEntry(this.allCards[cardIndex]));
+        const card = this.buildCharacterCardEntry(this.allCards[cardIndex]);
+
+        card.object.position.x = this.maindeck.x + this.maindeck.width / 2;
+        card.object.position.y = this.maindeck.y + this.maindeck.height / 2;
+
+        this.characterCards.push(card);
         this.repositionCards();
+
+        this.rewardCard = card;
+        this.rewardCardTargetX = card.object.position.x;
+        this.rewardCardTargetY = card.object.position.y;
+        card.object.position.x = this.maindeck.x + this.maindeck.width / 2;
+        card.object.position.y = this.maindeck.y + this.maindeck.height / 2;
+        this.pendingRewardCard = false;
+        this.playerInputLocked = true;
+        this.isRewardCardSliding = true;
+
         return true;
 };
 
