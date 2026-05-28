@@ -9,9 +9,7 @@ Game.prototype.buildAllCards = function() {
                 action: () => {
                     if (this.lastPlayedAction) {
                         this.magicianHadLastCard = true;
-                        this.magicianRepeating = true;
-                        this.pendingMagicianAction = this.lastPlayedAction;
-                        this.pendingMagicianInfoText = this.lastPlayedInfoText || "";
+                        this.lastPlayedAction();
                     } else {
                         this.magicianHadLastCard = false;
                         this.magicianMessage = true;
@@ -205,6 +203,28 @@ Game.prototype.buildAllCards = function() {
                     this.updateEnemyCandles();
                 }
             },
+            {
+                //15
+                name: "The Fool",
+                sprite: { src: "../../../assets/images/Epic Cards.png", rect: new Rect(0, 10, 213, 400) },
+                description: "Gain 2 lives, but a new moon card will be added to the Great Deck",
+                infoText: "Gained 2 lives! A Moon was added to the Great Deck.",
+                action: () => {
+                    if (this.currentTurn !== "enemy"){
+                    this.playerLives += 2;
+                    }
+                    else {
+                        this.enemyLives +=2;
+                    }
+            
+                    this.greatDeck.push("moon");
+            
+                    this.greatDeck.sort(() => Math.random() - 0.5);
+                    this.candleBurnPlayed = false;
+                    this.updatePlayerCandles();
+                    this.updateEnemyCandles();
+                }
+            },
         ];
     
 };
@@ -269,15 +289,12 @@ Game.prototype.activateStarPower = function(target) {
 Game.prototype.activateStrengthPower = function(target) {
 
     if (target === "enemy") {
+
         if (!this.enemyStrengthActive) {
             return false;
         }
 
         this.enemyStrengthActive = false;
-
-        if (this.enemyLives !== 1) {
-            return false;
-        }
 
         this.strengthMessage = true;
 
@@ -293,10 +310,6 @@ Game.prototype.activateStrengthPower = function(target) {
     }
 
     this.playerStrengthActive = false;
-
-    if (this.playerLives !== 1) {
-        return false;
-    }
 
     this.strengthMessage = true;
 

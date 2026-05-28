@@ -206,7 +206,8 @@ class Game {
             8,
             7,
             0,
-            3
+            3, 
+            15
         ]);
 
         this.maindeck = {
