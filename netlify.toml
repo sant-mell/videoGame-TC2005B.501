@@ -3,5 +3,5 @@
 
 [[redirects]]
   from = "/"
-  to = "/web/menu.html"
+  to = "/FoolsDescent/client/frontend/menu.html"
   status = 200
