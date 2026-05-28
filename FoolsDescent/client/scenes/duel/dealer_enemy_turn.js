@@ -1,3 +1,4 @@
+// testeando branch
 Game.prototype.dealer_enemy_turn = function() {
 
         if (this.gameOver) return;
