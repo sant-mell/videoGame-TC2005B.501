@@ -153,9 +153,28 @@ Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
             obj.position.y = canvasHeight / 2;
             this.showEnemyCards = false;
             cardEntry.action();
+            if (cardEntry.name === "The Magician" && this.magicianRepeating) {
+                cardEntry.showInfo = true;
+            
+                setTimeout(() => {
+                    cardEntry.infoText = this.pendingMagicianInfoText;
+                    this.pendingMagicianAction();
+                }, 2000);
+            
+                setTimeout(() => {
+                    this.magicianRepeating = false;
+                    cardEntry.visible = false;
+                    cardEntry.showInfo = false;
+                    cardEntry.infoText = "Repeating the last card played...";
+                    this.showEnemyCards = true;
+                    this.repositionCards();
+                }, 4000);
+            
+                return;
+            }
             cardEntry.showInfo = cardEntry.name !== "The Magician" || this.magicianHadLastCard;
             if (cardEntry.name !== "The Magician") {
-
+                this.lastPlayedInfoText = cardEntry.infoText;
                 this.lastPlayedAction = cardEntry.action;
                 this.lastPlayedName = cardEntry.name;
             }
@@ -397,6 +416,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
 
         // enemy turn starts
         this.enemyJusticeActive = false;
+        this.playerStrengthActive = false;
         this.easy_enemy_turn();
 
         }, 3000);

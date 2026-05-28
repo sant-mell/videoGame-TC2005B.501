@@ -202,6 +202,12 @@ Game.prototype.draw = function(ctx) {
         if (this.showStartButton) {
             this.drawCustomHitbox(ctx, this.startButton);
         }
+        if (this.playerTurnMessage) {
+            ctx.fillStyle = "white";
+            ctx.font = "45px MedievalSharp";
+            ctx.textAlign = "center";
+            ctx.fillText("Your turn", canvasWidth / 2, 370);
+        }
         if (this.sunMessage) {
 
             ctx.fillStyle = "white";
