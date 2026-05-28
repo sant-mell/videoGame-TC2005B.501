@@ -84,6 +84,7 @@ class Game {
         this.candleblow.volume = 0.4;
         this.cardSound = new Audio("../../../assets/audio/card.mpeg");
         this.cardSound.volume = 0.3;
+        this.enemyCharacterTurnCounter = 0;
 
         this.startButton = {
         x: canvasWidth / 2 - 75,
