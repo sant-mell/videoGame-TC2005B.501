@@ -51,7 +51,8 @@ class Game {
         this.playerHandBlockedMessage = false;
         this.maxLivesMessage = false;
         this.candleBurnPlayed = false;
-        this.enemyCanPlayCharacterCard = true;
+        this.enemyUsesCardNextTurn = true;
+        this.playerTurnMessage = false;
         // card effect states
         this.coins = 0;
         this.pageOfPentaclesActive = false;
@@ -222,9 +223,9 @@ class Game {
         // Enemy character cards (easy enemy: Magician, Chariot, Star, Strength)
         this.enemyCharacterCards = this.chooseEnemyCards([
             0, // Magician
-            1,
-            3,
-            4
+            1
+            //3,
+            //4
         ]);
 
         this.maindeck = {
