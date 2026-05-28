@@ -7,7 +7,7 @@
 
 
 
-![Logo Juego](../assets/images/Gemini_Generated_Image_om4mquom4mquom4m.png)
+![Logo Juego](../../assets/images/Gemini_Generated_Image_om4mquom4mquom4m.png)
 
 
 
@@ -30,7 +30,7 @@
 The following content is owned by its creators. Use without written permission is strictly prohibited.
 
 
-![Studio Logo](../assets/images/Studio%20Logo.png)
+![Studio Logo](../../assets/images/Studio%20Logo.png)
 
 ---
 
@@ -186,7 +186,7 @@ Managing risk is vital, as the player must choose whether to intervene before de
 
 
 
-![GameBoard](../assets/images/Duel.png)
+![GameBoard](../../assets/images/Duel.png)
 
 
 
@@ -203,7 +203,7 @@ Only two types of cards…
 
 “The Sun provides an opportunity, The Moon changes everything”
 
-![Sun and Moon](../assets/images/Sun%20and%20Moon.png)
+![Sun and Moon](../../assets/images/Sun%20and%20Moon.png)
 
 
 “These are not fortunes, they are futures”
@@ -276,7 +276,7 @@ Negative fortunes:
 
 
 
-![Common cards](../assets/images/Common%20Cards.png)
+![Common cards](../../assets/images/Common%20Cards.png)
 
 
 
@@ -291,7 +291,7 @@ Negative fortunes:
 
 
 
-![Rare cards](../assets/images/Rare%20Cards.png)
+![Rare cards](../../assets/images/Rare%20Cards.png)
 
 
 
@@ -305,7 +305,7 @@ Negative fortunes:
 
 
 
-![Epic cards](../assets/images/Legendary%20Cards.png)
+![Epic cards](../../assets/images/Legendary%20Cards.png)
 
 
 
@@ -316,7 +316,7 @@ Negative fortunes:
 
 
 
-![Legendary cards](../assets/images/Epic%20Cards.png)
+![Legendary cards](../../assets/images/Epic%20Cards.png)
 ---
 
 
@@ -338,7 +338,7 @@ The map will be a procedurally generated directed graph, similar to the one used
 
 The encounters will be easier on the beginning, where a calculation to prioritize easier enemies will be made. However, the possibility of finding a hard enemy or even the boss at the beginning is never zero.
 
-![Map](../assets/images/Final%20Map.png)
+![Map](../../assets/images/Final%20Map.png)
 
 #### Upgrades
 - *Card Binding* (300 coins): Spend a high amount of coins in order to be able to "bound" a card. This will make the card return to your hand on the next duel even if it was used on the last one.
@@ -394,13 +394,13 @@ On the map, one of the enemies of each difficulty will appear, those are also ra
 - "Drunk"
 
 
-![Common Enemies](../assets/images/Drunk.png)
+![Common Enemies](../../assets/images/Drunk.png)
 
 
 
 
 - "Peasant"
-![Common Enemies](../assets/images/Peseant.png)
+![Common Enemies](../../assets/images/Peseant.png)
 
 
 
@@ -416,11 +416,11 @@ These characters lack any real combat training, they only manage to play a basic
 
 
 - "Crazy Jester"
-![Rare Enemies](../assets/images/Jester.png)
+![Rare Enemies](../../assets/images/Jester.png)
 
 
 - "Bounded Knight"
-![Rare Enemies](../assets/images/Knight.png)
+![Rare Enemies](../../assets/images/Knight.png)
 
 These are a bit more seasoned but still have their openings. While they’ve added some rare cards to their deck, they aren't perfectly consistent, they’ll skip an action every third turn, offering you a brief window to strike back. They have a 50% probability they attack you, 50% they target themselves. 
 
@@ -434,11 +434,11 @@ These are a bit more seasoned but still have their openings. While they’ve add
 
 
 - "Killer Queen"
-![Epic Enemies](../assets/images/Queen.png)
+![Epic Enemies](../../assets/images/Queen.png)
 
 
 - "Mad Monarch"
-![Epic Enemies](../assets/images/The_king.png)
+![Epic Enemies](../../assets/images/The_king.png)
 
 
 
@@ -454,7 +454,7 @@ These are relentless fighters who never miss a beat, playing a card every single
 
 
 - "The Dealer"
-![Final Boss](../assets/images/Dealer.png)
+![Final Boss](../../assets/images/Dealer.png)
 
 
 
@@ -499,7 +499,7 @@ Buttons:
 
 [Statistics]: Will display the statistics collected through the single plays and global plays. for more information, consult the statistics section.
 
-![MainMenu](../assets/images/Main%20Menu.png)
+![MainMenu](../../assets/images/Main%20Menu.png)
 
 
 ### Level Selection
@@ -553,7 +553,7 @@ When the player lands on an upgrade node, a window appears offering an upgrade i
 - **[Exit Upgrade]:** Reject the offer and close the window.
 - **[Accept & Pay]:** Spend the listed coin cost to receive the [upgrade](#upgrades).
 
-![UpgradeMenu](../assets/images/UpgradeMenu.png)
+![UpgradeMenu](../../assets/images/UpgradeMenu.png)
 
 ### Health System
 Lives are represented visually by candles on the table. Each player starts with 3 lives, shown as a single lit candle with three visible melt states (full, half-melted, nearly gone). When all 3 lives are lost the candle is shown fully extinguished. If a player's lives exceed 3 (for example by playing The Devil card), a second candle appears beside the first to represent the extra lives, using the same three-state visual. The maximum number of lives is capped at 6 (two full candles). Extra lives are consumed first; the original candle only begins to melt once the extra one is gone.
@@ -565,7 +565,7 @@ Lives are represented visually by candles on the table. Each player starts with 
 ## UI / UX
 The user interface and experience design is focused on making it simple, intuitive, yet inmersive into the game. This is because our intention is for the player to feel like they are the ones sitting at the fortune table and traveling along this universe. The interface must integrate well with our world building and should also avoid breaking the mystical yet comical atmosphere that is being built.
 
-![GameInProgress](../assets/images/Gameplay.png)
+![GameInProgress](../../assets/images/Gameplay.png)
 
 ### Visual Interface
 - Duel (The Table): The screen does not have a clear health bar, but rather lives represented by melting candles. This is inspired from *Ghosts of Tsushima*, where game elements like HP, stamina, guidance maps are mixed onto the very atmosphere of the game represented with elements within the game's nature. The cards will be placed in an intuitive manner in front of the player, and the elements such as character cards and the great deck will be highlighted when the mouse hovers them in order to describe the elements efficiently
@@ -575,10 +575,10 @@ The user interface and experience design is focused on making it simple, intuiti
 - Map: The map will be a graph with nodes, within this graph, the player will only be able to click on those nodes adjacent to their current position. Each node will vary as stated in [the map section](#map), and will be represented by a black square for bosses, gears for their upgrades, a portal to represent the rest site, and finally a castle to represent the boss fight.
 - Upgrade Screen: A small window over the map will pop with the offer to upgrade in exchange of coins. The player will be able to click on the [Accept & Pay] button to accept the offer and pay the coins, or click on the [Exit Upgrade] button to reject the offer and close the window.
 - Statistics Screen: From the main menu, the player will access and view the statistics screen.
-![Statistics Screen](../assets/images/Statistics.png)
+![Statistics Screen](../../assets/images/Statistics.png)
  - Duel Closure: When the player wins or loses the game, a window will pop up, showing the result of the game, providing a description of the results and giving a small text of the money earned to increase the dopamine of the game. The player will be able to click an [Return] button to return to the map for the next enemy.
 
-![Victory](../assets/images/Victory.png)
+![Victory](../../assets/images/Victory.png)
 
 ---
 
@@ -595,7 +595,7 @@ The game will include a statistics system designed to track both individual play
 - Coins Earned
 - Cards Played
 
-![StatisticsMenu](../assets/images/Statistics.png)
+![StatisticsMenu](../../assets/images/Statistics.png)
 
 ### Global Statistics
 
@@ -721,12 +721,12 @@ The visual style of the game takes inspiration from games such as Inscryption fo
 ## Movement
 The main visual movements in the game are designed to reinforce its mystical and ominous tone while keeping interactions clear and satisfying. As the player progresses, The Fool will move smoothly across the map from node to node, emphasizing the sense of journey and descent into the unknown. During duels, cards will respond dynamically to player input by slightly elevating and rotating when selected or hovered over, creating a tactile and responsive feel that highlights their importance in decision making. Additionally, when a Moon card is applied to either the player or the enemy, a dark, magical mist will emerge from the crystal ball at the center of the table, spreading subtly across the scene to visually represent the shift toward danger and the presence of an unfavorable fate.
 
-![FoolsSprite](../assets/images/Gemini_Generated_Image_9tjvd69tjvd69tjv.png)
+![FoolsSprite](../../assets/images/Gemini_Generated_Image_9tjvd69tjvd69tjv.png)
 
 ## Animation
 The enemies will have three animation frames combined into a looping GIF to give them movement and personality during duels. These subtle animations help make each opponent feel more alive and reinforce their individual presence at the table. In addition, each enemy will have a final defeat frame, where they are shown resting their head on the table, visually representing their loss.
 
-![DefeatedEnemy](../assets/images/DefeatedKing.png)
+![DefeatedEnemy](../../assets/images/DefeatedKing.png)
 
 The candle that represents the player’s lives will also be animated using three frames combined into a seamless looping GIF. Since the candle is both a gameplay mechanic and an important source of light on the dark table, its constant flame helps maintain the atmosphere of tension and uncertainty, especially during the second half of the game where the environment becomes darker and more oppressive.
 
