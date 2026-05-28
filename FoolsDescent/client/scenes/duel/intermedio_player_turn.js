@@ -3,52 +3,52 @@ Game.prototype.activateTwoPentacles = function() {
         if (this.greatDeck.length < 2) {
             return;
         }
-    
+
         this.twoPentaclesCards = [
             this.greatDeck.shift(),
             this.greatDeck.shift()
         ];
-    
+
         this.showTwoPentaclesChoice = true;
         this.showPlayerCards = false;
-    
+
 };
 
 Game.prototype.resolveTwoPentacles = function(chosenIndex) {
-    
+
         this.currentGreatCard = this.twoPentaclesCards[chosenIndex];
-    
+
         this.showTwoPentaclesChoice = false;
-    
+
         this.discardCardType = this.twoPentaclesCards[1 - chosenIndex];
-    
+
         this.discardX = canvasWidth / 2;
         this.discardY = canvasHeight / 2;
-    
+
         this.isDiscardSliding = true;
-    
+
         this.showFinalImage = true;
-    
+
         setTimeout(() => {
-    
+
             this.slideDirection = "down";
             this.isCardSliding = true;
-    
+
         }, 500);
-    
+
         if (this.currentGreatCard === "moon") {
-    
+
             if (!this.activateStrengthPower("player")) {
                 this.playerLives--;
-    
+
                 if (this.playerJusticeActive) {
-    
+
                     if (!this.activateStrengthPower("enemy")) {
                         this.enemyLives--;
                     }
-    
+
                     this.playerJusticeActive = false;
-    
+
                     this.updateEnemyCandles();
 
                     if (this.enemyLives <= 0 && !this.activateStarPower("enemy")) {
@@ -56,63 +56,63 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
                     }
                 }
             }
-    
+
             this.currentTurn = "enemy";
         }
-    
+
         if (this.currentGreatCard === "sun") {
-    
+
             this.currentTurn = "player";
-    
+
             this.sunMessage = true;
-    
+
             if (this.pageOfPentaclesActive) {
-    
+
                 this.coins += this.kingOfPentaclesActive ? 100 : 50;
-    
+
                 this.pageOfPentaclesActive = false;
                 this.kingOfPentaclesActive = false;
             }
-    
+
             setTimeout(() => {
-    
+
                 this.sunMessage = false;
-    
+
             }, 2000);
         }
-    
+
         setTimeout(() => {
-    
+
             this.showFinalImage = false;
-    
+
             if (this.playerLives <= 0) {
-    
+
                 if (this.activateStarPower("player")) {
                     this.showPlayerCards = true;
-    
+
                     this.currentTurn = "player";
-    
+
                     return;
                 }
-    
+
                 this.gameOver = true;
-    
+
                 this.showPlayerCards = false;
-    
+
                 return;
             }
-    
+
             if (this.currentTurn === "enemy") {
-    
-                this.enemyTurn();
-    
+
+                this.intermedio_enemy_turn();
+
             } else {
-    
+
                 this.showPlayerCards = true;
             }
-    
+
         }, 3000);
-    
+
 };
 
 Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
@@ -165,9 +165,9 @@ Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
                 cardEntry.showInfo = false;
                 this.showEnemyCards = true;
                 this.repositionCards();
-            }, 2000);;
+            }, 2000);
         }
-    
+
 };
 
 Game.prototype.checkMainDeckClick = function(mouseX, mouseY) {
@@ -213,7 +213,7 @@ Game.prototype.checkMainDeckClick = function(mouseX, mouseY) {
             this.cardSound.play();
             this.showPlayerCards = false;
         }
-    
+
 };
 
 Game.prototype.checkTwoPentaclesClick = function(mouseX, mouseY) {
@@ -221,27 +221,27 @@ Game.prototype.checkTwoPentaclesClick = function(mouseX, mouseY) {
         if (!this.showTwoPentaclesChoice) {
             return;
         }
-    
+
         if (
             mouseX >= this.twoPentaclesLeft.x &&
             mouseX <= this.twoPentaclesLeft.x + this.twoPentaclesLeft.width &&
             mouseY >= this.twoPentaclesLeft.y &&
             mouseY <= this.twoPentaclesLeft.y + this.twoPentaclesLeft.height
         ) {
-    
+
             this.resolveTwoPentacles(0);
         }
-    
+
         if (
             mouseX >= this.twoPentaclesRight.x &&
             mouseX <= this.twoPentaclesRight.x + this.twoPentaclesRight.width &&
             mouseY >= this.twoPentaclesRight.y &&
             mouseY <= this.twoPentaclesRight.y + this.twoPentaclesRight.height
         ) {
-    
+
             this.resolveTwoPentacles(1);
         }
-    
+
 };
 
 Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
@@ -252,7 +252,6 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         if (!this.showCenterImage) {
             return;
         }
-        //youButton
         // YOU BUTTON
         if (
             mouseX >= this.youButton.x &&
@@ -322,7 +321,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
                 }
                 this.enemyJusticeActive = false;
                 if (this.currentTurn === "enemy") {
-                    this.enemyTurn();
+                    this.intermedio_enemy_turn();
                 }
 
             }, 3000);
@@ -356,15 +355,16 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         if (this.currentGreatCard === "moon") {
             if (!this.activateStrengthPower("enemy")) {
                 this.enemyLives--;
-        
+
                 if (this.enemyJusticeActive) {
                     if (!this.activateStrengthPower("player")) {
                         this.playerLives--;
                     }
-                
+
                     this.justiceMessageUntil = performance.now() + 3000;
-                
+
                     this.enemyJusticeActive = false;
+                    this.candleBurnPlayed = false;
                     this.updatePlayerCandles();
                 }
             }
@@ -379,7 +379,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         // CHECK IF ENEMY LOST
         if (this.enemyLives <= 0) {
             if (this.activateStarPower("enemy")) {
-                this.enemyTurn();
+                this.intermedio_enemy_turn();
                 return;
             }
 
@@ -397,9 +397,9 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
 
         // enemy turn starts
         this.enemyJusticeActive = false;
-        this.enemyTurn();
+        this.intermedio_enemy_turn();
 
         }, 3000);
         }
-    
+
 };

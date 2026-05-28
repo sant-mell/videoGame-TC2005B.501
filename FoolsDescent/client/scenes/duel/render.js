@@ -1,6 +1,6 @@
 Game.prototype.draw = function(ctx) {
 
-        // DRAW BACKGROUND
+        // draw background
         this.background.draw(ctx);
         if (this.isEnemyShowing) {
 
@@ -10,14 +10,14 @@ Game.prototype.draw = function(ctx) {
                 ctx.shadowBlur = 20;
             }
 
-            this.king.draw(ctx);
+            this.enemyImage.draw(ctx);
 
             ctx.shadowBlur = 0;
             ctx.shadowColor = "transparent";
         }
-        
+
         if (this.isShowingDefeatedEnemy) {
-            this.defeatedKing.draw(ctx);
+            this.defeatedEnemyImage.draw(ctx);
         }
         if (this.hoveredCard) {
             for (let c of this.characterCards) {
@@ -219,7 +219,7 @@ Game.prototype.draw = function(ctx) {
             );
         }
 
-        // DRAW ACTORS
+        // draw actors
         for (let actor of this.actors) {
             actor.draw(ctx);
         }
@@ -347,7 +347,7 @@ Game.prototype.draw = function(ctx) {
         }
 
 
-        // DRAW HITBOXES
+        // draw hitboxes
         //this.drawHitbox(ctx, this.card);
         //this.drawHitbox(ctx, this.card2);
         //this.drawHitbox(ctx, this.card3);

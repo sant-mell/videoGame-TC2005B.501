@@ -224,7 +224,7 @@ Game.prototype.destroyHalfOpponentCards = function() {
         this.repositionEnemyCards();
     }
 };
-Game.prototype.buildGreatDeck = function() {
+Game.prototype.buildGreatDeck = function(awardPlayerCard = false) {
     const sunCount = Math.floor(Math.random() * 4) +1;
     const moonCount = Math.floor(Math.random() * 4) +1;
 
@@ -239,6 +239,9 @@ Game.prototype.buildGreatDeck = function() {
 
     setTimeout(() => {
         this.showIntroText = false;
+        if (awardPlayerCard && !this.gameOver) {
+            this.addPlayerCardFromPool();
+        }
     }, 5000);
 };
 Game.prototype.activateStarPower = function(target) {
@@ -313,11 +316,47 @@ Game.prototype.buildCharacterCardEntry = function(cardDef) {
     
 };
 
-Game.prototype.chooseStartingCards = function(indices) {
-        const cards = indices.map(i => this.buildCharacterCardEntry(this.allCards[i]));
+Game.prototype.takeRandomPlayerCardIndex = function() {
+        if (!this.availablePlayerCardIndices || this.availablePlayerCardIndices.length === 0) {
+            return null;
+        }
+
+        const randomPoolIndex = Math.floor(Math.random() * this.availablePlayerCardIndices.length);
+        return this.availablePlayerCardIndices.splice(randomPoolIndex, 1)[0];
+};
+
+Game.prototype.addPlayerCardFromPool = function() {
+        if (!this.allCards || !this.characterCards) {
+            return false;
+        }
+
+        const cardIndex = this.takeRandomPlayerCardIndex();
+        if (cardIndex === null) {
+            return false;
+        }
+
+        this.characterCards.push(this.buildCharacterCardEntry(this.allCards[cardIndex]));
+        this.repositionCards();
+        return true;
+};
+
+Game.prototype.chooseStartingCards = function(indices, amount = 3) {
+        this.playerCardPoolIndices = indices.slice();
+        this.availablePlayerCardIndices = indices.slice();
+
+        const cards = [];
+        const startingCardCount = Math.min(amount, this.availablePlayerCardIndices.length);
+
+        for (let i = 0; i < startingCardCount; i++) {
+            const cardIndex = this.takeRandomPlayerCardIndex();
+            if (cardIndex !== null) {
+                cards.push(this.buildCharacterCardEntry(this.allCards[cardIndex]));
+            }
+        }
+
         this.repositionCardsArray(cards);
         return cards;
-    
+
 };
 
 Game.prototype.chooseEnemyCards = function(indices) {
@@ -327,8 +366,8 @@ Game.prototype.chooseEnemyCards = function(indices) {
             card.object.size.y = 90;
             return card;
         });
-        this.enemyCharacterCards = cards; // assign FIRST
-        this.repositionEnemyCards();      // THEN reposition
+        this.enemyCharacterCards = cards;
+        this.repositionEnemyCards();
         return cards;
     
 };

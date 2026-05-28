@@ -1,6 +1,6 @@
 Game.prototype.update = function(deltaTime) {
     if (this.greatDeck.length === 0 && !this.gameOver) {
-        this.buildGreatDeck();
+        this.buildGreatDeck(true);
     }
         let dt = deltaTime / 1000;
         
@@ -50,7 +50,7 @@ Game.prototype.update = function(deltaTime) {
                     if (this.finalImage.position.y >= this.downtargetY) {
                 
                         this.finalImage.position.y = this.downtargetY;
-                        this.isCardSliding = false;  // SET THIS FIRST
+                        this.isCardSliding = false;
                         this.candleBurnPlayed = false;
                         this.updatePlayerCandles();
                 
@@ -112,7 +112,7 @@ Game.prototype.update = function(deltaTime) {
             }
         }
 
-        // UPDATE ACTORS
+        // update actors
         for (let actor of this.actors) {
             actor.updateFrame(deltaTime);
         }

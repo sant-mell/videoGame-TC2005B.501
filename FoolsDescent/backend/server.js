@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 // serve the whole project so all scenes work over http
 app.use(express.static(path.join(__dirname, ".."))); // makes the parent directory be available for localhost
 
-// AI assisted: run with "pm2 start server.js" so the process restarts on crash.
+// run with "pm2 start server.js" to auto-restart on crash
 const db = mysql.createPool({
     host: "localhost",
     user: "root",

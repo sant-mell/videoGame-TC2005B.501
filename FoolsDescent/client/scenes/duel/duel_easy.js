@@ -1,10 +1,15 @@
 "use strict";
 
+// Global variables
 const canvasWidth = 1200;
 const canvasHeight = 600;
 
+// Context of the Canvas
 let ctx;
+
+// A variable to store the game object
 let game;
+// Variable to store the time at the previous frame
 let oldTime;
 
 class Game {
@@ -18,6 +23,11 @@ class Game {
         this.enemyLives = 3;
         this.playerLives = 3;
         this.currentTurn = "player";
+
+        //CHOOSE ENEMY HERE!!
+        this.chooseEnemy = 2; //<--- CHOOSE ENEMY (1 = Drunk, 2 = Peasant)
+        //^^^^^^ CHOOSE ENEMY ^^^^^^
+
         //enemy card
         this.activeEnemyCard = null;
         //card animation
@@ -36,11 +46,12 @@ class Game {
         this.isShowingDefeatedEnemy = false;
         this.strengthMessage = false;
         this.turnBlockedMessage = false;
-        this.justiceMessageUntil = 0; //este era booleano
+        this.justiceMessageUntil = 0;
         this.playerHandBlocked = false;
         this.playerHandBlockedMessage = false;
         this.maxLivesMessage = false;
         this.candleBurnPlayed = false;
+        this.enemyCanPlayCharacterCard = true;
         // card effect states
         this.coins = 0;
         this.pageOfPentaclesActive = false;
@@ -66,7 +77,7 @@ class Game {
         this.discardY = canvasHeight / 2;
         //audio
         this.startSound = new Audio("../../../assets/audio/hardEnemies (1).mov");
-        this.startSound.volume = 0.2;
+        this.startSound.volume = 0;
         this.candleburn = new Audio("../../../assets/audio/candle_burning.mov");
         this.candleburn.volume = 0.8;
         this.candleblow = new Audio("../../../assets/audio/candle_blow.mov");
@@ -94,48 +105,65 @@ class Game {
         );
 
         this.background.setSprite(
-            "../../../assets/images/new_table.png",
+            "../../../assets/images/Easy_background.png",
             new Rect(0, 0, 1690, 928)
         );
         this.enemyImage = new AnimatedObject(
-            new Vector(canvasWidth / 2, 151.5),
-            390,
+            new Vector(canvasWidth / 2, 154),
+            450,
             260,
             "gray",
             "enemy",
             45
         );
-
-        this.enemyImage.setSprite(
-            "../../../assets/images/The_king_new.png",
-            new Rect(10, 0, 835, 600)
-        );
+        switch(this.chooseEnemy){
+            case 1:
+                this.enemyImage.setSprite(
+                    "../../../assets/images/Drunk_new.png",
+                    new Rect(0, 0, 835, 584)
+                );
+                break;
+            case 2:
+                this.enemyImage.setSprite(
+                    "../../../assets/images/Peasant_new.png",
+                    new Rect(10, 10, 825, 610)
+                );
+                break;
+        }
 
         this.defeatedEnemyImage = new AnimatedObject(
             new Vector(canvasWidth / 2, 205),
-            270,
-            140,
+            400,
+            170,
             "gray",
             "enemy",
             45
         );
 
-        this.defeatedEnemyImage.setSprite(
-            "../../../assets/images/DefeatedKing_new.png",
-            new Rect(0, 0, 380, 174)
-        );
+        switch(this.chooseEnemy){
+            case 1:
+                this.defeatedEnemyImage.setSprite(
+                "../../../assets/images/Deafeated_Drunk_Final.png",
+                new Rect(0, 0, 380, 174));
+                break;
+            case 2:
+                this.defeatedEnemyImage.setSprite(
+                "../../../assets/images/defeated_peasant.png",
+                new Rect(0, 0, 380, 174));
+                break;
+        }
         this.extra_player_candles = new AnimatedObject(
 
             new Vector(canvasWidth - 390 , 420),
-        
+
             90,
             200,
-        
+
             "gray",
             "card",
             1
         );
-        
+
         this.extra_player_candles.setSprite(
             "../../../assets/images/Candles.png",
             new Rect(0, 0, 380, 500)
@@ -143,10 +171,10 @@ class Game {
         this.extra_enemy_candles = new AnimatedObject(
 
             new Vector(canvasWidth / 2 - 208 , 217),
-        
+
             90,
             200,
-        
+
             "gray",
             "card",
             1
@@ -188,29 +216,15 @@ class Game {
         // All card definitions in the pool
         this.allCards = this.buildAllCards();
 
-        // Deal 3 random starting cards from the full pool
-        //this.characterCards = this.dealStartingCards(3);
+        // Choose the player card pool; 3 random cards are dealt from it.
+        this.characterCards = this.chooseStartingCards([0, 3, 9, 1]);
 
-        // Manually choose starting cards by index (pass amount to deal all of them)
-        // this.characterCards = this.chooseStartingCards([0, 6, 14, 1, 13], 5);
-        this.characterCards = this.chooseStartingCards([0, 6, 14, 1, 13]);
-
-        // Enemy character cards
+        // Enemy character cards (easy enemy: Magician, Chariot, Star, Strength)
         this.enemyCharacterCards = this.chooseEnemyCards([
-            11, // Lovers
-            14, // Devil
-            12, // Hanged Man
-            9, //Wheel of Fortune
-            7,  // Hermit
-            1,//chariot
-           //0 //not fixed yet, depends on other cards, check last
-            //3 DONE
-            //4, //DONE
-            //7, //DONE
-            //8, //DONE
-            //14, //DONE
-            //12 //DONE
-            //13
+            0, // Magician
+            1,
+            3,
+            4
         ]);
 
         this.maindeck = {
@@ -237,7 +251,7 @@ class Game {
             width: 120,
             height: 200
         };
-        
+
         this.twoPentaclesRight = {
             x: canvasWidth / 2 + 60,
             y: canvasHeight / 2 - 100,
