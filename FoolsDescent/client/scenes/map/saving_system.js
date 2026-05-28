@@ -1,9 +1,11 @@
 function saveMapLocally(game) {
-    localStorage.setItem("mapData", JSON.stringify(game.getSaveData()));
+    const key = "mapData_" + localStorage.getItem("userId");
+    localStorage.setItem(key, JSON.stringify(game.getSaveData()));
 }
 
 function loadMapLocally(game) {
-    const raw = localStorage.getItem("mapData");
+    const key = "mapData_" + localStorage.getItem("userId");
+    const raw = localStorage.getItem(key);
     if (!raw) return false;
     game.loadSaveData(JSON.parse(raw));
     return true;
