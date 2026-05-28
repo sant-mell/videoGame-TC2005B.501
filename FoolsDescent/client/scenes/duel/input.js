@@ -9,6 +9,10 @@ Game.prototype.createEventListeners = function() {
 
             this.checkStartButton(mouseX, mouseY);
 
+            if (this.isPlayerTurnInputLocked()) {
+                return;
+            }
+
             for (let c of this.characterCards) {
                 this.checkCardClick(c, mouseX, mouseY);
             }
@@ -32,6 +36,10 @@ Game.prototype.createEventListeners = function() {
 Game.prototype.checkCardHover = function(mouseX, mouseY) {
 
         this.hoveredCard = null;
+
+        if (this.isPlayerTurnInputLocked()) {
+            return;
+        }
     
         for (let c of this.characterCards) {
     

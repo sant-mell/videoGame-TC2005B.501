@@ -76,6 +76,12 @@ class Game {
         this.discardCardType = "";
         this.discardX = canvasWidth / 2;
         this.discardY = canvasHeight / 2;
+        this.isRewardCardSliding = false;
+        this.rewardCard = null;
+        this.rewardCardTargetX = 0;
+        this.rewardCardTargetY = 0;
+        this.pendingRewardCard = false;
+        this.playerInputLocked = false;
         //audio
         this.startSound = new Audio("../../../assets/audio/hardEnemies (1).mov");
         this.startSound.volume = 0;
@@ -218,7 +224,7 @@ class Game {
         this.allCards = this.buildAllCards();
 
         // Choose the player card pool; 3 random cards are dealt from it.
-        this.characterCards = this.chooseStartingCards([0, 3, 9, 1]);
+        this.characterCards = this.chooseStartingCards([0, 3, 9, 1, 14]);
 
         // Enemy character cards (easy enemy: Magician, Chariot, Star, Strength)
         this.enemyCharacterCards = this.chooseEnemyCards([

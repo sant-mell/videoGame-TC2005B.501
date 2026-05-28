@@ -64,6 +64,12 @@ class Game {
         this.discardCardType = "";
         this.discardX = canvasWidth / 2;
         this.discardY = canvasHeight / 2;
+        this.isRewardCardSliding = false;
+        this.rewardCard = null;
+        this.rewardCardTargetX = 0;
+        this.rewardCardTargetY = 0;
+        this.pendingRewardCard = false;
+        this.playerInputLocked = false;
         //audio
         this.startSound = new Audio("../../../assets/audio/hardEnemies (1).mov");
         this.startSound.volume = 0.2;

@@ -2,6 +2,7 @@ Game.prototype.update = function(deltaTime) {
     if (this.greatDeck.length === 0 && !this.gameOver) {
         this.buildGreatDeck(true);
     }
+    this.startPendingRewardCard();
         let dt = deltaTime / 1000;
         
 
@@ -111,7 +112,22 @@ Game.prototype.update = function(deltaTime) {
                 }
             }
         }
-
+        if (this.isRewardCardSliding && this.rewardCard) {
+            const card = this.rewardCard.object;
+            const dx = this.rewardCardTargetX - card.position.x;
+            const dy = this.rewardCardTargetY - card.position.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const step = this.slideSpeed * dt;
+        
+            if (distance <= step) {
+                card.position.x = this.rewardCardTargetX;
+                card.position.y = this.rewardCardTargetY;
+                this.finishRewardCardSlide();
+            } else {
+                card.position.x += (dx / distance) * step;
+                card.position.y += (dy / distance) * step;
+            }
+        }
         // update actors
         for (let actor of this.actors) {
             actor.updateFrame(deltaTime);
