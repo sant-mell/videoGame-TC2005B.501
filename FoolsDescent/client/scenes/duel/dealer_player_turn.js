@@ -104,6 +104,7 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
 
             if (this.currentTurn === "enemy") {
 
+                this.playerStrengthActive = false;
                 this.dealer_enemy_turn();
 
             } else {
@@ -147,15 +148,37 @@ Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
             mouseY >= top &&
             mouseY <= bottom
         ) {
+            this.hoveredCard = null;
+            cardEntry.isHovered = false;
             // MOVE CARD TO CENTER
 
             obj.position.x = canvasWidth / 2;
             obj.position.y = canvasHeight / 2;
             this.showEnemyCards = false;
             cardEntry.action();
+            if (cardEntry.name === "The Magician" && this.magicianRepeating) {
+                cardEntry.showInfo = true;
+
+                setTimeout(() => {
+                    cardEntry.infoText = this.pendingMagicianInfoText;
+                    this.pendingMagicianAction();
+                }, 2000);
+
+                setTimeout(() => {
+                    this.magicianRepeating = false;
+                    cardEntry.visible = false;
+                    cardEntry.showInfo = false;
+                    cardEntry.infoText = "Repeating the last card played...";
+                    this.showEnemyCards = true;
+                    this.repositionCards();
+                }, 4000);
+
+                return;
+            }
             cardEntry.showInfo = cardEntry.name !== "The Magician" || this.magicianHadLastCard;
             if (cardEntry.name !== "The Magician") {
 
+                this.lastPlayedInfoText = cardEntry.infoText;
                 this.lastPlayedAction = cardEntry.action;
                 this.lastPlayedName = cardEntry.name;
             }
@@ -321,6 +344,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
                 }
                 this.enemyJusticeActive = false;
                 if (this.currentTurn === "enemy") {
+                    this.playerStrengthActive = false;
                     this.dealer_enemy_turn();
                 }
 
@@ -379,6 +403,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         // CHECK IF ENEMY LOST
         if (this.enemyLives <= 0) {
             if (this.activateStarPower("enemy")) {
+                this.playerStrengthActive = false;
                 this.dealer_enemy_turn();
                 return;
             }
@@ -397,6 +422,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
 
         // enemy turn starts
         this.enemyJusticeActive = false;
+        this.playerStrengthActive = false;
         this.dealer_enemy_turn();
 
         }, 3000);
