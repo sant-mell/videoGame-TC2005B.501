@@ -14,6 +14,13 @@ Game.prototype.dealer_enemy_turn = function() {
         this.showEnemyCards = true;
         this.showPlayerCards = false;
         this.currentTurn = "enemy";
+        if (!this.enemyExtraCardTurn) {
+            this.enemyTurnCounter++;
+            if (this.enemyTurnCounter === 3) {
+                this.enemyTurnCounter = 0;
+                this.enemyExtraCardTurn = true;
+            }
+        }
     
         const skipEnemyCharacterCard = this.enemyHandBlocked;
 
@@ -24,6 +31,13 @@ Game.prototype.dealer_enemy_turn = function() {
         setTimeout(() => {
     
             let enemyCard;
+
+            // Uses The Fool as their first card
+            if (this.enemyCharacterCardsUsed === 0) {
+                enemyCard = this.enemyCharacterCards.find(
+                    card => card.name === "The Fool"
+                );
+            }
 
             // Uses The Star if they have one live left
             if (this.enemyLives === 1) {
@@ -135,15 +149,19 @@ Game.prototype.dealer_enemy_turn = function() {
                     this.repositionEnemyCards();
                 }, 5000);
     
-                // after character card resolves, draw from main deck
+                // After character card resolves, draw from main deck / Logic for extra character card usage
                 setTimeout(() => {
-                    this.showCenterImage = true;
+                    if (this.enemyExtraCardTurn) {
+                        this.enemyExtraCardTurn = false;
+                        this.dealer_enemy_turn();
+                    } else {
+                        this.showCenterImage = true;
+                        setTimeout(() => {
+                            this.showCenterImage = false;
+                            this.resolveEnemyDeckDraw();
+                        }, 1000);
+                    }
                 }, 7000);
-    
-                setTimeout(() => {
-                    this.showCenterImage = false;
-                    this.resolveEnemyDeckDraw();
-                }, 8000);
     
             } else {
     
