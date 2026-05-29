@@ -1,13 +1,14 @@
 Game.prototype.activateTwoPentacles = function() {
 
-        if (this.greatDeck.length < 2) {
+        if (this.greatDeck.length === 0) {
             return;
         }
     
-        this.twoPentaclesCards = [
-            this.greatDeck.shift(),
-            this.greatDeck.shift()
-        ];
+        this.twoPentaclesCards = [this.greatDeck.shift()];
+
+        if (this.greatDeck.length > 0) {
+            this.twoPentaclesCards.push(this.greatDeck.shift());
+        }
     
         this.showTwoPentaclesChoice = true;
         this.showPlayerCards = false;
@@ -25,7 +26,7 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
         this.discardX = canvasWidth / 2;
         this.discardY = canvasHeight / 2;
     
-        this.isDiscardSliding = true;
+        this.isDiscardSliding = this.discardCardType != null;
     
         this.showFinalImage = true;
     
@@ -242,6 +243,24 @@ Game.prototype.checkMainDeckClick = function(mouseX, mouseY) {
 Game.prototype.checkTwoPentaclesClick = function(mouseX, mouseY) {
 
         if (!this.showTwoPentaclesChoice) {
+            return;
+        }
+
+        if (this.twoPentaclesCards.length === 1) {
+            const singleCardX =
+                canvasWidth / 2 - this.twoPentaclesLeft.width / 2;
+            const singleCardY =
+                canvasHeight / 2 - this.twoPentaclesLeft.height / 2;
+
+            if (
+                mouseX >= singleCardX &&
+                mouseX <= singleCardX + this.twoPentaclesLeft.width &&
+                mouseY >= singleCardY &&
+                mouseY <= singleCardY + this.twoPentaclesLeft.height
+            ) {
+                this.resolveTwoPentacles(0);
+            }
+
             return;
         }
     

@@ -263,14 +263,25 @@ Game.prototype.draw = function(ctx) {
                 canvasWidth / 2,
                 canvasHeight / 2 - 130
             );
-        
-            const leftCx =
-                this.twoPentaclesLeft.x +
-                this.twoPentaclesLeft.width / 2;
-        
-            const leftCy =
-                this.twoPentaclesLeft.y +
-                this.twoPentaclesLeft.height / 2;
+
+            if (this.twoPentaclesCards.length === 1) {
+                ctx.font = "22px MedievalSharp";
+                ctx.fillText(
+                    "Only one card remaining from the Great Deck!",
+                    canvasWidth / 2,
+                    canvasHeight / 2 - 92
+                );
+            }
+	        
+            const leftCx = this.twoPentaclesCards.length === 1
+                ? canvasWidth / 2
+                : this.twoPentaclesLeft.x +
+                    this.twoPentaclesLeft.width / 2;
+	        
+            const leftCy = this.twoPentaclesCards.length === 1
+                ? canvasHeight / 2
+                : this.twoPentaclesLeft.y +
+                    this.twoPentaclesLeft.height / 2;
         
             if (this.twoPentaclesCards[0] === "moon") {
         
@@ -287,27 +298,29 @@ Game.prototype.draw = function(ctx) {
                 this.sunImage.draw(ctx);
             }
         
-            const rightCx =
-                this.twoPentaclesRight.x +
-                this.twoPentaclesRight.width / 2;
-        
-            const rightCy =
-                this.twoPentaclesRight.y +
-                this.twoPentaclesRight.height / 2;
-        
-            if (this.twoPentaclesCards[1] === "moon") {
-        
-                this.finalImage.position.x = rightCx;
-                this.finalImage.position.y = rightCy;
-        
-                this.finalImage.draw(ctx);
-        
-            } else {
-        
-                this.sunImage.position.x = rightCx;
-                this.sunImage.position.y = rightCy;
-        
-                this.sunImage.draw(ctx);
+            if (this.twoPentaclesCards.length === 2) {
+                const rightCx =
+                    this.twoPentaclesRight.x +
+                    this.twoPentaclesRight.width / 2;
+	        
+                const rightCy =
+                    this.twoPentaclesRight.y +
+                    this.twoPentaclesRight.height / 2;
+	        
+                if (this.twoPentaclesCards[1] === "moon") {
+	        
+                    this.finalImage.position.x = rightCx;
+                    this.finalImage.position.y = rightCy;
+	        
+                    this.finalImage.draw(ctx);
+	        
+                } else {
+	        
+                    this.sunImage.position.x = rightCx;
+                    this.sunImage.position.y = rightCy;
+	        
+                    this.sunImage.draw(ctx);
+                }
             }
         
             this.finalImage.position.x = canvasWidth / 2;
