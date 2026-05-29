@@ -108,7 +108,29 @@ Game.prototype.dealer_enemy_turn = function() {
                 // apply effect and remove card
                 setTimeout(() => {
                     enemyCard.action();
+                    if (enemyCard.name === "The Magician" && this.magicianRepeating) {
+                        enemyCard.showInfo = true;
+
+                        setTimeout(() => {
+                            enemyCard.infoText = this.pendingMagicianInfoText;
+                            this.pendingMagicianAction();
+                        }, 1500);
+
+                        setTimeout(() => {
+                            this.magicianRepeating = false;
+                            enemyCard.showInfo = false;
+                            enemyCard.infoText = "Repeating the last card played...";
+                            enemyCard.object.size.x = 50;
+                            enemyCard.object.size.y = 90;
+                            this.activeEnemyCard = null;
+                            this.enemyCharacterCards.splice(chosenIndex, 1);
+                            this.repositionEnemyCards();
+                        }, 3000);
+
+                        return;
+                    }
                     if (enemyCard.name !== "The Magician") {
+                        this.lastPlayedInfoText = enemyCard.infoText;
                         this.lastPlayedAction = enemyCard.action;
                         this.lastPlayedName = enemyCard.name;
                     }
@@ -218,8 +240,14 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             }
 
             // If they targeted themselves and it was a moon, it's now the players turn
+            this.enemyStrengthActive = false;
             this.currentTurn = "player";
             this.showEnemyCards = true;
+
+            this.playerTurnMessage = true;
+            setTimeout(() => {
+                this.playerTurnMessage = false;
+            }, 2000);
 
             if (this.playerHandBlocked) {
                 this.showPlayerCards = false;
@@ -243,8 +271,14 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             return;
         }
 
+        this.enemyStrengthActive = false;
         this.currentTurn = "player";
         this.showEnemyCards = true;
+
+        this.playerTurnMessage = true;
+        setTimeout(() => {
+            this.playerTurnMessage = false;
+        }, 2000);
 
         if (this.playerHandBlocked) {
             this.showPlayerCards = false;

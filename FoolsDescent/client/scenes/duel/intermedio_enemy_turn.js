@@ -237,7 +237,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
         if (enemyTargetsSelf) {
 
             if (this.currentGreatCard === "sun") {
-                this.enemyTurn();
+                this.intermedio_enemy_turn();
                 return;
             }
 
@@ -267,7 +267,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
             setTimeout(() => {
                 this.turnBlockedMessage = false;
-                this.enemyTurn();
+                this.intermedio_enemy_turn();
             }, 2000);
 
             return;

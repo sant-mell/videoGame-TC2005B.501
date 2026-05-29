@@ -201,7 +201,8 @@ class Game {
 
         // Manually choose starting cards by index (pass amount to deal all of them)
         // this.characterCards = this.chooseStartingCards([0, 6, 14, 1, 13], 5);
-        this.characterCards = this.chooseStartingCards([0, 6, 14, 1, 13]);
+        this.personalPlayerCardIndices = [12, 13];
+        this.characterCards = this.chooseStartingCards([11, 12, 14]);
 
         // Enemy character cards
         this.enemyCharacterCards = this.chooseEnemyCards([
@@ -210,15 +211,8 @@ class Game {
             12, // Hanged Man
             9, //Wheel of Fortune
             7,  // Hermit
-            1,//chariot
-           //0 //not fixed yet, depends on other cards, check last
-            //3 DONE
-            //4, //DONE
-            //7, //DONE
-            //8, //DONE
-            //14, //DONE
-            //12 //DONE
-            //13
+            1,
+            0
         ]);
 
         this.maindeck = {
