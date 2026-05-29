@@ -20,7 +20,7 @@ class Game {
     }
     initObjects() {
 
-        this.enemyLives = 1;
+        this.enemyLives = 3;
         this.playerLives = 3;
         this.currentTurn = "player";
 
@@ -90,7 +90,7 @@ class Game {
         this.candleblow.volume = 0.4;
         this.cardSound = new Audio("../../../assets/audio/card.mpeg");
         this.cardSound.volume = 0.3;
-
+        
         this.startButton = {
         x: canvasWidth / 2 - 75,
         y: canvasHeight / 2 - 40,

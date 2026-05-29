@@ -153,6 +153,20 @@ Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
             obj.position.y = canvasHeight / 2;
             this.showEnemyCards = false;
             cardEntry.action();
+            if (cardEntry.name === "The Fool") {
+                cardEntry.infoText =
+                    this.foolRandomCardName + ": " +
+                    this.foolRandomCardInfo;
+                cardEntry.showInfo = true;
+                setTimeout(() => {
+                    cardEntry.visible = false;
+                    cardEntry.showInfo = false;
+                    cardEntry.infoText = "Surprise!";
+                    this.showEnemyCards = true;
+                    this.repositionCards();
+                }, 3000);
+                return;
+            }
             cardEntry.showInfo = cardEntry.name !== "The Magician" || this.magicianHadLastCard;
             if (cardEntry.name !== "The Magician") {
 

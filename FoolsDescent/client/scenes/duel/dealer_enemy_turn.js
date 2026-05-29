@@ -1,4 +1,3 @@
-
 Game.prototype.dealer_enemy_turn = function() {
 
         if (this.gameOver) return;
@@ -25,8 +24,6 @@ Game.prototype.dealer_enemy_turn = function() {
         setTimeout(() => {
     
             let enemyCard;
-
-            // Uses the Fool as their first card
 
             // Uses The Star if they have one live left
             if (this.enemyLives === 1) {
@@ -109,6 +106,23 @@ Game.prototype.dealer_enemy_turn = function() {
                 // apply effect and remove card
                 setTimeout(() => {
                     enemyCard.action();
+
+                    if (enemyCard.name === "The Fool") {
+                        enemyCard.infoText =
+                            this.foolRandomCardName + ": " +
+                            this.foolRandomCardInfo;
+                        enemyCard.showInfo = true;
+                        setTimeout(() => {
+                            enemyCard.showInfo = false;
+                            enemyCard.object.size.x = 50;
+                            enemyCard.object.size.y = 90;
+                            this.activeEnemyCard = null;
+                            this.enemyCharacterCards.splice(chosenIndex, 1);
+                            this.repositionEnemyCards();
+                        }, 3000);
+                        return;
+                    }
+
                     if (enemyCard.name !== "The Magician") {
                         this.lastPlayedAction = enemyCard.action;
                         this.lastPlayedName = enemyCard.name;
