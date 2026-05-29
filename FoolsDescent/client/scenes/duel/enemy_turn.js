@@ -151,9 +151,10 @@ Game.prototype.enemyTurn = function() {
                 }, 8000);
     
             } else {
-    
+	    
                 // no character card, draw from main deck immediately
                 setTimeout(() => {
+                    this.showEnemyCards = false;
                     this.showCenterImage = true;
                 }, 500);
     
