@@ -52,6 +52,8 @@ class Game {
         this.maxLivesMessage = false;
         this.candleBurnPlayed = false;
         this.enemyCharacterTurnCounter = 0;
+        this.playerTurnMessage = false;
+        this.usesPendingMagicianRepeat = true;
         // card effect states
         this.coins = 0;
         this.pageOfPentaclesActive = false;
