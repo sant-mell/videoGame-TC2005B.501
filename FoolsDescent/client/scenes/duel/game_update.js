@@ -3,6 +3,7 @@ Game.prototype.update = function(deltaTime) {
         this.buildGreatDeck(true);
     }
     this.startPendingRewardCard();
+    this.saveRemainingPlayerCardsAfterWin();
         let dt = deltaTime / 1000;
         
 
