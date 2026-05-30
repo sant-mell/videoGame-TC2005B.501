@@ -1,8 +1,17 @@
 Game.prototype.update = function(deltaTime) {
-    if (this.greatDeck.length === 0 && !this.gameOver) {
+    if (
+        this.greatDeck.length === 0 &&
+        !this.gameOver &&
+        !this.showTwoPentaclesChoice &&
+        !this.showCenterImage &&
+        !this.showFinalImage &&
+        !this.isCardSliding &&
+        !this.isDiscardSliding
+    ) {
         this.buildGreatDeck(true);
     }
     this.startPendingRewardCard();
+    this.saveRemainingPlayerCardsAfterWin();
         let dt = deltaTime / 1000;
         
 

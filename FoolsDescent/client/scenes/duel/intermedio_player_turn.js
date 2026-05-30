@@ -1,13 +1,14 @@
 Game.prototype.activateTwoPentacles = function() {
 
-        if (this.greatDeck.length < 2) {
+        if (this.greatDeck.length === 0) {
             return;
         }
 
-        this.twoPentaclesCards = [
-            this.greatDeck.shift(),
-            this.greatDeck.shift()
-        ];
+        this.twoPentaclesCards = [this.greatDeck.shift()];
+
+        if (this.greatDeck.length > 0) {
+            this.twoPentaclesCards.push(this.greatDeck.shift());
+        }
 
         this.showTwoPentaclesChoice = true;
         this.showPlayerCards = false;
@@ -25,7 +26,7 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
         this.discardX = canvasWidth / 2;
         this.discardY = canvasHeight / 2;
 
-        this.isDiscardSliding = true;
+        this.isDiscardSliding = this.discardCardType != null;
 
         this.showFinalImage = true;
 
@@ -104,6 +105,7 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
 
             if (this.currentTurn === "enemy") {
 
+                this.playerStrengthActive = false;
                 this.intermedio_enemy_turn();
 
             } else {
@@ -141,24 +143,46 @@ Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
         const top = obj.position.y - obj.size.y / 2;
         const bottom = obj.position.y + obj.size.y / 2;
 
-        if (
-            mouseX >= left &&
-            mouseX <= right &&
-            mouseY >= top &&
-            mouseY <= bottom
-        ) {
-            // MOVE CARD TO CENTER
-
-            obj.position.x = canvasWidth / 2;
-            obj.position.y = canvasHeight / 2;
-            this.showEnemyCards = false;
-            cardEntry.action();
-            cardEntry.showInfo = cardEntry.name !== "The Magician" || this.magicianHadLastCard;
-            if (cardEntry.name !== "The Magician") {
-
-                this.lastPlayedAction = cardEntry.action;
-                this.lastPlayedName = cardEntry.name;
+	        if (
+	            mouseX >= left &&
+	            mouseX <= right &&
+	            mouseY >= top &&
+	            mouseY <= bottom
+	        ) {
+            this.hoveredCard = null;
+            cardEntry.isHovered = false;
+	            // MOVE CARD TO CENTER
+	
+	            obj.position.x = canvasWidth / 2;
+	            obj.position.y = canvasHeight / 2;
+	            this.showEnemyCards = false;
+	            cardEntry.action();
+            if (cardEntry.name === "The Magician" && this.magicianRepeating) {
+                cardEntry.showInfo = true;
+            
+                setTimeout(() => {
+                    cardEntry.infoText = this.pendingMagicianInfoText;
+                    this.pendingMagicianAction();
+                }, 2000);
+            
+                setTimeout(() => {
+                    this.magicianRepeating = false;
+                    cardEntry.visible = false;
+                    cardEntry.showInfo = false;
+                    cardEntry.infoText = "Repeating the last card played...";
+                    this.showEnemyCards = true;
+                    this.repositionCards();
+                }, 4000);
+            
+                return;
             }
+	            cardEntry.showInfo = cardEntry.name !== "The Magician" || this.magicianHadLastCard;
+	            if (cardEntry.name !== "The Magician") {
+	
+                this.lastPlayedInfoText = cardEntry.infoText;
+	                this.lastPlayedAction = cardEntry.action;
+	                this.lastPlayedName = cardEntry.name;
+	            }
 
             setTimeout(() => {
                 cardEntry.visible = false;
@@ -219,6 +243,24 @@ Game.prototype.checkMainDeckClick = function(mouseX, mouseY) {
 Game.prototype.checkTwoPentaclesClick = function(mouseX, mouseY) {
 
         if (!this.showTwoPentaclesChoice) {
+            return;
+        }
+
+        if (this.twoPentaclesCards.length === 1) {
+            const singleCardX =
+                canvasWidth / 2 - this.twoPentaclesLeft.width / 2;
+            const singleCardY =
+                canvasHeight / 2 - this.twoPentaclesLeft.height / 2;
+
+            if (
+                mouseX >= singleCardX &&
+                mouseX <= singleCardX + this.twoPentaclesLeft.width &&
+                mouseY >= singleCardY &&
+                mouseY <= singleCardY + this.twoPentaclesLeft.height
+            ) {
+                this.resolveTwoPentacles(0);
+            }
+
             return;
         }
 
@@ -321,6 +363,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
                 }
                 this.enemyJusticeActive = false;
                 if (this.currentTurn === "enemy") {
+                    this.playerStrengthActive = false;
                     this.intermedio_enemy_turn();
                 }
 
@@ -379,6 +422,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         // CHECK IF ENEMY LOST
         if (this.enemyLives <= 0) {
             if (this.activateStarPower("enemy")) {
+                this.playerStrengthActive = false;
                 this.intermedio_enemy_turn();
                 return;
             }
@@ -395,9 +439,10 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
             return;
         }
 
-        // enemy turn starts
-        this.enemyJusticeActive = false;
-        this.intermedio_enemy_turn();
+	        // enemy turn starts
+	        this.enemyJusticeActive = false;
+        this.playerStrengthActive = false;
+	        this.intermedio_enemy_turn();
 
         }, 3000);
         }
