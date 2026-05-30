@@ -4,7 +4,7 @@ USE fools_descent;
 
 CREATE TABLE users (
 
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 
     full_name VARCHAR(100),
 
@@ -20,7 +20,7 @@ CREATE TABLE users (
 
 CREATE TABLE Game_saveState (
 
-    user_id INT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL PRIMARY KEY,
 
     current_coins INT NOT NULL DEFAULT 0,
 

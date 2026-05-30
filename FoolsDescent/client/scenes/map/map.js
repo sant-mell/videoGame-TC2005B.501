@@ -20,6 +20,29 @@ const NODE_REST = 0;
 const NODE_ENEMY = 1;
 const NODE_UPGRADE = 2;
 const NODE_BOSS = 3;
+ //enemy difficulty definition
+const ENEMY_COMMON = 0;
+const ENEMY_RARE = 1;
+const ENEMY_EPIC = 2;
+
+function pickDifficulty(fight) {
+    let r = Math.random();
+    if (fight === 1) {
+        return ENEMY_COMMON;
+    } else if (fight === 2) {
+        if (r < 0.20) {
+            return ENEMY_COMMON;
+        } else {
+            return ENEMY_RARE;
+        }
+    } else {
+        if (r < 0.40) {
+            return ENEMY_RARE;
+        } else {
+            return ENEMY_EPIC;
+        }
+    }
+}
 
 const FOOL_COLS = 3;
 const FOOL_FRAME_W = 256; // 768 / 3
@@ -201,7 +224,7 @@ class Node {
         this.frame = frame; // which part of the spritesheet to use
         this.sheet = sheet; // castles or nodes spritesheet
         this.type = type; // NODE_REST=0, NODE_ENEMY=1, NODE_UPGRADE=2, NODE_BOSS=3
-        this.upgradeType = upgradeType; // UPGRADE_BINDING=0, UPGRADE_LIFE=1, UPGRADE_CARD=2, null for non-upgrade nodes
+        this.upgradeType = upgradeType; // UPGRADE_BINDING=0, UPGRADE_LIFE=1, UPGRADE_CARD=2
         this.sprite = null; // to assign sprite later
     }
 
@@ -483,9 +506,24 @@ class Game {
                 this.updateAvailable();
                 await saveProgress(this);
                 if (n.type === NODE_ENEMY) {
-                    window.location.href = "../duel/duel.html";
+                    let fight;
+                    if (n.id === 1 || n.id === 2) {
+                        fight = 1;
+                    } else if (n.id === 3 || n.id === 4) {
+                        fight = 2;
+                    } else {
+                        fight = 3;
+                    }
+                    let diff = pickDifficulty(fight);
+                    if (diff === ENEMY_COMMON) {
+                        window.location.href = "../duel/duel_easy.html";
+                    } else if (diff === ENEMY_RARE) {
+                        window.location.href = "../duel/duel_intermedio.html";
+                    } else {
+                        window.location.href = "../duel/duel.html";
+                    }
                 } else if (n.type === NODE_BOSS) {
-                    window.location.href = "../duel/duel.html";
+                    window.location.href = "../duel/duel_dealer.html";
                 } else if (n.type === NODE_UPGRADE) {
                     this.currentUpgradeType = n.upgradeType;
                     this.upgradeOpen = true;
