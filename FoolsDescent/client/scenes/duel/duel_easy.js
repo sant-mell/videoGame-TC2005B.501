@@ -53,6 +53,7 @@ class Game {
         this.candleBurnPlayed = false;
         this.enemyUsesCardNextTurn = true;
         this.playerTurnMessage = false;
+        this.usesPendingMagicianRepeat = true;
         // card effect states
         this.coins = 0;
         this.pageOfPentaclesActive = false;
@@ -83,8 +84,8 @@ class Game {
         this.pendingRewardCard = false;
         this.playerInputLocked = false;
         //audio
-        this.startSound = new Audio("../../../assets/audio/hardEnemies (1).mov");
-        this.startSound.volume = 0;
+        this.startSound = new Audio("../../../assets/audio/easyEnemies.mpeg");
+        this.startSound.volume = 0.2;
         this.candleburn = new Audio("../../../assets/audio/candle_burning.mov");
         this.candleburn.volume = 0.8;
         this.candleblow = new Audio("../../../assets/audio/candle_blow.mov");
@@ -222,16 +223,18 @@ class Game {
 
         // All card definitions in the pool
         this.allCards = this.buildAllCards();
-
-        // Choose the player card pool; 3 random cards are dealt from it.
-        this.characterCards = this.chooseStartingCards([0, 3, 9, 1, 14]);
+        
+        //simulation for remaining personal cards from last duels
+        this.personalPlayerCardIndices = [0, 3];
+        // Choose the player card pool; 2 random cards are dealt from it.
+        this.characterCards = this.chooseStartingCards([5]); //([0, 1, 2, 3, 4, 5])
 
         // Enemy character cards (easy enemy: Magician, Chariot, Star, Strength)
         this.enemyCharacterCards = this.chooseEnemyCards([
             0, // Magician
-            1
-            //3,
-            //4
+            1,
+            3,
+            4
         ]);
 
         this.maindeck = {

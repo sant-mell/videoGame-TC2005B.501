@@ -52,6 +52,8 @@ class Game {
         this.maxLivesMessage = false;
         this.candleBurnPlayed = false;
         this.enemyCharacterTurnCounter = 0;
+        this.playerTurnMessage = false;
+        this.usesPendingMagicianRepeat = true;
         // card effect states
         this.coins = 0;
         this.pageOfPentaclesActive = false;
@@ -82,8 +84,8 @@ class Game {
         this.pendingRewardCard = false;
         this.playerInputLocked = false;
         //audio
-        this.startSound = new Audio("../../../assets/audio/hardEnemies (1).mov");
-        this.startSound.volume = 0;
+        this.startSound = new Audio("../../../assets/audio/midEnemies.mp3");
+        this.startSound.volume = 0.2;
         this.candleburn = new Audio("../../../assets/audio/candle_burning.mov");
         this.candleburn.volume = 0.8;
         this.candleblow = new Audio("../../../assets/audio/candle_blow.mov");
@@ -222,9 +224,9 @@ class Game {
 
         // All card definitions in the pool
         this.allCards = this.buildAllCards();
-
-        // Choose the player card pool; 3 random cards are dealt from it.
-        this.characterCards = this.chooseStartingCards([0, 6, 14, 1, 13, 7, 8]);
+        this.personalPlayerCardIndices = [11, 8];
+        // Choose the player card pool; 2 random cards are dealt from it.
+        this.characterCards = this.chooseStartingCards([6, 7, 8, 9, 10]);
 
         // Enemy character cards
         this.enemyCharacterCards = this.chooseEnemyCards([

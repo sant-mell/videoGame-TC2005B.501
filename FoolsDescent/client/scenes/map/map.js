@@ -249,9 +249,9 @@ class Game {
         this.initObjects();
         this.createEventListeners();
 
-        this.mapMusic = new Audio("../../../assets/audio/travel map.mp3");
-        this.mapMusic.volume = 0.4;
-        this.mapMusic.loop = true;
+        this.startSound = new Audio("../../../assets/audio/Map.mp3");
+        this.startSound.volume = 0.2;
+        this.startSound.loop = true;
     }
 
     initObjects() {
@@ -557,7 +557,8 @@ class Game {
         });
         // click on an available node to send the fool there
         window.addEventListener("click", (event) => {
-            if (this.mapMusic.paused) this.mapMusic.play();
+            //if (this.mapMusic.paused) this.mapMusic.play();
+            if (this.startSound.paused) this.startSound.play();
             const rect = ctx.canvas.getBoundingClientRect();
             const mouseX = event.clientX - rect.left;
             const mouseY = event.clientY - rect.top;

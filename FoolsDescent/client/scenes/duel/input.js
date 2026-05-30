@@ -9,12 +9,20 @@ Game.prototype.createEventListeners = function() {
 
             this.checkStartButton(mouseX, mouseY);
 
+            if (this.showTwoPentaclesChoice) {
+                this.checkTwoPentaclesClick(mouseX, mouseY);
+                return;
+            }
+
             if (this.isPlayerTurnInputLocked()) {
                 return;
             }
 
             for (let c of this.characterCards) {
                 this.checkCardClick(c, mouseX, mouseY);
+                if (this.showTwoPentaclesChoice) {
+                    return;
+                }
             }
             this.checkMainDeckClick(mouseX, mouseY);
             this.checkChoiceButtons(mouseX, mouseY);

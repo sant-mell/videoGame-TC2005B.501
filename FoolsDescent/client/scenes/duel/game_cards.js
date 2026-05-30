@@ -5,14 +5,20 @@ Game.prototype.buildAllCards = function() {
                 name: "The Magician",
                 sprite: { src: "../../../assets/images/Common Cards.png", rect: new Rect(15, 20, 210, 400) },
                 infoText: "Repeating the last card played...",
-                description: "Repeats the effect of your last played card",
-                action: () => {
-                    if (this.lastPlayedAction) {
-                        this.magicianHadLastCard = true;
-                        this.lastPlayedAction();
-                    } else {
-                        this.magicianHadLastCard = false;
-                        this.magicianMessage = true;
+	                description: "Repeats the effect of your last played card",
+	                action: () => {
+	                    if (this.lastPlayedAction) {
+	                        this.magicianHadLastCard = true;
+                            if (this.usesPendingMagicianRepeat) {
+                                this.magicianRepeating = true;
+                                this.pendingMagicianInfoText = this.lastPlayedInfoText;
+                                this.pendingMagicianAction = this.lastPlayedAction;
+                            } else {
+                                this.lastPlayedAction();
+                            }
+	                    } else {
+	                        this.magicianHadLastCard = false;
+	                        this.magicianMessage = true;
                         setTimeout(() => { this.magicianMessage = false; }, 2000);
                     }
                 }
@@ -354,13 +360,17 @@ Game.prototype.activateStarPower = function(target) {
 };
 Game.prototype.activateStrengthPower = function(target) {
 
-    if (target === "enemy") {
+	    if (target === "enemy") {
+	
+	        if (!this.enemyStrengthActive) {
+	            return false;
+	        }
 
-        if (!this.enemyStrengthActive) {
-            return false;
-        }
-
-        this.enemyStrengthActive = false;
+            if (this.enemyLives !== 1) {
+                return false;
+            }
+	
+	        this.enemyStrengthActive = false;
 
         this.strengthMessage = true;
 
@@ -371,11 +381,15 @@ Game.prototype.activateStrengthPower = function(target) {
         return true;
     }
 
-    if (!this.playerStrengthActive) {
-        return false;
-    }
+	    if (!this.playerStrengthActive) {
+	        return false;
+	    }
 
-    this.playerStrengthActive = false;
+        if (this.playerLives !== 1) {
+            return false;
+        }
+	
+	    this.playerStrengthActive = false;
 
     this.strengthMessage = true;
 
@@ -385,13 +399,14 @@ Game.prototype.activateStrengthPower = function(target) {
 
     return true;
 };
-Game.prototype.buildCharacterCardEntry = function(cardDef) {
+Game.prototype.buildCharacterCardEntry = function(cardDef, cardIndex = null) {
         const obj = new AnimatedObject(
             new Vector(canvasWidth / 2, canvasHeight - 180),
             100, 175, "gray", "card", 1
         );
         obj.setSprite(cardDef.sprite.src, cardDef.sprite.rect);
         return {
+            cardIndex: cardIndex,
             object: obj,
             sprite: cardDef.sprite,
             name: cardDef.name,
@@ -404,13 +419,21 @@ Game.prototype.buildCharacterCardEntry = function(cardDef) {
     
 };
 
-Game.prototype.takeRandomPlayerCardIndex = function() {
-        if (!this.availablePlayerCardIndices || this.availablePlayerCardIndices.length === 0) {
+Game.prototype.pickRandomCardIndexFromPool = function(poolIndices) {
+        if (!poolIndices || poolIndices.length === 0) {
             return null;
         }
 
-        const randomPoolIndex = Math.floor(Math.random() * this.availablePlayerCardIndices.length);
-        return this.availablePlayerCardIndices.splice(randomPoolIndex, 1)[0];
+        const randomPoolIndex = Math.floor(Math.random() * poolIndices.length);
+        return poolIndices[randomPoolIndex];
+};
+
+Game.prototype.takeRandomPlayerCardIndex = function() {
+        return this.pickRandomCardIndexFromPool(
+            this.difficultyCardPoolIndices ||
+            this.playerCardPoolIndices ||
+            this.availablePlayerCardIndices
+        );
 };
 
 Game.prototype.addPlayerCardFromPool = function() {
@@ -423,10 +446,10 @@ Game.prototype.addPlayerCardFromPool = function() {
             return false;
         }
 
-        const card = this.buildCharacterCardEntry(this.allCards[cardIndex]);
+        const card = this.buildCharacterCardEntry(this.allCards[cardIndex], cardIndex);
 
-        card.object.position.x = this.maindeck.x + this.maindeck.width / 2;
-        card.object.position.y = this.maindeck.y + this.maindeck.height / 2;
+        card.object.position.x = canvasWidth;
+        card.object.position.y = canvasWidth;
 
         this.characterCards.push(card);
         this.repositionCards();
@@ -434,8 +457,8 @@ Game.prototype.addPlayerCardFromPool = function() {
         this.rewardCard = card;
         this.rewardCardTargetX = card.object.position.x;
         this.rewardCardTargetY = card.object.position.y;
-        card.object.position.x = this.maindeck.x + this.maindeck.width / 2;
-        card.object.position.y = this.maindeck.y + this.maindeck.height / 2;
+        card.object.position.x = canvasWidth;
+        card.object.position.y = canvasHeight;
         this.pendingRewardCard = false;
         this.playerInputLocked = true;
         this.isRewardCardSliding = true;
@@ -443,17 +466,29 @@ Game.prototype.addPlayerCardFromPool = function() {
         return true;
 };
 
-Game.prototype.chooseStartingCards = function(indices, amount = 3) {
+Game.prototype.chooseStartingCards = function(indices, amount = 2) {
+        this.difficultyCardPoolIndices = indices.slice();
         this.playerCardPoolIndices = indices.slice();
         this.availablePlayerCardIndices = indices.slice();
 
-        const cards = [];
-        const startingCardCount = Math.min(amount, this.availablePlayerCardIndices.length);
+        if (!Array.isArray(this.personalPlayerCardIndices)) {
+            this.personalPlayerCardIndices = [];
+        }
 
-        for (let i = 0; i < startingCardCount; i++) {
+        this.savedWinningCards = false;
+
+        const cards = [];
+
+        for (let i = 0; i < amount; i++) {
             const cardIndex = this.takeRandomPlayerCardIndex();
             if (cardIndex !== null) {
-                cards.push(this.buildCharacterCardEntry(this.allCards[cardIndex]));
+                cards.push(this.buildCharacterCardEntry(this.allCards[cardIndex], cardIndex));
+            }
+        }
+
+        for (let cardIndex of this.personalPlayerCardIndices) {
+            if (this.allCards[cardIndex]) {
+                cards.push(this.buildCharacterCardEntry(this.allCards[cardIndex], cardIndex));
             }
         }
 
@@ -464,7 +499,7 @@ Game.prototype.chooseStartingCards = function(indices, amount = 3) {
 
 Game.prototype.chooseEnemyCards = function(indices) {
         const cards = indices.map(i => {
-            const card = this.buildCharacterCardEntry(this.allCards[i]);
+            const card = this.buildCharacterCardEntry(this.allCards[i], i);
             card.object.size.x = 50;
             card.object.size.y = 90;
             return card;
@@ -473,4 +508,22 @@ Game.prototype.chooseEnemyCards = function(indices) {
         this.repositionEnemyCards();
         return cards;
     
+};
+
+Game.prototype.saveRemainingPlayerCardsAfterWin = function() {
+        if (this.savedWinningCards || !this.gameOver || this.enemyLives > 0) {
+            return;
+        }
+
+        if (!Array.isArray(this.personalPlayerCardIndices)) {
+            this.personalPlayerCardIndices = [];
+        }
+
+        for (let card of this.characterCards) {
+            if (card.visible && typeof card.cardIndex === "number") {
+                this.personalPlayerCardIndices.push(card.cardIndex);
+            }
+        }
+
+        this.savedWinningCards = true;
 };

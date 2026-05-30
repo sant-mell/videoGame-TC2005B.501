@@ -120,7 +120,7 @@ Game.prototype.dealer_enemy_turn = function() {
                 // apply effect and remove card
                 setTimeout(() => {
                     enemyCard.action();
-
+                  
                     if (enemyCard.name === "The Fool") {
                         enemyCard.infoText =
                             this.foolRandomCardName + ": " +
@@ -138,6 +138,7 @@ Game.prototype.dealer_enemy_turn = function() {
                     }
 
                     if (enemyCard.name !== "The Magician") {
+                        this.lastPlayedInfoText = enemyCard.infoText;
                         this.lastPlayedAction = enemyCard.action;
                         this.lastPlayedName = enemyCard.name;
                     }
@@ -164,9 +165,10 @@ Game.prototype.dealer_enemy_turn = function() {
                 }, 7000);
     
             } else {
-    
+	    
                 // no character card, draw from main deck immediately
                 setTimeout(() => {
+                    this.showEnemyCards = false;
                     this.showCenterImage = true;
                 }, 500);
     
@@ -251,8 +253,14 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             }
 
             // If they targeted themselves and it was a moon, it's now the players turn
+            this.enemyStrengthActive = false;
             this.currentTurn = "player";
             this.showEnemyCards = true;
+
+            this.playerTurnMessage = true;
+            setTimeout(() => {
+                this.playerTurnMessage = false;
+            }, 2000);
 
             if (this.playerHandBlocked) {
                 this.showPlayerCards = false;
@@ -276,8 +284,14 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             return;
         }
 
+        this.enemyStrengthActive = false;
         this.currentTurn = "player";
         this.showEnemyCards = true;
+
+        this.playerTurnMessage = true;
+        setTimeout(() => {
+            this.playerTurnMessage = false;
+        }, 2000);
 
         if (this.playerHandBlocked) {
             this.showPlayerCards = false;

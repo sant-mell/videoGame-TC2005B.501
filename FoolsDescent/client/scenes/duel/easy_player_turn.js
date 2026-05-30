@@ -1,13 +1,14 @@
 Game.prototype.activateTwoPentacles = function() {
 
-        if (this.greatDeck.length < 2) {
+        if (this.greatDeck.length === 0) {
             return;
         }
 
-        this.twoPentaclesCards = [
-            this.greatDeck.shift(),
-            this.greatDeck.shift()
-        ];
+        this.twoPentaclesCards = [this.greatDeck.shift()];
+
+        if (this.greatDeck.length > 0) {
+            this.twoPentaclesCards.push(this.greatDeck.shift());
+        }
 
         this.showTwoPentaclesChoice = true;
         this.showPlayerCards = false;
@@ -25,7 +26,7 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
         this.discardX = canvasWidth / 2;
         this.discardY = canvasHeight / 2;
 
-        this.isDiscardSliding = true;
+        this.isDiscardSliding = this.discardCardType != null;
 
         this.showFinalImage = true;
 
@@ -104,6 +105,7 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
 
             if (this.currentTurn === "enemy") {
 
+                this.playerStrengthActive = false;
                 this.easy_enemy_turn();
 
             } else {
@@ -243,6 +245,24 @@ Game.prototype.checkTwoPentaclesClick = function(mouseX, mouseY) {
             return;
         }
 
+        if (this.twoPentaclesCards.length === 1) {
+            const singleCardX =
+                canvasWidth / 2 - this.twoPentaclesLeft.width / 2;
+            const singleCardY =
+                canvasHeight / 2 - this.twoPentaclesLeft.height / 2;
+
+            if (
+                mouseX >= singleCardX &&
+                mouseX <= singleCardX + this.twoPentaclesLeft.width &&
+                mouseY >= singleCardY &&
+                mouseY <= singleCardY + this.twoPentaclesLeft.height
+            ) {
+                this.resolveTwoPentacles(0);
+            }
+
+            return;
+        }
+
         if (
             mouseX >= this.twoPentaclesLeft.x &&
             mouseX <= this.twoPentaclesLeft.x + this.twoPentaclesLeft.width &&
@@ -342,6 +362,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
                 }
                 this.enemyJusticeActive = false;
                 if (this.currentTurn === "enemy") {
+                    this.playerStrengthActive = false;
                     this.easy_enemy_turn();
                 }
 
@@ -400,6 +421,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         // CHECK IF ENEMY LOST
         if (this.enemyLives <= 0) {
             if (this.activateStarPower("enemy")) {
+                this.playerStrengthActive = false;
                 this.easy_enemy_turn();
                 return;
             }
