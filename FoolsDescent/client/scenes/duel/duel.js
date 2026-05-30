@@ -18,6 +18,13 @@ class Game {
         this.enemyLives = 3;
         this.playerLives = 3;
         this.currentTurn = "player";
+
+        //CHOOSE ENEMY HERE!!
+        //this.chooseEnemy = 2; //<--- CHOOSE ENEMY (1 = King, 2 = Queen)
+        
+        // Automatically chooses the enemy (1 or 2)
+        this.chooseEnemy = Math.floor(Math.random() * 2) + 1;
+
         //enemy card
         this.activeEnemyCard = null;
         //card animation
@@ -114,10 +121,20 @@ class Game {
             45
         );
 
-        this.enemyImage.setSprite(
-            "../../../assets/images/The_king_new.png",
-            new Rect(10, 0, 835, 600)
-        );
+        switch(this.chooseEnemy){
+            case 1:
+                this.enemyImage.setSprite(
+                    "../../../assets/images/The_king_new.png",
+                    new Rect(10, 0, 835, 600)
+                );
+                break;
+            case 2:
+                this.enemyImage.setSprite(
+                    "../../../assets/images/Queen_Final.png",
+                    new Rect(10, 10, 825, 610)
+                );
+                break;
+        }
 
         this.defeatedEnemyImage = new AnimatedObject(
             new Vector(canvasWidth / 2, 205),
@@ -128,10 +145,19 @@ class Game {
             45
         );
 
-        this.defeatedEnemyImage.setSprite(
-            "../../../assets/images/DefeatedKing_new.png",
-            new Rect(0, 0, 380, 174)
-        );
+        switch(this.chooseEnemy){
+            case 1:
+                this.defeatedEnemyImage.setSprite(
+                "../../../assets/images/DefeatedKing_new.png",
+                new Rect(0, 0, 380, 174));
+                break;
+            case 2:
+                this.defeatedEnemyImage.setSprite(
+                "../../../assets/images/Defeated_Queen.png",
+                new Rect(0, 0, 380, 174));
+                break;
+        }
+
         this.extra_player_candles = new AnimatedObject(
 
             new Vector(canvasWidth - 390 , 420),
@@ -201,8 +227,17 @@ class Game {
 
         // Manually choose starting cards by index (pass amount to deal all of them)
         // this.characterCards = this.chooseStartingCards([0, 6, 14, 1, 13], 5);
-        this.personalPlayerCardIndices = [12, 13];
-        this.characterCards = this.chooseStartingCards([11, 12, 14]);
+        //this.personalPlayerCardIndices = [12, 13];
+        //this.characterCards = this.chooseStartingCards([11, 12, 14]);
+
+         // Gives two random cards at the start of the duel, they get added to the players deck
+        let cards = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]; // Common, rare and epic
+
+        // Random order
+        cards.sort(() => Math.random() - 0.5);
+
+        // Chooses two
+        this.characterCards = this.chooseStartingCards(cards.slice(0, 2));
 
         // Enemy character cards
         this.enemyCharacterCards = this.chooseEnemyCards([
