@@ -157,23 +157,18 @@ Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
             obj.position.y = canvasHeight / 2;
             this.showEnemyCards = false;
             cardEntry.action();
-            if (cardEntry.name === "The Magician" && this.magicianRepeating) {
+            if (cardEntry.name === "The Fool") {
+                cardEntry.infoText =
+                    this.foolRandomCardName + ": " +
+                    this.foolRandomCardInfo;
                 cardEntry.showInfo = true;
-
                 setTimeout(() => {
-                    cardEntry.infoText = this.pendingMagicianInfoText;
-                    this.pendingMagicianAction();
-                }, 2000);
-
-                setTimeout(() => {
-                    this.magicianRepeating = false;
                     cardEntry.visible = false;
                     cardEntry.showInfo = false;
-                    cardEntry.infoText = "Repeating the last card played...";
+                    cardEntry.infoText = "Surprise!";
                     this.showEnemyCards = true;
                     this.repositionCards();
-                }, 4000);
-
+                }, 3000);
                 return;
             }
             cardEntry.showInfo = cardEntry.name !== "The Magician" || this.magicianHadLastCard;
