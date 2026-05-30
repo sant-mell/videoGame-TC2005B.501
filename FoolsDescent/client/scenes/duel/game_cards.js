@@ -212,23 +212,40 @@ Game.prototype.buildAllCards = function() {
             {
                 //15
                 name: "The Fool",
-                sprite: { src: "../../../assets/images/Epic Cards.png", rect: new Rect(0, 10, 213, 400) },
-                description: "Gain 2 lives, but a new moon card will be added to the Great Deck",
-                infoText: "Gained 2 lives! A Moon was added to the Great Deck.",
+                sprite: { src: "../../../assets/images/Epic Cards.png", rect: new Rect(0, 10, 204, 385) },
+                description: "Any card effect is possible, but which one will it be?",
+                infoText: "Surprise!",
                 action: () => {
-                    if (this.currentTurn !== "enemy"){
-                    this.playerLives += 2;
+                    let foolCards;
+
+                    if (this.currentTurn === "enemy") {
+                        foolCards = [
+                            this.allCards[1],
+                            this.allCards[3],
+                            this.allCards[4],
+                            this.allCards[7],
+                            this.allCards[8],
+                            this.allCards[9],
+                            this.allCards[11],
+                            this.allCards[12],
+                            this.allCards[13],
+                            this.allCards[14]
+                        ];
                     }
                     else {
-                        this.enemyLives +=2;
+                        foolCards = this.allCards.filter(
+                            card => card.name !== "The Fool"
+                        );
                     }
-            
-                    this.greatDeck.push("moon");
-            
-                    this.greatDeck.sort(() => Math.random() - 0.5);
-                    this.candleBurnPlayed = false;
-                    this.updatePlayerCandles();
-                    this.updateEnemyCandles();
+
+                    const randomCard =
+                        foolCards[Math.floor(Math.random() * foolCards.length)];
+                    
+                    this.lastPlayedAction = randomCard.action;
+                    this.foolRandomCardName = randomCard.name;
+                    this.foolRandomCardInfo = randomCard.infoText;
+
+                    randomCard.action();
                 }
             },
         ];

@@ -14,6 +14,13 @@ Game.prototype.dealer_enemy_turn = function() {
         this.showEnemyCards = true;
         this.showPlayerCards = false;
         this.currentTurn = "enemy";
+        if (!this.enemyExtraCardTurn) {
+            this.enemyTurnCounter++;
+            if (this.enemyTurnCounter === 3) {
+                this.enemyTurnCounter = 0;
+                this.enemyExtraCardTurn = true;
+            }
+        }
     
         const skipEnemyCharacterCard = this.enemyHandBlocked;
 
@@ -25,7 +32,12 @@ Game.prototype.dealer_enemy_turn = function() {
     
             let enemyCard;
 
-            // Uses the Fool as their first card
+            // Uses The Fool as their first card
+            if (this.enemyCharacterCardsUsed === 0) {
+                enemyCard = this.enemyCharacterCards.find(
+                    card => card.name === "The Fool"
+                );
+            }
 
             // Uses The Star if they have one live left
             if (this.enemyLives === 1) {
@@ -108,27 +120,23 @@ Game.prototype.dealer_enemy_turn = function() {
                 // apply effect and remove card
                 setTimeout(() => {
                     enemyCard.action();
-                    if (enemyCard.name === "The Magician" && this.magicianRepeating) {
+                  
+                    if (enemyCard.name === "The Fool") {
+                        enemyCard.infoText =
+                            this.foolRandomCardName + ": " +
+                            this.foolRandomCardInfo;
                         enemyCard.showInfo = true;
-
                         setTimeout(() => {
-                            enemyCard.infoText = this.pendingMagicianInfoText;
-                            this.pendingMagicianAction();
-                        }, 1500);
-
-                        setTimeout(() => {
-                            this.magicianRepeating = false;
                             enemyCard.showInfo = false;
-                            enemyCard.infoText = "Repeating the last card played...";
                             enemyCard.object.size.x = 50;
                             enemyCard.object.size.y = 90;
                             this.activeEnemyCard = null;
                             this.enemyCharacterCards.splice(chosenIndex, 1);
                             this.repositionEnemyCards();
                         }, 3000);
-
                         return;
                     }
+
                     if (enemyCard.name !== "The Magician") {
                         this.lastPlayedInfoText = enemyCard.infoText;
                         this.lastPlayedAction = enemyCard.action;
@@ -142,15 +150,19 @@ Game.prototype.dealer_enemy_turn = function() {
                     this.repositionEnemyCards();
                 }, 5000);
     
-                // after character card resolves, draw from main deck
+                // After character card resolves, draw from main deck / Logic for extra character card usage
                 setTimeout(() => {
-                    this.showCenterImage = true;
+                    if (this.enemyExtraCardTurn) {
+                        this.enemyExtraCardTurn = false;
+                        this.dealer_enemy_turn();
+                    } else {
+                        this.showCenterImage = true;
+                        setTimeout(() => {
+                            this.showCenterImage = false;
+                            this.resolveEnemyDeckDraw();
+                        }, 1000);
+                    }
                 }, 7000);
-    
-                setTimeout(() => {
-                    this.showCenterImage = false;
-                    this.resolveEnemyDeckDraw();
-                }, 8000);
     
             } else {
 	    
