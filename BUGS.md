@@ -38,15 +38,9 @@
 
 - Las monedas siempre se guardan como 0.
 
-- El mapa tira un error de referencia al iniciar porque usa cosas de otro archivo que todavía no cargó.
-
-- Si guardas cartas extra en localStorage por primera vez, guarda un string raro en vez de lo que debe.
-
 ---
 
 ## Web
-
-- Si los datos del mapa están mal formados el servidor se cae.
 
 - En createaccount y mainmenu hay botones metidos dentro de links, lo cual es HTML inválido.
 
