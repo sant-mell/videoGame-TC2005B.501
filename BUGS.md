@@ -39,9 +39,3 @@
 - Las monedas siempre se guardan como 0.
 
 ---
-
-## Web
-
-- En createaccount y mainmenu hay botones metidos dentro de links, lo cual es HTML inválido.
-
----
