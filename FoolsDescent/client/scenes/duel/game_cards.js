@@ -13,7 +13,12 @@ Game.prototype.buildAllCards = function() {
                             const repeatedAction = this.lastPlayedAction;
                             if (this.usesPendingMagicianRepeat) {
                                 this.magicianRepeating = true;
-                                this.pendingMagicianInfoText = this.lastPlayedInfoText;
+                                this.pendingMagicianInfoText =
+                                    this.getCardInfoTextForTurn(
+                                        this.lastPlayedName,
+                                        magicianOwner,
+                                        this.lastPlayedInfoText
+                                    );
                                 this.pendingMagicianAction = () => {
                                     this.runCardActionAsTurn(
                                         repeatedAction,
@@ -267,6 +272,49 @@ Game.prototype.runCardActionAsTurn = function(action, turnOwner) {
     this.currentTurn = turnOwner;
     action();
     this.currentTurn = previousTurn;
+};
+
+Game.prototype.getCardInfoTextForTurn = function(cardName, turnOwner, fallbackText) {
+    const infoTexts = {
+        "The Star": {
+            player: "You will be revived if you reach 0 lives!",
+            enemy: "The enemy will be revived if they reach 0 lives!"
+        },
+        "Strength": {
+            player: "You cannot die next round!",
+            enemy: "Enemy can't die this round!"
+        },
+        "The Hermit": {
+            player: "Enemy's next turn is blocked!",
+            enemy: "Your turn will be blocked!"
+        },
+        "Justice": {
+            player: "If you lose a life next turn, so does the enemy!",
+            enemy: "If the enemy loses a life on this turn or the next one so do you!"
+        },
+        "The Hanged Man": {
+            player: "Enemy cannot use their Character Deck next turn!",
+            enemy: "The enemy has blocked your hand for the next turn."
+        },
+        "The Tower": {
+            player: "Destroyed half of the enemy's cards!",
+            enemy: "The enemy destroyed half of your character cards!"
+        },
+        "The Devil": {
+            player: "Gained 2 lives! A Moon was added to the Great Deck.",
+            enemy: "The enemy gained 2 lives! A Moon was added to the Great Deck."
+        },
+        "The Lovers": {
+            player: "Removing one Moon from the Great Deck...",
+            enemy: "The enemy removed one Moon from the Great Deck..."
+        }
+    };
+
+    if (infoTexts[cardName] && infoTexts[cardName][turnOwner]) {
+        return infoTexts[cardName][turnOwner];
+    }
+
+    return fallbackText;
 };
 
 Game.prototype.destroyHalfOpponentCards = function() {
