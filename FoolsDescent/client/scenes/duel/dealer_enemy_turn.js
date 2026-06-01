@@ -69,14 +69,23 @@ Game.prototype.dealer_enemy_turn = function() {
                         card => card.name !== "The Hermit"
                     );
                 }
-
-                if (availableCards.length <= 0) {
-                    availableCards = this.enemyCharacterCards;
-                }
-
-                enemyCard = availableCards[
-                    Math.floor(Math.random() * availableCards.length)
+                const enemyMagicianBlockedLastCards = [
+                    "Two of Pentacles",
+                    "The High Priestess",
+                    "Page of Pentacles",
+                    "King of Pentacles"
                 ];
+                
+                if (enemyMagicianBlockedLastCards.includes(this.lastPlayedName)) {
+                    availableCards = availableCards.filter(
+                        card => card.name !== "The Magician"
+                    );
+                }
+                if (availableCards.length > 0) {
+                    enemyCard = availableCards[
+                        Math.floor(Math.random() * availableCards.length)
+                    ];
+                }
             }
 
             const chosenIndex = this.enemyCharacterCards.indexOf(enemyCard);
@@ -120,6 +129,28 @@ Game.prototype.dealer_enemy_turn = function() {
                 // apply effect and remove card
                 setTimeout(() => {
                     enemyCard.action();
+
+                    if (enemyCard.name === "The Magician" && this.magicianRepeating) {
+                        enemyCard.showInfo = true;
+
+                        setTimeout(() => {
+                            enemyCard.infoText = this.pendingMagicianInfoText;
+                            this.pendingMagicianAction();
+                        }, 1500);
+
+                        setTimeout(() => {
+                            this.magicianRepeating = false;
+                            enemyCard.showInfo = false;
+                            enemyCard.infoText = "Repeating the last card played...";
+                            enemyCard.object.size.x = 50;
+                            enemyCard.object.size.y = 90;
+                            this.activeEnemyCard = null;
+                            this.enemyCharacterCards.splice(chosenIndex, 1);
+                            this.repositionEnemyCards();
+                        }, 3000);
+
+                        return;
+                    }
                   
                     if (enemyCard.name === "The Fool") {
                         enemyCard.infoText =
@@ -254,6 +285,20 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
             // If they targeted themselves and it was a moon, it's now the players turn
             this.enemyStrengthActive = false;
+
+            if (this.playerTurnBlocked) {
+                this.playerTurnBlocked = false;
+                this.currentTurn = "enemy";
+                this.turnBlockedMessage = true;
+
+                setTimeout(() => {
+                    this.turnBlockedMessage = false;
+                    this.dealer_enemy_turn();
+                }, 2000);
+
+                return;
+            }
+
             this.currentTurn = "player";
             this.showEnemyCards = true;
 

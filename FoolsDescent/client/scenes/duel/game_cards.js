@@ -9,12 +9,22 @@ Game.prototype.buildAllCards = function() {
 	                action: () => {
 	                    if (this.lastPlayedAction) {
 	                        this.magicianHadLastCard = true;
+                            const magicianOwner = this.currentTurn;
+                            const repeatedAction = this.lastPlayedAction;
                             if (this.usesPendingMagicianRepeat) {
                                 this.magicianRepeating = true;
                                 this.pendingMagicianInfoText = this.lastPlayedInfoText;
-                                this.pendingMagicianAction = this.lastPlayedAction;
+                                this.pendingMagicianAction = () => {
+                                    this.runCardActionAsTurn(
+                                        repeatedAction,
+                                        magicianOwner
+                                    );
+                                };
                             } else {
-                                this.lastPlayedAction();
+                                this.runCardActionAsTurn(
+                                    repeatedAction,
+                                    magicianOwner
+                                );
                             }
 	                    } else {
 	                        this.magicianHadLastCard = false;
@@ -251,6 +261,14 @@ Game.prototype.buildAllCards = function() {
         ];
     
 };
+Game.prototype.runCardActionAsTurn = function(action, turnOwner) {
+    const previousTurn = this.currentTurn;
+
+    this.currentTurn = turnOwner;
+    action();
+    this.currentTurn = previousTurn;
+};
+
 Game.prototype.destroyHalfOpponentCards = function() {
     const targetCards = this.currentTurn === "enemy"
         ? this.characterCards

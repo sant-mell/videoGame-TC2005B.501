@@ -26,22 +26,28 @@ Game.prototype.easy_enemy_turn = function() {
         let enemyCard;
 
         let availableCards = this.enemyCharacterCards;
-
-        // Avoid magician only on first enemy card usage
-        if (this.enemyUsesCardNextTurn && this.lastPlayedAction == null) {
+        const enemyMagicianBlockedLastCards = [
+            "Two of Pentacles",
+            "The High Priestess",
+            "Page of Pentacles",
+            "King of Pentacles"
+        ];
+        // Avoid magician only on first enemy card usage or if the last card is two of pentacles or high priestess
+        if (
+            (this.enemyUsesCardNextTurn && this.lastPlayedAction == null) ||
+            enemyMagicianBlockedLastCards.includes(this.lastPlayedName)
+        ) {
             availableCards = availableCards.filter(
                 card => card.name !== "The Magician"
             );
         }
 
-        if (availableCards.length <= 0) {
-            availableCards = this.enemyCharacterCards;
-        }
-
         // Random selection
-        enemyCard = availableCards[
-            Math.floor(Math.random() * availableCards.length)
-        ];
+        if (availableCards.length > 0) {
+            enemyCard = availableCards[
+                Math.floor(Math.random() * availableCards.length)
+            ];
+        }
 
         const chosenIndex = this.enemyCharacterCards.indexOf(enemyCard);
 
@@ -333,6 +339,25 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
             // Moon self-hit = player turn
             this.enemyStrengthActive = false;
+
+            if (this.playerTurnBlocked) {
+
+                this.playerTurnBlocked = false;
+
+                this.currentTurn = "enemy";
+
+                this.turnBlockedMessage = true;
+
+                setTimeout(() => {
+
+                    this.turnBlockedMessage = false;
+
+                    this.easy_enemy_turn();
+
+                }, 2000);
+
+                return;
+            }
 
             this.currentTurn = "player";
 
