@@ -1,4 +1,5 @@
 Game.prototype.update = function(deltaTime) {
+    this.resolveNoResultTie();
     if (
         this.greatDeck.length === 0 &&
         !this.gameOver &&

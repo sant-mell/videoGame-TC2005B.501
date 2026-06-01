@@ -389,6 +389,21 @@ Game.prototype.draw = function(ctx) {
                         this.sunImage.draw(ctx);
                     }
                 }
+            if (performance.now() < this.noResultMessageUntil) {
+                ctx.fillStyle = "white";
+                ctx.font = "40px MedievalSharp";
+                    ctx.textAlign = "center";
+                    ctx.fillText(
+                        "This duel must have a result.",
+                        canvasWidth / 2,
+                        canvasHeight / 2 + 30
+                    );
+                    ctx.fillText(
+                        "There is no cheating fate.",
+                        canvasWidth / 2,
+                        canvasHeight / 2 - 30
+                    );
+                }
             if (this.gameOver) {
                 this.startSound.pause();
                 this.showEnemyCards = false;

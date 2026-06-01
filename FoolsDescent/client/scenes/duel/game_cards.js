@@ -399,6 +399,74 @@ Game.prototype.activateStrengthPower = function(target) {
 
     return true;
 };
+Game.prototype.resolveNoResultTie = function() {
+    if (this.playerLives > 0 || this.enemyLives > 0) {
+        return false;
+    }
+
+    let protectionActivated = false;
+
+    if (this.playerStrengthActive) {
+        this.playerLives = 1;
+        this.playerStrengthActive = false;
+        protectionActivated = true;
+    }
+
+    if (this.enemyStrengthActive) {
+        this.enemyLives = 1;
+        this.enemyStrengthActive = false;
+        protectionActivated = true;
+    }
+
+    if (protectionActivated) {
+        this.strengthMessage = true;
+        setTimeout(() => {
+            this.strengthMessage = false;
+        }, 2000);
+    }
+
+    const playerStarActivated = this.activateStarPower("player");
+    const enemyStarActivated = this.activateStarPower("enemy");
+
+    if (protectionActivated || playerStarActivated || enemyStarActivated) {
+        this.gameOver = this.playerLives <= 0 || this.enemyLives <= 0;
+
+        if (this.enemyLives > 0) {
+            this.isEnemyShowing = true;
+            this.isShowingDefeatedEnemy = false;
+        }
+
+        this.candleBurnPlayed = false;
+        this.updatePlayerCandles();
+        this.updateEnemyCandles();
+
+        return true;
+    }
+
+    this.gameOver = false;
+
+    this.playerLives = 1;
+    this.enemyLives = 1;
+
+    this.playerJusticeActive = false;
+    this.enemyJusticeActive = false;
+    this.playerStrengthActive = false;
+    this.enemyStrengthActive = false;
+
+    this.noResultMessageUntil = performance.now() + 3500;
+
+    this.showFinalImage = false;
+    this.showCenterImage = false;
+    this.isCardSliding = false;
+    this.isEnemyShowing = true;
+    this.isShowingDefeatedEnemy = false;
+
+    this.candleBurnPlayed = false;
+    this.updatePlayerCandles();
+    this.updateEnemyCandles();
+
+    return true;
+};
 Game.prototype.buildCharacterCardEntry = function(cardDef, cardIndex = null) {
         const obj = new AnimatedObject(
             new Vector(canvasWidth / 2, canvasHeight - 180),
