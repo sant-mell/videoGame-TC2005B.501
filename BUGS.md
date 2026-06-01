@@ -32,6 +32,8 @@
 
 - Justice puede resetearse antes de tiempo en el duelo del Dealer.
 
+- Si usas alguna de las tarjetas que el enemigo no puede usar (Page of Pentacles, Two of Pentacles, High Priestess o King of Pentacles) y luego ellos aplican Magician los efectos son para ti.
+
 ---
 
 ## Mapa
