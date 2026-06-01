@@ -275,6 +275,11 @@ class Game {
         this.startSound = new Audio("../../../assets/audio/Map.mp3");
         this.startSound.volume = 0.2;
         this.startSound.loop = true;
+        const savedTime = localStorage.getItem("mapMusicTime");
+
+        if (savedTime !== null) {
+        this.startSound.currentTime = Number(savedTime);
+}
     }
 
     initObjects() {
@@ -516,13 +521,21 @@ class Game {
                     }
                     let diff = pickDifficulty(fight);
                     if (diff === ENEMY_COMMON) {
+                        localStorage.setItem("mapMusicTime", this.startSound.currentTime);
+                        this.startSound.pause();
                         window.location.href = "../duel/duel_easy.html";
                     } else if (diff === ENEMY_RARE) {
+                        localStorage.setItem("mapMusicTime", this.startSound.currentTime);
+                        this.startSound.pause();
                         window.location.href = "../duel/duel_intermedio.html";
                     } else {
+                        localStorage.setItem("mapMusicTime", this.startSound.currentTime);
+                        this.startSound.pause();
                         window.location.href = "../duel/duel.html";
                     }
                 } else if (n.type === NODE_BOSS) {
+                    localStorage.setItem("mapMusicTime", this.startSound.currentTime);
+                    this.startSound.pause();
                     window.location.href = "../duel/duel_dealer.html";
                 } else if (n.type === NODE_UPGRADE) {
                     this.currentUpgradeType = n.upgradeType;

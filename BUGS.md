@@ -18,8 +18,6 @@
 
 - Hay código en el hover de las cartas que nunca corre.
 
-- Si los dos mueren al mismo tiempo con Justice, salen los dos mensajes de victoria y derrota encimados.
-
 - Page of Pentacles dice que da monedas al ganar pero en realidad solo las da en una situación muy específica.
 
 - Si el enemigo copia tu Strength con The Magician, el buff se lo queda él.
