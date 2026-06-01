@@ -9,12 +9,27 @@ Game.prototype.buildAllCards = function() {
 	                action: () => {
 	                    if (this.lastPlayedAction) {
 	                        this.magicianHadLastCard = true;
+                            const magicianOwner = this.currentTurn;
+                            const repeatedAction = this.lastPlayedAction;
                             if (this.usesPendingMagicianRepeat) {
                                 this.magicianRepeating = true;
-                                this.pendingMagicianInfoText = this.lastPlayedInfoText;
-                                this.pendingMagicianAction = this.lastPlayedAction;
+                                this.pendingMagicianInfoText =
+                                    this.getCardInfoTextForTurn(
+                                        this.lastPlayedName,
+                                        magicianOwner,
+                                        this.lastPlayedInfoText
+                                    );
+                                this.pendingMagicianAction = () => {
+                                    this.runCardActionAsTurn(
+                                        repeatedAction,
+                                        magicianOwner
+                                    );
+                                };
                             } else {
-                                this.lastPlayedAction();
+                                this.runCardActionAsTurn(
+                                    repeatedAction,
+                                    magicianOwner
+                                );
                             }
 	                    } else {
 	                        this.magicianHadLastCard = false;
@@ -251,6 +266,57 @@ Game.prototype.buildAllCards = function() {
         ];
     
 };
+Game.prototype.runCardActionAsTurn = function(action, turnOwner) {
+    const previousTurn = this.currentTurn;
+
+    this.currentTurn = turnOwner;
+    action();
+    this.currentTurn = previousTurn;
+};
+
+Game.prototype.getCardInfoTextForTurn = function(cardName, turnOwner, fallbackText) {
+    const infoTexts = {
+        "The Star": {
+            player: "You will be revived if you reach 0 lives!",
+            enemy: "The enemy will be revived if they reach 0 lives!"
+        },
+        "Strength": {
+            player: "You cannot die next round!",
+            enemy: "Enemy can't die this round!"
+        },
+        "The Hermit": {
+            player: "Enemy's next turn is blocked!",
+            enemy: "Your turn will be blocked!"
+        },
+        "Justice": {
+            player: "If you lose a life next turn, so does the enemy!",
+            enemy: "If the enemy loses a life on this turn or the next one so do you!"
+        },
+        "The Hanged Man": {
+            player: "Enemy cannot use their Character Deck next turn!",
+            enemy: "The enemy has blocked your hand for the next turn."
+        },
+        "The Tower": {
+            player: "Destroyed half of the enemy's cards!",
+            enemy: "The enemy destroyed half of your character cards!"
+        },
+        "The Devil": {
+            player: "Gained 2 lives! A Moon was added to the Great Deck.",
+            enemy: "The enemy gained 2 lives! A Moon was added to the Great Deck."
+        },
+        "The Lovers": {
+            player: "Removing one Moon from the Great Deck...",
+            enemy: "The enemy removed one Moon from the Great Deck..."
+        }
+    };
+
+    if (infoTexts[cardName] && infoTexts[cardName][turnOwner]) {
+        return infoTexts[cardName][turnOwner];
+    }
+
+    return fallbackText;
+};
+
 Game.prototype.destroyHalfOpponentCards = function() {
     const targetCards = this.currentTurn === "enemy"
         ? this.characterCards
@@ -396,6 +462,74 @@ Game.prototype.activateStrengthPower = function(target) {
     setTimeout(() => {
         this.strengthMessage = false;
     }, 2000);
+
+    return true;
+};
+Game.prototype.resolveNoResultTie = function() {
+    if (this.playerLives > 0 || this.enemyLives > 0) {
+        return false;
+    }
+
+    let protectionActivated = false;
+
+    if (this.playerStrengthActive) {
+        this.playerLives = 1;
+        this.playerStrengthActive = false;
+        protectionActivated = true;
+    }
+
+    if (this.enemyStrengthActive) {
+        this.enemyLives = 1;
+        this.enemyStrengthActive = false;
+        protectionActivated = true;
+    }
+
+    if (protectionActivated) {
+        this.strengthMessage = true;
+        setTimeout(() => {
+            this.strengthMessage = false;
+        }, 2000);
+    }
+
+    const playerStarActivated = this.activateStarPower("player");
+    const enemyStarActivated = this.activateStarPower("enemy");
+
+    if (protectionActivated || playerStarActivated || enemyStarActivated) {
+        this.gameOver = this.playerLives <= 0 || this.enemyLives <= 0;
+
+        if (this.enemyLives > 0) {
+            this.isEnemyShowing = true;
+            this.isShowingDefeatedEnemy = false;
+        }
+
+        this.candleBurnPlayed = false;
+        this.updatePlayerCandles();
+        this.updateEnemyCandles();
+
+        return true;
+    }
+
+    this.gameOver = false;
+
+    this.playerLives = 1;
+    this.enemyLives = 1;
+
+    this.playerJusticeActive = false;
+    this.enemyJusticeActive = false;
+    this.playerStrengthActive = false;
+    this.enemyStrengthActive = false;
+
+    this.noResultMessageUntil = performance.now() + 3500;
+
+    this.showFinalImage = false;
+    this.showCenterImage = false;
+    this.isCardSliding = false;
+    this.isEnemyShowing = true;
+    this.isShowingDefeatedEnemy = false;
+
+    this.candleBurnPlayed = false;
+    this.updatePlayerCandles();
+    this.updateEnemyCandles();
 
     return true;
 };

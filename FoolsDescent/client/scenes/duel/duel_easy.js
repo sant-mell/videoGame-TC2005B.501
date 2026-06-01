@@ -225,9 +225,9 @@ class Game {
         this.allCards = this.buildAllCards();
         
         //simulation for remaining personal cards from last duels
-        this.personalPlayerCardIndices = [0, 3];
+        this.personalPlayerCardIndices = [];
         // Choose the player card pool; 2 random cards are dealt from it.
-        this.characterCards = this.chooseStartingCards([5]); //([0, 1, 2, 3, 4, 5])
+        this.characterCards = this.chooseStartingCards([0, 1, 2, 3, 4, 5]);
 
         // Enemy character cards (easy enemy: Magician, Chariot, Star, Strength)
         this.enemyCharacterCards = this.chooseEnemyCards([
@@ -235,6 +235,7 @@ class Game {
             1,
             3,
             4
+            
         ]);
 
         this.maindeck = {
