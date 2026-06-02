@@ -130,10 +130,8 @@ Game.prototype.buildAllCards = function() {
                 action: () => {
                         if (this.currentTurn === "enemy") {
                             this.playerTurnBlocked = true;
-                            console.log("HERMIT PLAYER ACTION", this.currentTurn);
                         } else {
                             this.enemyTurnBlocked = true;
-                            console.log("HERMIT ENEMY ACTION", this.currentTurn);
                         }
                 }
             },
@@ -583,7 +581,7 @@ Game.prototype.addPlayerCardFromPool = function() {
         const card = this.buildCharacterCardEntry(this.allCards[cardIndex], cardIndex);
 
         card.object.position.x = canvasWidth;
-        card.object.position.y = canvasWidth;
+        card.object.position.y = canvasHeight;
 
         this.characterCards.push(card);
         this.repositionCards();

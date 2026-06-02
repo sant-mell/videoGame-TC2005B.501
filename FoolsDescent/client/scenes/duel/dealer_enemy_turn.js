@@ -173,6 +173,7 @@ Game.prototype.dealer_enemy_turn = function() {
                         this.lastPlayedAction = enemyCard.action;
                         this.lastPlayedName = enemyCard.name;
                     }
+                    this.enemyCharacterCardsUsed++;
                     enemyCard.showInfo = false;
                     enemyCard.object.size.x = 50;
                     enemyCard.object.size.y = 90;
