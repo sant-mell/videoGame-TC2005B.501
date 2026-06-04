@@ -29,6 +29,8 @@ Game.prototype.dealer_enemy_turn = function() {
             }
     
         setTimeout(() => {
+
+            if (this.gameOver) return;
     
             let enemyCard;
 
@@ -96,6 +98,7 @@ Game.prototype.dealer_enemy_turn = function() {
     
                 // hide other cards, move chosen card to center
                 setTimeout(() => {
+                if (this.gameOver) return;
                 this.showEnemyCards = false;
                 this.activeEnemyCard = enemyCard;
     
@@ -107,6 +110,7 @@ Game.prototype.dealer_enemy_turn = function() {
 
                 // show info text after card is in center
                 setTimeout(() => {
+                    if (this.gameOver) return;
                     enemyCard.showInfo = enemyCard.name !== "The Magician" || this.lastPlayedAction;
                     if (enemyCard.name === "The Star") {
                         enemyCard.infoText = "The enemy will be revived if they reach 0 lives!";
@@ -128,17 +132,20 @@ Game.prototype.dealer_enemy_turn = function() {
     
                 // apply effect and remove card
                 setTimeout(() => {
+                    if (this.gameOver) return;
                     enemyCard.action();
 
                     if (enemyCard.name === "The Magician" && this.magicianRepeating) {
                         enemyCard.showInfo = true;
 
                         setTimeout(() => {
+                            if (this.gameOver) return;
                             enemyCard.infoText = this.pendingMagicianInfoText;
                             this.pendingMagicianAction();
                         }, 1500);
 
                         setTimeout(() => {
+                            if (this.gameOver) return;
                             this.magicianRepeating = false;
                             enemyCard.showInfo = false;
                             enemyCard.infoText = "Repeating the last card played...";
@@ -158,6 +165,7 @@ Game.prototype.dealer_enemy_turn = function() {
                             this.foolRandomCardInfo;
                         enemyCard.showInfo = true;
                         setTimeout(() => {
+                            if (this.gameOver) return;
                             enemyCard.showInfo = false;
                             enemyCard.object.size.x = 50;
                             enemyCard.object.size.y = 90;
@@ -184,12 +192,14 @@ Game.prototype.dealer_enemy_turn = function() {
     
                 // After character card resolves, draw from main deck / Logic for extra character card usage
                 setTimeout(() => {
+                    if (this.gameOver) return;
                     if (this.enemyExtraCardTurn) {
                         this.enemyExtraCardTurn = false;
                         this.dealer_enemy_turn();
                     } else {
                         this.startCenterCardAnimation();
                         setTimeout(() => {
+                            if (this.gameOver) return;
                             this.showCenterImage = false;
                             this.resolveEnemyDeckDraw();
                         }, 1000);
@@ -200,11 +210,13 @@ Game.prototype.dealer_enemy_turn = function() {
 	    
                 // no character card, draw from main deck immediately
                 setTimeout(() => {
+                    if (this.gameOver) return;
                     this.showEnemyCards = false;
                     this.startCenterCardAnimation();
                 }, 500);
     
                 setTimeout(() => {
+                    if (this.gameOver) return;
                     this.showCenterImage = false;
                     this.resolveEnemyDeckDraw();
                 }, 4000);
@@ -216,6 +228,9 @@ Game.prototype.dealer_enemy_turn = function() {
 
 Game.prototype.resolveEnemyDeckDraw = function() {
 
+    if (this.gameOver) return;
+    if (this.handleEmptyEnemyDeckDraw()) return;
+
     this.currentGreatCard = this.greatDeck.shift();
     this.showFinalImage = true;
 
@@ -223,6 +238,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
     const enemyTargetsSelf = Math.random() < 0.30;
 
     setTimeout(() => {
+        if (this.gameOver) return;
         this.slideDirection = enemyTargetsSelf ? "up" : "down";
         this.isCardSliding = true;
     }, 500);
@@ -293,6 +309,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
                 this.turnBlockedMessage = true;
 
                 setTimeout(() => {
+                    if (this.gameOver) return;
                     this.turnBlockedMessage = false;
                     this.dealer_enemy_turn();
                 }, 2000);
@@ -323,6 +340,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             this.turnBlockedMessage = true;
 
             setTimeout(() => {
+                if (this.gameOver) return;
                 this.turnBlockedMessage = false;
                 this.dealer_enemy_turn();
             }, 2000);
@@ -336,6 +354,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
         this.playerTurnMessage = true;
         setTimeout(() => {
+            if (this.gameOver) return;
             this.playerTurnMessage = false;
         }, 2000);
 

@@ -141,7 +141,7 @@ Game.prototype.update = function(deltaTime) {
 
                     if (this.sunImage.position.y >= this.downtargetY)  {
 
-                        this.finalImage.position.y = this.downtargetY;
+                        this.sunImage.position.y = this.downtargetY;
 
                         this.isCardSliding = false;
 
