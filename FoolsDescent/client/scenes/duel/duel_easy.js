@@ -25,8 +25,10 @@ class Game {
         this.currentTurn = "player";
 
         //CHOOSE ENEMY HERE!!
-        this.chooseEnemy = 2; //<--- CHOOSE ENEMY (1 = Drunk, 2 = Peasant)
-        //^^^^^^ CHOOSE ENEMY ^^^^^^
+        //this.chooseEnemy = 1; //<--- CHOOSE ENEMY (1 = Drunk, 2 = Peasant)
+        
+        // Automatically chooses the enemy (1 or 2)
+        this.chooseEnemy = Math.floor(Math.random() * 2) + 1;
 
         //enemy card
         this.activeEnemyCard = null;
@@ -236,9 +238,18 @@ class Game {
         this.allCards = this.buildAllCards();
         
         //simulation for remaining personal cards from last duels
-        this.personalPlayerCardIndices = [];
+        //this.personalPlayerCardIndices = [0, 3];
         // Choose the player card pool; 2 random cards are dealt from it.
-        this.characterCards = this.chooseStartingCards([0, 1, 2, 3, 4, 5]);
+        //this.characterCards = this.chooseStartingCards([5]); //([0, 1, 2, 3, 4, 5])
+
+        // Gives two random cards at the start of the duel, they get added to the players deck
+        let cards = [0, 1, 2, 3, 4, 5]; // Common only
+
+        // Random order
+        cards.sort(() => Math.random() - 0.5);
+
+        // Chooses two
+        this.characterCards = this.chooseStartingCards(cards.slice(0, 2));
 
         // Enemy character cards (easy enemy: Magician, Chariot, Star, Strength)
         this.enemyCharacterCards = this.chooseEnemyCards([
