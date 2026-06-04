@@ -338,8 +338,34 @@ Game.prototype.isPlayerTurnInputLocked = function() {
     return Boolean(
         this.playerInputLocked ||
         this.pendingRewardCard ||
-        this.isRewardCardSliding
+        this.isRewardCardSliding ||
+        this.isCenterCardAnimating
     );
+};
+
+Game.prototype.startCenterCardAnimation = function() {
+    const startX = this.maindeck.x + this.maindeck.width / 2;
+    const startY = this.maindeck.y + this.maindeck.height / 2;
+
+    this.showCenterImage = true;
+    this.isCenterCardAnimating = true;
+    this.centerCardAnimationTime = 0;
+    this.centerCardAnimationDuration = 400;
+
+    this.centerCardStartX = startX;
+    this.centerCardStartY = startY;
+    this.centerCardStartW = this.maindeck.width;
+    this.centerCardStartH = this.maindeck.height;
+
+    this.centerCardTargetX = canvasWidth / 2;
+    this.centerCardTargetY = canvasHeight / 2;
+    this.centerCardTargetW = 120;
+    this.centerCardTargetH = 200;
+
+    this.centerImage.position.x = this.centerCardStartX;
+    this.centerImage.position.y = this.centerCardStartY;
+    this.centerImage.size.x = this.centerCardStartW;
+    this.centerImage.size.y = this.centerCardStartH;
 };
 
 Game.prototype.finishRewardCardSlide = function() {

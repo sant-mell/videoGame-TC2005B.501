@@ -188,7 +188,7 @@ Game.prototype.dealer_enemy_turn = function() {
                         this.enemyExtraCardTurn = false;
                         this.dealer_enemy_turn();
                     } else {
-                        this.showCenterImage = true;
+                        this.startCenterCardAnimation();
                         setTimeout(() => {
                             this.showCenterImage = false;
                             this.resolveEnemyDeckDraw();
@@ -201,7 +201,7 @@ Game.prototype.dealer_enemy_turn = function() {
                 // no character card, draw from main deck immediately
                 setTimeout(() => {
                     this.showEnemyCards = false;
-                    this.showCenterImage = true;
+                    this.startCenterCardAnimation();
                 }, 500);
     
                 setTimeout(() => {

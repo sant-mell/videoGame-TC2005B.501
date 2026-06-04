@@ -14,6 +14,41 @@ Game.prototype.update = function(deltaTime) {
     this.startPendingRewardCard();
     this.saveRemainingPlayerCardsAfterWin();
         let dt = deltaTime / 1000;
+
+        if (this.isCenterCardAnimating) {
+            this.centerCardAnimationTime += deltaTime;
+
+            let t =
+                this.centerCardAnimationTime /
+                this.centerCardAnimationDuration;
+
+            t = Math.min(t, 1);
+            t = 1 - Math.pow(1 - t, 3);
+
+            this.centerImage.position.x =
+                this.centerCardStartX +
+                (this.centerCardTargetX - this.centerCardStartX) * t;
+
+            this.centerImage.position.y =
+                this.centerCardStartY +
+                (this.centerCardTargetY - this.centerCardStartY) * t;
+
+            this.centerImage.size.x =
+                this.centerCardStartW +
+                (this.centerCardTargetW - this.centerCardStartW) * t;
+
+            this.centerImage.size.y =
+                this.centerCardStartH +
+                (this.centerCardTargetH - this.centerCardStartH) * t;
+
+            if (t >= 1) {
+                this.isCenterCardAnimating = false;
+                this.centerImage.position.x = this.centerCardTargetX;
+                this.centerImage.position.y = this.centerCardTargetY;
+                this.centerImage.size.x = this.centerCardTargetW;
+                this.centerImage.size.y = this.centerCardTargetH;
+            }
+        }
         
 
         // DISCARD SLIDE

@@ -8,8 +8,6 @@
 
 - La música se reinicia cada que haces click en cualquier cosa. (Esta no se donde dices)
 
-- Hay un typo donde confundieron el ancho del canvas con la altura.
-
 - El Dealer tiene un contador que nunca actualiza.
 
 - Una variable se inicializa dos veces en el mismo lugar en la escena intermedio.
