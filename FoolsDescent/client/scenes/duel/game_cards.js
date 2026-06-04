@@ -368,6 +368,30 @@ Game.prototype.startCenterCardAnimation = function() {
     this.centerImage.size.y = this.centerCardStartH;
 };
 
+Game.prototype.handleEmptyEnemyDeckDraw = function() {
+    if (this.greatDeck.length > 0) {
+        return false;
+    }
+
+    this.showCenterImage = false;
+    this.showFinalImage = false;
+    this.isCenterCardAnimating = false;
+    this.isCardSliding = false;
+    this.currentTurn = "player";
+    this.showEnemyCards = true;
+
+    if (this.playerHandBlocked) {
+        this.showPlayerCards = false;
+        this.playerHandBlockedMessage = true;
+    } else {
+        this.showPlayerCards = true;
+    }
+
+    this.buildGreatDeck(true);
+
+    return true;
+};
+
 Game.prototype.finishRewardCardSlide = function() {
     this.pendingRewardCard = false;
     this.playerInputLocked = false;

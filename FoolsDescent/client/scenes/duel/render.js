@@ -49,10 +49,6 @@ Game.prototype.draw = function(ctx) {
                     canvasHeight / 2 + 70
             );
                 }
-                if (c !== this.hoveredCard && c.isHovered) {
-                    c.object.position.y += 25;
-                    c.isHovered = false;
-                }
             }
 
         }
