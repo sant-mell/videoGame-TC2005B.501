@@ -179,8 +179,17 @@ class Fool {
                 this.stopMovement(this.direction);
             } else {
                 // constant speed diagonally like in class
-                this.x += (dx / d) * this.speed * dt;
-                this.y += (dy / d) * this.speed * dt;
+                let step = this.speed * dt;
+                if (step >= d) {
+                    this.x = this.tx;
+                    this.y = this.ty;
+                    this.moving = false;
+                    this.arrived = true;
+                    this.stopMovement(this.direction);
+                } else {
+                    this.x += (dx / d) * step;
+                    this.y += (dy / d) * step;
+                }
             }
         }
         // always tick for idle animation to alter

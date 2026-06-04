@@ -142,7 +142,7 @@ Game.prototype.easy_enemy_turn = function() {
 
                         this.pendingMagicianAction();
 
-                    }, 1500);
+                    }, 800);
 
                     setTimeout(() => {
 
@@ -167,7 +167,7 @@ Game.prototype.easy_enemy_turn = function() {
 
                         this.repositionEnemyCards();
 
-                    }, 3000);
+                    }, 1800);
 
                     return;
                 }
@@ -253,7 +253,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
     this.showFinalImage = true;
 
     // 60% chance enemy targets self
-    const enemyTargetsSelf = Math.random() < 0.60;
+    const enemyTargetsSelf = Math.random() < 0.40;
 
     setTimeout(() => {
 
@@ -303,6 +303,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             if (!this.activateStrengthPower("player")) {
 
                 this.playerLives--;
+                this.updatePlayerCandles();
             }
 
             if (this.playerJusticeActive) {
@@ -361,8 +362,6 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             }
 
             // Moon self-hit = player turn
-            this.enemyStrengthActive = false;
-
             if (this.playerTurnBlocked) {
 
                 this.playerTurnBlocked = false;
@@ -431,8 +430,6 @@ Game.prototype.resolveEnemyDeckDraw = function() {
         }
 
         // Normal player turn
-        this.enemyStrengthActive = false;
-
         this.currentTurn = "player";
 
         this.showEnemyCards = true;

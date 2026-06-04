@@ -648,7 +648,7 @@ Game.prototype.addPlayerCardFromPool = function() {
         return true;
 };
 
-Game.prototype.chooseStartingCards = function(indices, amount = 2) {
+Game.prototype.chooseStartingCards = function(indices, amount = 0) {
         this.difficultyCardPoolIndices = indices.slice();
         this.playerCardPoolIndices = indices.slice();
         this.availablePlayerCardIndices = indices.slice();
