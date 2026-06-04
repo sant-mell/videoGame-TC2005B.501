@@ -83,6 +83,17 @@ class Game {
         this.rewardCardTargetY = 0;
         this.pendingRewardCard = false;
         this.playerInputLocked = false;
+        this.isCenterCardAnimating = false;
+        this.centerCardAnimationTime = 0;
+        this.centerCardAnimationDuration = 400;
+        this.centerCardStartX = 0;
+        this.centerCardStartY = 0;
+        this.centerCardStartW = 0;
+        this.centerCardStartH = 0;
+        this.centerCardTargetX = 0;
+        this.centerCardTargetY = 0;
+        this.centerCardTargetW = 0;
+        this.centerCardTargetH = 0;
         //audio
         this.startSound = new Audio("../../../assets/audio/easyEnemies.mpeg");
         this.startSound.volume = 0.2;
@@ -225,9 +236,9 @@ class Game {
         this.allCards = this.buildAllCards();
         
         //simulation for remaining personal cards from last duels
-        this.personalPlayerCardIndices = [0, 3];
+        this.personalPlayerCardIndices = [];
         // Choose the player card pool; 2 random cards are dealt from it.
-        this.characterCards = this.chooseStartingCards([5]); //([0, 1, 2, 3, 4, 5])
+        this.characterCards = this.chooseStartingCards([0, 1, 2, 3, 4, 5]);
 
         // Enemy character cards (easy enemy: Magician, Chariot, Star, Strength)
         this.enemyCharacterCards = this.chooseEnemyCards([
@@ -235,6 +246,7 @@ class Game {
             1,
             3,
             4
+            
         ]);
 
         this.maindeck = {

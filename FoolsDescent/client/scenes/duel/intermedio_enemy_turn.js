@@ -22,6 +22,8 @@ Game.prototype.intermedio_enemy_turn = function() {
             }
     
         setTimeout(() => {
+
+            if (this.gameOver) return;
     
             let enemyCard;
 
@@ -77,6 +79,7 @@ Game.prototype.intermedio_enemy_turn = function() {
     
                 // hide other cards, move chosen card to center
                 setTimeout(() => {
+                if (this.gameOver) return;
                 this.showEnemyCards = false;
                 this.activeEnemyCard = enemyCard;
     
@@ -88,6 +91,7 @@ Game.prototype.intermedio_enemy_turn = function() {
 
                 // show info text after card is in center
                 setTimeout(() => {
+                    if (this.gameOver) return;
                     enemyCard.showInfo = enemyCard.name !== "The Magician" || this.lastPlayedAction;
                     if (enemyCard.name === "The Star") {
                         enemyCard.infoText = "The enemy will be revived if they reach 0 lives!";
@@ -109,16 +113,19 @@ Game.prototype.intermedio_enemy_turn = function() {
     
 	                // apply effect and remove card
 	                setTimeout(() => {
+                    if (this.gameOver) return;
 	                    enemyCard.action();
                     if (enemyCard.name === "The Magician" && this.magicianRepeating) {
                         enemyCard.showInfo = true;
 
                         setTimeout(() => {
+                            if (this.gameOver) return;
                             enemyCard.infoText = this.pendingMagicianInfoText;
                             this.pendingMagicianAction();
                         }, 1500);
 
                         setTimeout(() => {
+                            if (this.gameOver) return;
                             this.magicianRepeating = false;
                             enemyCard.showInfo = false;
                             enemyCard.infoText = "Repeating the last card played...";
@@ -146,10 +153,12 @@ Game.prototype.intermedio_enemy_turn = function() {
     
                 // after character card resolves, draw from main deck
                 setTimeout(() => {
-                    this.showCenterImage = true;
+                    if (this.gameOver) return;
+                    this.startCenterCardAnimation();
                 }, 7000);
     
                 setTimeout(() => {
+                    if (this.gameOver) return;
                     this.showCenterImage = false;
                     this.resolveEnemyDeckDraw();
                 }, 8000);
@@ -158,11 +167,13 @@ Game.prototype.intermedio_enemy_turn = function() {
 	    
                 // no character card, draw from main deck immediately
                 setTimeout(() => {
+                    if (this.gameOver) return;
                     this.showEnemyCards = false;
-                    this.showCenterImage = true;
+                    this.startCenterCardAnimation();
                 }, 500);
     
                 setTimeout(() => {
+                    if (this.gameOver) return;
                     this.showCenterImage = false;
                     this.resolveEnemyDeckDraw();
                 }, 4000);
@@ -174,6 +185,9 @@ Game.prototype.intermedio_enemy_turn = function() {
 
 Game.prototype.resolveEnemyDeckDraw = function() {
 
+    if (this.gameOver) return;
+    if (this.handleEmptyEnemyDeckDraw()) return;
+
     this.currentGreatCard = this.greatDeck.shift();
     this.showFinalImage = true;
 
@@ -181,6 +195,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
     const enemyTargetsSelf = Math.random() < 0.50;
 
     setTimeout(() => {
+        if (this.gameOver) return;
         this.slideDirection = enemyTargetsSelf ? "up" : "down";
         this.isCardSliding = true;
     }, 500);
@@ -244,6 +259,21 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
 	            // If they targeted themselves and it was a moon, it's now the players turn
             this.enemyStrengthActive = false;
+
+            if (this.playerTurnBlocked) {
+                this.playerTurnBlocked = false;
+                this.currentTurn = "enemy";
+                this.turnBlockedMessage = true;
+
+                setTimeout(() => {
+                    if (this.gameOver) return;
+                    this.turnBlockedMessage = false;
+                    this.intermedio_enemy_turn();
+                }, 2000);
+
+                return;
+            }
+
 	            this.currentTurn = "player";
 	            this.showEnemyCards = true;
 
@@ -267,6 +297,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             this.turnBlockedMessage = true;
 
             setTimeout(() => {
+                if (this.gameOver) return;
                 this.turnBlockedMessage = false;
                 this.intermedio_enemy_turn();
             }, 2000);
@@ -280,6 +311,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
         this.playerTurnMessage = true;
         setTimeout(() => {
+            if (this.gameOver) return;
             this.playerTurnMessage = false;
         }, 2000);
 	

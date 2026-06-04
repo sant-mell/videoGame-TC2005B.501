@@ -83,6 +83,17 @@ class Game {
         this.rewardCardTargetY = 0;
         this.pendingRewardCard = false;
         this.playerInputLocked = false;
+        this.isCenterCardAnimating = false;
+        this.centerCardAnimationTime = 0;
+        this.centerCardAnimationDuration = 400;
+        this.centerCardStartX = 0;
+        this.centerCardStartY = 0;
+        this.centerCardStartW = 0;
+        this.centerCardStartH = 0;
+        this.centerCardTargetX = 0;
+        this.centerCardTargetY = 0;
+        this.centerCardTargetW = 0;
+        this.centerCardTargetH = 0;
         //audio
         this.startSound = new Audio("../../../assets/audio/midEnemies.mp3");
         this.startSound.volume = 0.2;
@@ -92,7 +103,6 @@ class Game {
         this.candleblow.volume = 0.4;
         this.cardSound = new Audio("../../../assets/audio/card.mpeg");
         this.cardSound.volume = 0.3;
-        this.enemyCharacterTurnCounter = 0;
 
         this.startButton = {
         x: canvasWidth / 2 - 75,

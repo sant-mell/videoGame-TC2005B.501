@@ -161,11 +161,13 @@ Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
                 cardEntry.showInfo = true;
             
                 setTimeout(() => {
+                    if (this.gameOver) return;
                     cardEntry.infoText = this.pendingMagicianInfoText;
                     this.pendingMagicianAction();
                 }, 2000);
             
                 setTimeout(() => {
+                    if (this.gameOver) return;
                     this.magicianRepeating = false;
                     cardEntry.visible = false;
                     cardEntry.showInfo = false;
@@ -184,6 +186,7 @@ Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
             }
 
             setTimeout(() => {
+                if (this.gameOver) return;
                 cardEntry.visible = false;
                 cardEntry.showInfo = false;
                 this.showEnemyCards = true;
@@ -229,7 +232,7 @@ Game.prototype.checkMainDeckClick = function(mouseX, mouseY) {
             mouseY <= this.maindeck.y + this.maindeck.height
         ) {
             // SHOW IMAGE
-            this.showCenterImage = true;
+            this.startCenterCardAnimation();
             this.playerHandBlocked = false;
             this.playerHandBlockedMessage = false;
             this.showEnemyCards = false;
@@ -291,6 +294,9 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         }
         // ONLY WORK IF CENTER IMAGE IS SHOWING
         if (!this.showCenterImage) {
+            return;
+        }
+        if (this.isCenterCardAnimating) {
             return;
         }
         // YOU BUTTON
@@ -360,10 +366,13 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
 
                     return;
                 }
-                this.enemyJusticeActive = false;
                 if (this.currentTurn === "enemy") {
+                    this.enemyJusticeActive = false;
                     this.playerStrengthActive = false;
+                    if (this.gameOver) return;
                     this.easy_enemy_turn();
+                } else {
+                    this.showPlayerCards = true;
                 }
 
             }, 3000);

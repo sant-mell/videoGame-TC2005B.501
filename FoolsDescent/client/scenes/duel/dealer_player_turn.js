@@ -106,6 +106,7 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
             if (this.currentTurn === "enemy") {
 
                 this.playerStrengthActive = false;
+                if (this.gameOver) return;
                 this.dealer_enemy_turn();
 
             } else {
@@ -225,7 +226,7 @@ Game.prototype.checkMainDeckClick = function(mouseX, mouseY) {
             mouseY <= this.maindeck.y + this.maindeck.height
         ) {
             // SHOW IMAGE
-            this.showCenterImage = true;
+            this.startCenterCardAnimation();
             this.playerHandBlocked = false;
             this.playerHandBlockedMessage = false;
             this.showEnemyCards = false;
@@ -289,6 +290,9 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         if (!this.showCenterImage) {
             return;
         }
+        if (this.isCenterCardAnimating) {
+            return;
+        }
         // YOU BUTTON
         if (
             mouseX >= this.youButton.x &&
@@ -340,7 +344,12 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
             }
             setTimeout(() => {
                 this.showFinalImage = false;
-                this.showPlayerCards = true;
+
+                if (this.gameOver) {
+                    this.showPlayerCards = false;
+                    this.showCenterImage = false;
+                    return;
+                }
 
                 // game over check
                 if (this.playerLives <= 0) {
@@ -356,10 +365,13 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
 
                     return;
                 }
-                this.enemyJusticeActive = false;
                 if (this.currentTurn === "enemy") {
+                    this.enemyJusticeActive = false;
                     this.playerStrengthActive = false;
+                    if (this.gameOver) return;
                     this.dealer_enemy_turn();
+                } else {
+                    this.showPlayerCards = true;
                 }
 
             }, 3000);
@@ -414,6 +426,8 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         setTimeout(() => {
         this.showFinalImage = false;
 
+        if (this.gameOver) return;
+
         // CHECK IF ENEMY LOST
         if (this.enemyLives <= 0) {
             if (this.activateStarPower("enemy")) {
@@ -437,6 +451,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         // enemy turn starts
         this.enemyJusticeActive = false;
         this.playerStrengthActive = false;
+        if (this.gameOver) return;
         this.dealer_enemy_turn();
 
         }, 3000);

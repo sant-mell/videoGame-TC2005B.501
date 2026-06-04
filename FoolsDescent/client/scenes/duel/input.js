@@ -76,7 +76,7 @@ Game.prototype.checkCardHover = function(mouseX, mouseY) {
 };
 
 Game.prototype.checkStartButton = function(mouseX, mouseY) {
-        if (!this.gameOver){
+        if (!this.gameOver && this.startSound.paused){
         this.startSound.play();
         }
         if (!this.showStartButton) {

@@ -49,10 +49,6 @@ Game.prototype.draw = function(ctx) {
                     canvasHeight / 2 + 70
             );
                 }
-                if (c !== this.hoveredCard && c.isHovered) {
-                    c.object.position.y += 25;
-                    c.isHovered = false;
-                }
             }
 
         }
@@ -375,7 +371,11 @@ Game.prototype.draw = function(ctx) {
             this.centerImage.draw(ctx);
         }
         // DRAW BUTTONS ONLY WHEN CENTER IMAGE EXISTS
-        if (this.showCenterImage && this.currentTurn === "player") {
+        if (
+            this.showCenterImage &&
+            this.currentTurn === "player" &&
+            !this.isCenterCardAnimating
+        ) {
 
         this.drawCustomHitbox(ctx, this.youButton);
         }
@@ -388,6 +388,21 @@ Game.prototype.draw = function(ctx) {
                     if (this.currentGreatCard === "sun") {
                         this.sunImage.draw(ctx);
                     }
+                }
+            if (performance.now() < this.noResultMessageUntil) {
+                ctx.fillStyle = "white";
+                ctx.font = "40px MedievalSharp";
+                    ctx.textAlign = "center";
+                    ctx.fillText(
+                        "This duel must have a result.",
+                        canvasWidth / 2,
+                        canvasHeight / 2 + 30
+                    );
+                    ctx.fillText(
+                        "There is no cheating fate.",
+                        canvasWidth / 2,
+                        canvasHeight / 2 - 30
+                    );
                 }
             if (this.gameOver) {
                 this.startSound.pause();

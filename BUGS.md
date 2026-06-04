@@ -4,29 +4,11 @@
 
 ## Duelo
 
-- La Sun card se va de pantalla y no para.
-
-- La música se reinicia cada que haces click en cualquier cosa.
-
-- Hay un typo donde confundieron el ancho del canvas con la altura.
-
-- Quedaron dos console.log sin borrar en The Hermit.
-
 - El Dealer tiene un contador que nunca actualiza.
-
-- Una variable se inicializa dos veces en el mismo lugar en la escena intermedio.
-
-- Hay código en el hover de las cartas que nunca corre.
-
-- Si los dos mueren al mismo tiempo con Justice, salen los dos mensajes de victoria y derrota encimados.
 
 - Page of Pentacles dice que da monedas al ganar pero en realidad solo las da en una situación muy específica.
 
-- Si el enemigo copia tu Strength con The Magician, el buff se lo queda él.
-
-- Lo mismo pasa con The Star, Justice, The Hermit y The Hanged Man. The Hermit incluso te bloquea a ti en vez del enemigo.
-
-- Si usas The Magician después de The Fool, vuelve a jugar al Fool en vez de la carta que el Fool había elegido.
+- Si usas The Magician después de The Fool, vuelve a jugar al Fool en vez de la carta que el Fool había elegido. (Este no lo voy a contar como bug, es un feature jajajjaja)
 
 - En el duelo del Dealer el juego puede seguir avanzando turnos aunque ya haya terminado.
 
@@ -37,11 +19,5 @@
 ## Mapa
 
 - Las monedas siempre se guardan como 0.
-
----
-
-## Web
-
-- En createaccount y mainmenu hay botones metidos dentro de links, lo cual es HTML inválido.
 
 ---
