@@ -230,7 +230,7 @@ Game.prototype.checkMainDeckClick = function(mouseX, mouseY) {
             mouseY <= this.maindeck.y + this.maindeck.height
         ) {
             // SHOW IMAGE
-            this.showCenterImage = true;
+            this.startCenterCardAnimation();
             this.playerHandBlocked = false;
             this.playerHandBlockedMessage = false;
             this.showEnemyCards = false;
@@ -292,6 +292,9 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         }
         // ONLY WORK IF CENTER IMAGE IS SHOWING
         if (!this.showCenterImage) {
+            return;
+        }
+        if (this.isCenterCardAnimating) {
             return;
         }
         // YOU BUTTON

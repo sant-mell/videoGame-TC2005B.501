@@ -375,7 +375,11 @@ Game.prototype.draw = function(ctx) {
             this.centerImage.draw(ctx);
         }
         // DRAW BUTTONS ONLY WHEN CENTER IMAGE EXISTS
-        if (this.showCenterImage && this.currentTurn === "player") {
+        if (
+            this.showCenterImage &&
+            this.currentTurn === "player" &&
+            !this.isCenterCardAnimating
+        ) {
 
         this.drawCustomHitbox(ctx, this.youButton);
         }

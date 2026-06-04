@@ -146,7 +146,7 @@ Game.prototype.intermedio_enemy_turn = function() {
     
                 // after character card resolves, draw from main deck
                 setTimeout(() => {
-                    this.showCenterImage = true;
+                    this.startCenterCardAnimation();
                 }, 7000);
     
                 setTimeout(() => {
@@ -159,7 +159,7 @@ Game.prototype.intermedio_enemy_turn = function() {
                 // no character card, draw from main deck immediately
                 setTimeout(() => {
                     this.showEnemyCards = false;
-                    this.showCenterImage = true;
+                    this.startCenterCardAnimation();
                 }, 500);
     
                 setTimeout(() => {

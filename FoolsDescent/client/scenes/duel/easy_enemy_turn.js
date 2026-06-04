@@ -191,7 +191,7 @@ Game.prototype.easy_enemy_turn = function() {
 
             // After character card resolves, draw from main deck
             setTimeout(() => {
-                this.showCenterImage = true;
+                this.startCenterCardAnimation();
             }, 7000);
 
             setTimeout(() => {
@@ -207,7 +207,7 @@ Game.prototype.easy_enemy_turn = function() {
             // No character card, draw from main deck immediately
             setTimeout(() => {
                 this.showEnemyCards = false;
-                this.showCenterImage = true;
+                this.startCenterCardAnimation();
             }, 500);
 
             setTimeout(() => {
