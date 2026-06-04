@@ -122,7 +122,7 @@ Game.prototype.intermedio_enemy_turn = function() {
                             if (this.gameOver) return;
                             enemyCard.infoText = this.pendingMagicianInfoText;
                             this.pendingMagicianAction();
-                        }, 1500);
+                        }, 800);
 
                         setTimeout(() => {
                             if (this.gameOver) return;
@@ -134,7 +134,7 @@ Game.prototype.intermedio_enemy_turn = function() {
                             this.activeEnemyCard = null;
                             this.enemyCharacterCards.splice(chosenIndex, 1);
                             this.repositionEnemyCards();
-                        }, 3000);
+                        }, 1800);
 
                         return;
                     }
@@ -192,7 +192,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
     this.showFinalImage = true;
 
     // Probability: 50% they attack you, 50% they choose themselves
-    const enemyTargetsSelf = Math.random() < 0.50;
+    const enemyTargetsSelf = Math.random() < 0.30;
 
     setTimeout(() => {
         if (this.gameOver) return;
@@ -222,6 +222,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
         } else {
             if (!this.activateStrengthPower("player")) {
                 this.playerLives--;
+                this.updatePlayerCandles();
             }
             if (this.playerJusticeActive) {
                 if (!this.activateStrengthPower("enemy")) {
@@ -258,8 +259,6 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             }
 
 	            // If they targeted themselves and it was a moon, it's now the players turn
-            this.enemyStrengthActive = false;
-
             if (this.playerTurnBlocked) {
                 this.playerTurnBlocked = false;
                 this.currentTurn = "enemy";
@@ -305,7 +304,6 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             return;
         }
 
-        this.enemyStrengthActive = false;
 	        this.currentTurn = "player";
 	        this.showEnemyCards = true;
 

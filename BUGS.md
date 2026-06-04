@@ -10,10 +10,6 @@
 
 - Si usas The Magician después de The Fool, vuelve a jugar al Fool en vez de la carta que el Fool había elegido. (Este no lo voy a contar como bug, es un feature jajajjaja)
 
-- En el duelo del Dealer el juego puede seguir avanzando turnos aunque ya haya terminado.
-
-- Justice puede resetearse antes de tiempo en el duelo del Dealer.
-
 ---
 
 ## Mapa

@@ -238,7 +238,7 @@ class Game {
 
         // Manually choose starting cards by index (pass amount to deal all of them)
         // this.characterCards = this.chooseStartingCards([0, 6, 14, 1, 13], 5);
-        //this.personalPlayerCardIndices = [12, 13];
+        this.personalPlayerCardIndices = [7, 8];
         //this.characterCards = this.chooseStartingCards([11, 12, 14]);
 
          // Gives two random cards at the start of the duel, they get added to the players deck
@@ -247,8 +247,8 @@ class Game {
         // Random order
         cards.sort(() => Math.random() - 0.5);
 
-        // Chooses two
-        this.characterCards = this.chooseStartingCards(cards.slice(0, 2));
+        // Choose one
+        this.characterCards = this.chooseStartingCards(cards.slice(0, 14));
 
         // Enemy character cards
         this.enemyCharacterCards = this.chooseEnemyCards([

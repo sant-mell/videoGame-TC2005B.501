@@ -220,8 +220,8 @@ class Game {
         // All card definitions in the pool
         this.allCards = this.buildAllCards();
         //this.personalPlayerCardIndices = [9, 6];
-        // Choose the player card pool; 3 random cards are dealt from it.
-        //this.characterCards = this.chooseStartingCards([11, 0, 14, 13, 3, 8, 12]);
+        // Choose the player card pool; 2 random cards are dealt from it.
+        //this.characterCards = this.chooseStartingCards([11, 0, 14, 13, 12]);
         // Gives two random cards at the start of the duel, they get added to the players deck
         let cards = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; // All cards
 
