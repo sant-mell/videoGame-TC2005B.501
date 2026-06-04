@@ -8,6 +8,8 @@
 </head>
 <body>
 
+    <audio id="menuMusic" src="../../assets/audio/home_screen.mp3" loop></audio>
+
     <div class="background-glow"></div>
 
     <div class="landing-container">
@@ -24,6 +26,18 @@
         </a>
 
     </div>
+    <script>
+        const menuMusic = document.getElementById("menuMusic");
+        menuMusic.volume = 0.3;
+    
+        window.addEventListener("click", () => {
+            if (menuMusic.paused) {
+                menuMusic.play().catch(() => {
+                    console.log("Menu music waiting for user interaction");
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>

@@ -23,25 +23,33 @@ Game.prototype.easy_enemy_turn = function() {
 
     setTimeout(() => {
 
+        if (this.gameOver) return;
+
         let enemyCard;
 
         let availableCards = this.enemyCharacterCards;
-
-        // Avoid magician only on first enemy card usage
-        if (this.enemyUsesCardNextTurn && this.lastPlayedAction == null) {
+        const enemyMagicianBlockedLastCards = [
+            "Two of Pentacles",
+            "The High Priestess",
+            "Page of Pentacles",
+            "King of Pentacles"
+        ];
+        // Avoid magician only on first enemy card usage or if the last card is two of pentacles or high priestess
+        if (
+            (this.enemyUsesCardNextTurn && this.lastPlayedAction == null) ||
+            enemyMagicianBlockedLastCards.includes(this.lastPlayedName)
+        ) {
             availableCards = availableCards.filter(
                 card => card.name !== "The Magician"
             );
         }
 
-        if (availableCards.length <= 0) {
-            availableCards = this.enemyCharacterCards;
-        }
-
         // Random selection
-        enemyCard = availableCards[
-            Math.floor(Math.random() * availableCards.length)
-        ];
+        if (availableCards.length > 0) {
+            enemyCard = availableCards[
+                Math.floor(Math.random() * availableCards.length)
+            ];
+        }
 
         const chosenIndex = this.enemyCharacterCards.indexOf(enemyCard);
 
@@ -59,6 +67,8 @@ Game.prototype.easy_enemy_turn = function() {
             // Hide other cards, move chosen card to center
             setTimeout(() => {
 
+                if (this.gameOver) return;
+
                 this.showEnemyCards = false;
                 this.activeEnemyCard = enemyCard;
 
@@ -72,6 +82,8 @@ Game.prototype.easy_enemy_turn = function() {
 
             // Show info text after card is centered
             setTimeout(() => {
+
+                if (this.gameOver) return;
 
                 enemyCard.showInfo =
                     enemyCard.name !== "The Magician" ||
@@ -109,6 +121,8 @@ Game.prototype.easy_enemy_turn = function() {
             // Apply effect and remove card
             setTimeout(() => {
 
+                if (this.gameOver) return;
+
                 enemyCard.action();
 
                 // MAGician repeat logic
@@ -121,6 +135,8 @@ Game.prototype.easy_enemy_turn = function() {
 
                     setTimeout(() => {
 
+                        if (this.gameOver) return;
+
                         enemyCard.infoText =
                             this.pendingMagicianInfoText;
 
@@ -129,6 +145,8 @@ Game.prototype.easy_enemy_turn = function() {
                     }, 1500);
 
                     setTimeout(() => {
+
+                        if (this.gameOver) return;
 
                         this.magicianRepeating = false;
 
@@ -185,10 +203,13 @@ Game.prototype.easy_enemy_turn = function() {
 
             // After character card resolves, draw from main deck
             setTimeout(() => {
-                this.showCenterImage = true;
+                if (this.gameOver) return;
+                this.startCenterCardAnimation();
             }, 7000);
 
             setTimeout(() => {
+
+                if (this.gameOver) return;
 
                 this.showCenterImage = false;
 
@@ -200,11 +221,14 @@ Game.prototype.easy_enemy_turn = function() {
 
             // No character card, draw from main deck immediately
             setTimeout(() => {
+                if (this.gameOver) return;
                 this.showEnemyCards = false;
-                this.showCenterImage = true;
+                this.startCenterCardAnimation();
             }, 500);
 
             setTimeout(() => {
+
+                if (this.gameOver) return;
 
                 this.showCenterImage = false;
 
@@ -221,6 +245,9 @@ Game.prototype.easy_enemy_turn = function() {
 
 Game.prototype.resolveEnemyDeckDraw = function() {
 
+    if (this.gameOver) return;
+    if (this.handleEmptyEnemyDeckDraw()) return;
+
     this.currentGreatCard = this.greatDeck.shift();
 
     this.showFinalImage = true;
@@ -229,6 +256,8 @@ Game.prototype.resolveEnemyDeckDraw = function() {
     const enemyTargetsSelf = Math.random() < 0.60;
 
     setTimeout(() => {
+
+        if (this.gameOver) return;
 
         this.slideDirection =
             enemyTargetsSelf ? "up" : "down";
@@ -334,6 +363,27 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             // Moon self-hit = player turn
             this.enemyStrengthActive = false;
 
+            if (this.playerTurnBlocked) {
+
+                this.playerTurnBlocked = false;
+
+                this.currentTurn = "enemy";
+
+                this.turnBlockedMessage = true;
+
+                setTimeout(() => {
+
+                    if (this.gameOver) return;
+
+                    this.turnBlockedMessage = false;
+
+                    this.easy_enemy_turn();
+
+                }, 2000);
+
+                return;
+            }
+
             this.currentTurn = "player";
 
             this.showEnemyCards = true;
@@ -368,6 +418,8 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             this.turnBlockedMessage = true;
 
             setTimeout(() => {
+
+                if (this.gameOver) return;
 
                 this.turnBlockedMessage = false;
 
