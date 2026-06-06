@@ -247,8 +247,8 @@ class Game {
         // Random order
         cards.sort(() => Math.random() - 0.5);
 
-        // Chooses two
-        this.characterCards = this.chooseStartingCards(cards.slice(0, 2));
+        // Choose one
+        this.characterCards = this.chooseStartingCards(cards.slice(0, 10));
 
         // Enemy character cards
         this.enemyCharacterCards = this.chooseEnemyCards([
