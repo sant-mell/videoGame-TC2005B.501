@@ -11,7 +11,7 @@ function loadMapLocally(game) {
     return true;
 }
 
-async function saveNewDescent(game) { // saves a new descent run to the server, returns true if successful
+async function saveNewDescent(game) {
     saveMapLocally(game);
     const saveData = game.getSaveData();
     try {
@@ -25,11 +25,12 @@ async function saveNewDescent(game) { // saves a new descent run to the server, 
         });
         return response.ok;
     } catch (err) {
+        console.error(err);
         return false;
     }
 }
 
-async function saveProgress(game) { 
+async function saveProgress(game) {
     saveMapLocally(game);
     const saveData = game.getSaveData();
     try {
@@ -38,13 +39,13 @@ async function saveProgress(game) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 userId: localStorage.getItem("userId"),
-                currentCoins: 0,
                 currentMapPosition: saveData.currentId || 0,
                 mapData: saveData
             })
         });
         return response.ok;
     } catch (err) {
+        console.error(err);
         return false;
     }
 }
@@ -61,10 +62,12 @@ async function loadGame(game) {
         const data = await response.json();
         if (data.success) {
             game.loadSaveData(data.saveData.mapData);
+            localStorage.setItem("playerCoins", data.saveData.currentCoins || 0);
             return true;
         }
         return false;
     } catch (err) {
+        console.error(err);
         return false;
     }
 }

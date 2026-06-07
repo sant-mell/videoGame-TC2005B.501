@@ -6,6 +6,7 @@ function getDuelSnapshot(game) {
         playerLives: game.playerLives,
         currentTurn: game.currentTurn,
         chooseEnemy: game.chooseEnemy,
+        enemyName: game.enemyName,
         coins: game.coins,
         greatDeck: game.greatDeck.slice(),
         sunCount: game.sunCount,
@@ -40,6 +41,7 @@ function restoreDuelSnapshot(game, snap) {
     game.playerLives = snap.playerLives;
     game.currentTurn = snap.currentTurn;
     game.chooseEnemy = snap.chooseEnemy;
+    game.enemyName = snap.enemyName;
     game.coins = snap.coins;
     game.greatDeck = snap.greatDeck.slice();
     game.sunCount = snap.sunCount;
@@ -82,6 +84,8 @@ function restoreDuelSnapshot(game, snap) {
     game.showEnemyCards = true;
     game.updatePlayerCandles();
     game.updateEnemyCandles();
+    // cards are rebuilt visible above, so offset is 0, but set it explicitly for safety
+    game.cardsPlayedOffset = game.characterCards.filter(c => c.visible === false).length;
 }
 
 async function saveDuelCheckpoint(game) {
@@ -94,7 +98,9 @@ async function saveDuelCheckpoint(game) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId: Number(userId), duelData: snapshot })
         });
-    } catch (e) {}
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 async function loadDuelCheckpoint(game) {
@@ -107,7 +113,9 @@ async function loadDuelCheckpoint(game) {
             restoreDuelSnapshot(game, data.duelData);
             return true;
         }
-    } catch (e) {}
+    } catch (e) {
+        console.error(e);
+    }
     return false;
 }
 
@@ -120,7 +128,9 @@ async function clearDuelCheckpoint() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId: Number(userId) })
         });
-    } catch (e) {}
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 async function savePlayerDeckToDB(cardIndices) {
@@ -132,27 +142,30 @@ async function savePlayerDeckToDB(cardIndices) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId: Number(userId), cards: cardIndices })
         });
-    } catch (e) {}
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 async function loadPlayerDeck(game) {
     const userId = localStorage.getItem("userId");
-    if (userId) {
-        try {
-            const res = await fetch(`http://localhost:3000/player-deck/${userId}`);
-            const data = await res.json();
-            if (data.success && data.cards.length > 0) {
-                const oldPersonal = new Set(game.personalPlayerCardIndices);
-                game.personalPlayerCardIndices = data.cards.slice();
-                // Keep pool-awarded cards, replace only the personal-hand entries
-                const poolCards = game.characterCards.filter(c => !oldPersonal.has(c.cardIndex));
-                const personalCards = data.cards
-                    .filter(i => game.allCards[i])
-                    .map(i => game.buildCharacterCardEntry(game.allCards[i], i));
-                game.characterCards = [...personalCards, ...poolCards];
-                game.repositionCardsArray(game.characterCards);
-            }
-        } catch (e) {}
+    if (!userId) return;
+    try {
+        const res = await fetch(`http://localhost:3000/player-deck/${userId}`);
+        const data = await res.json();
+        if (data.success && data.cards.length > 0) {
+            const oldPersonal = new Set(game.personalPlayerCardIndices);
+            game.personalPlayerCardIndices = data.cards.slice();
+            // Keep pool-awarded cards, replace only the personal-hand entries
+            const poolCards = game.characterCards.filter(c => !oldPersonal.has(c.cardIndex));
+            const personalCards = data.cards
+                .filter(i => game.allCards[i])
+                .map(i => game.buildCharacterCardEntry(game.allCards[i], i));
+            game.characterCards = [...personalCards, ...poolCards];
+            game.repositionCardsArray(game.characterCards);
+        }
+    } catch (e) {
+        console.error(e);
     }
 
     // Always deal 2 random cards from the difficulty pool at the start of each duel
