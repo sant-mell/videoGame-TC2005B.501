@@ -40,6 +40,8 @@ class Game {
         this.hoveredCard = null;
         //booleans
         this.gameOver = false;
+        this.statsSent = false;
+        this.enemyTier = "boss";
         this.showStartButton = true;
         this.sunMessage = false;
         this.isEnemyShowing = true;

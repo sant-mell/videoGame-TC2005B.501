@@ -8,6 +8,53 @@ Santiago Aguilar Mello · Miguel Eduardo Vega Bisonó · Regina Fernanda Portela
 
 ---
 
+## Project Structure
+
+```
+FoolsDescent/
+├── assets/
+│   ├── audio/                       # music and sound effects
+│   └── images/                      # sprites and backgrounds
+├── backend/
+│   ├── server.js                    # Express API: register, login, save, duel-result, stats
+│   ├── package.json                 # npm dependencies
+│   └── package-lock.json            # locked dependency versions
+├── client/
+│   ├── frontend/                    # web pages served by Express
+│   │   ├── menu.html                # login screen
+│   │   ├── mainmenu.html            # main menu after login
+│   │   ├── createaccount.html       # account creation form
+│   │   ├── statistics.html          # stats display page
+│   │   ├── tutorial.html            # how to play
+│   │   └── welcome.html             # landing page
+│   ├── scenes/
+│   │   ├── duel/                    # duel scene
+│   │   │   ├── duel.html / duel.js  # entry point and Game class
+│   │   │   ├── player_turn.js / enemy_turn.js   # turn logic
+│   │   │   ├── game_cards.js / game_update.js   # card definitions and update loop
+│   │   │   ├── render.js / layout.js / input.js # drawing, UI, keyboard
+│   │   │   ├── duel_stats.js        # posts result to /duel-result on win or loss
+│   │   │   └── duel_checkpoint.js   # saves mid-duel state to /duel-checkpoint
+│   │   └── map/                     # map scene
+│   │       ├── map.html / map.js    # entry point and node graph traversal
+│   │       ├── saving_system.js     # calls /save-progress and /load-game
+│   │       └── map_upgrade.js       # upgrade node logic
+│   └── scripts/                     # JS for the web frontend pages
+│       ├── createaccount.js         # calls /register
+│       ├── mainmenu.js              # calls /login
+│       ├── menu.js                  # handles menu navigation
+│       └── statistics.js            # calls /stats/personal and /stats/global
+├── database/
+│   ├── schema.sql                   # tables, views, triggers, stored procedures
+│   ├── data.sql                     # seed data
+│   └── gen_data.sql                 # larger generated seed dataset
+└── docs/
+    ├── GDD/                         # Game Design Document
+    └── Databases/                   # ER diagrams and DB documentation
+```
+
+---
+
 ## Game Overview
 
 The Fool's Descent is a roguelike card game where you navigate a map, fight enemies, and manage your hand to survive until you reach The Dealer.
@@ -99,18 +146,3 @@ All controls depend on the cursor. For debugging, `y` shows hitboxes.
 - Statistics page does not pull data yet
 - *Page of Pentacles* and *King of Pentacles* give coin bonuses but coins don't persist yet so nothing actually saves
 
----
-
-## Project Structure
-
-```
-FoolsDescent/client/scenes/duel/ # Duel scene (main playable scene)
-FoolsDescent/client/scenes/map/ # Map scene
-FoolsDescent/client/frontend/ # Web frontend (menu, login, tutorial, statistics)
-FoolsDescent/client/scripts/ # Frontend JS scripts
-FoolsDescent/backend/ # Express server
-FoolsDescent/assets/ # Images and audio
-FoolsDescent/database/ # SQL schema
-FoolsDescent/docs/ # GDD and database docs
-activities/ # In-class assignments
-```
