@@ -677,8 +677,11 @@ async function main() {
         localStorage.removeItem("pendingFight");
         localStorage.removeItem("duelWon");
         localStorage.removeItem("extraCards");
-        await saveNewDescent(game);
-        localStorage.setItem("continueRun", "true");
+        localStorage.setItem("playerCoins", "0");
+        const saved = await saveNewDescent(game);
+        if (saved) {
+            localStorage.setItem("continueRun", "true");
+        }
     }
     drawScene(0);
 }

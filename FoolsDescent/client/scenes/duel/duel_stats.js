@@ -1,9 +1,10 @@
 // records play time from page load until the duel ends
 const duelStartMs = Date.now();
 
-async function sendDuelResult(game) { // reports one finished duel to the server
+async function sendDuelResult(game) {
     const won = game.enemyLives <= 0;
-    const cardsPlayed = game.characterCards.filter(c => c.visible === false).length;
+    // ignore cards that were already used before this session started
+    const cardsPlayed = game.characterCards.filter(c => c.visible === false).length - (game.cardsPlayedOffset || 0);
     const durationSec = Math.round((Date.now() - duelStartMs) / 1000);
     const greatDeck = Array.isArray(game.greatDeck) ? game.greatDeck.join(",") : "";
     try {
@@ -14,7 +15,9 @@ async function sendDuelResult(game) { // reports one finished duel to the server
                 userId: localStorage.getItem("userId"),
                 won: won,
                 enemyTier: game.enemyTier,
+                enemyName: game.enemyName,
                 coinsGained: game.coins,
+                kingOfPentaclesActive: game.kingOfPentaclesActive || false,
                 cardsPlayed: cardsPlayed,
                 durationSec: durationSec,
                 greatDeck: greatDeck
@@ -27,7 +30,7 @@ async function sendDuelResult(game) { // reports one finished duel to the server
     }
 }
 
-async function finishDuel(game) { // records the result, then returns to the map to apply it
+async function finishDuel(game) {
     const won = game.enemyLives <= 0;
     localStorage.setItem("duelWon", won ? "true" : "false");
     if (!won) {

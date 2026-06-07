@@ -6,6 +6,7 @@ function getDuelSnapshot(game) {
         playerLives: game.playerLives,
         currentTurn: game.currentTurn,
         chooseEnemy: game.chooseEnemy,
+        enemyName: game.enemyName,
         coins: game.coins,
         greatDeck: game.greatDeck.slice(),
         sunCount: game.sunCount,
@@ -40,6 +41,7 @@ function restoreDuelSnapshot(game, snap) {
     game.playerLives = snap.playerLives;
     game.currentTurn = snap.currentTurn;
     game.chooseEnemy = snap.chooseEnemy;
+    game.enemyName = snap.enemyName;
     game.coins = snap.coins;
     game.greatDeck = snap.greatDeck.slice();
     game.sunCount = snap.sunCount;
@@ -80,6 +82,8 @@ function restoreDuelSnapshot(game, snap) {
     game.showEnemyCards = true;
     game.updatePlayerCandles();
     game.updateEnemyCandles();
+    // cards are rebuilt visible above, so offset is 0, but set it explicitly for safety
+    game.cardsPlayedOffset = game.characterCards.filter(c => c.visible === false).length;
 }
 
 async function saveDuelCheckpoint(game) {

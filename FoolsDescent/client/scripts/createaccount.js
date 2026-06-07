@@ -36,6 +36,7 @@ registerForm.addEventListener("submit", async (event) => {
         if (data.success) {
 
             alert("Account created!");
+            window.location.href = "mainmenu.html";
 
         } else {
 

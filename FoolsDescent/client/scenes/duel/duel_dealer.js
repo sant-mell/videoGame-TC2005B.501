@@ -27,6 +27,7 @@ class Game {
         //CHOOSE ENEMY HERE!!
         this.chooseEnemy = 2; //<--- CHOOSE ENEMY (only Dealer here; this.chooseEnemy is unused)
         //^^^^^^ CHOOSE ENEMY ^^^^^^
+        this.enemyName = "The Dealer";
 
         //enemy card
         this.activeEnemyCard = null;

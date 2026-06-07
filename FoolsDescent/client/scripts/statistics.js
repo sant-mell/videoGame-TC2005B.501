@@ -13,13 +13,13 @@ async function loadPersonalStats() {
     const userId = localStorage.getItem("userId");
     if (!userId) return;
     try {
-        const response = await fetch("http://localhost:3000/stats/current-run", {
+        const response = await fetch("http://localhost:3000/stats/personal", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId: userId })
         });
         const data = await response.json();
-        if (!data.success) return;
+        if (!data.success || !data.stats) return;
         const s = data.stats;
         document.getElementById("personalPlayTime").textContent = formatTime(s.total_play_time || 0);
         document.getElementById("personalDeaths").textContent = s.deaths || 0;

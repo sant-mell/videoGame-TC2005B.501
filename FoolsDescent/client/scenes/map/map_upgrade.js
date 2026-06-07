@@ -83,17 +83,28 @@ Game.prototype.checkUpgradeClick = function(mouseX, mouseY) {
 };
 
 Game.prototype.acceptUpgrade = async function() {
-    this.upgradeOpen = false;
     const userId = localStorage.getItem("userId");
-    if (userId) {
-        try {
-            await fetch("http://localhost:3000/player-upgrade", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId: Number(userId), upgradeId: this.currentUpgradeType + 1 })
-            });
-        } catch (e) {}
+    if (!userId) { this.upgradeOpen = false; return; }
+    try {
+        const res = await fetch("http://localhost:3000/player-upgrade", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: Number(userId), upgradeId: this.currentUpgradeType + 1 })
+        });
+        const data = await res.json();
+        if (!data.success) {
+            this.upgradeOpen = false;
+            return; // not enough coins or server error
+        }
+        // keep local coins in sync
+        const prev = parseInt(localStorage.getItem("playerCoins") || "0");
+        const costs = [300, 400, 100]; // Card Binding, Life Extension, Extra Card
+        localStorage.setItem("playerCoins", Math.max(0, prev - costs[this.currentUpgradeType]));
+    } catch (e) {
+        this.upgradeOpen = false;
+        return;
     }
+    this.upgradeOpen = false;
     if (this.currentUpgradeType === UPGRADE_CARD) {
         this.cardPickerOpen = true;
     }

@@ -29,6 +29,7 @@ class Game {
         
         // Automatically chooses the enemy (1 or 2)
         this.chooseEnemy = Math.floor(Math.random() * 2) + 1;
+        this.enemyName = this.chooseEnemy === 1 ? "Drunk" : "Peasant";
 
         //enemy card
         this.activeEnemyCard = null;

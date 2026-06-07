@@ -28,6 +28,7 @@ loginButton.addEventListener("click", async () => {
         if (data.success) {
 
             localStorage.setItem("userId", data.userId);
+            localStorage.setItem("username", username);
             localStorage.setItem("continueRun", "false");
 
             alert("Login successful!");

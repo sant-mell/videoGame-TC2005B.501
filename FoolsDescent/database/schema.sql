@@ -31,7 +31,8 @@ CREATE TABLE Cards (
     description TEXT,
     image VARCHAR(255),
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (card_id)
+    PRIMARY KEY (card_id),
+    UNIQUE KEY uq_card_name (card_name)
 );
 
 CREATE TABLE Enemy (
@@ -40,7 +41,8 @@ CREATE TABLE Enemy (
     difficulty_tier VARCHAR(50) NOT NULL,
     image VARCHAR(255),
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (enemy_id)
+    PRIMARY KEY (enemy_id),
+    UNIQUE KEY uq_enemy_name (enemy_name)
 );
 
 CREATE TABLE Upgrades (
@@ -49,7 +51,8 @@ CREATE TABLE Upgrades (
     cost INT NOT NULL DEFAULT 0,
     effect TEXT,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (upgrade_id)
+    PRIMARY KEY (upgrade_id),
+    UNIQUE KEY uq_upgrade_name (upgrade_name)
 );
 
 -- one row, updated by triggers
@@ -254,10 +257,10 @@ GROUP BY e.enemy_id, e.enemy_name, e.difficulty_tier;
 CREATE VIEW v_difficulty_winrate AS
 SELECT e.difficulty_tier,
        COUNT(rec.encounter_id) AS times_fought,
-       SUM(rec.defeated_successfully) AS times_defeated,
-       ROUND(100 * SUM(rec.defeated_successfully) / NULLIF(COUNT(rec.encounter_id), 0), 1) AS win_rate_pct
+       IFNULL(SUM(rec.defeated_successfully), 0) AS times_defeated,
+       ROUND(100 * IFNULL(SUM(rec.defeated_successfully), 0) / NULLIF(COUNT(rec.encounter_id), 0), 1) AS win_rate_pct
 FROM Enemy e
-JOIN Run_Enemy_Encounters rec ON e.enemy_id = rec.enemy_id
+LEFT JOIN Run_Enemy_Encounters rec ON e.enemy_id = rec.enemy_id
 GROUP BY e.difficulty_tier;
 
 -- cards each player owns
@@ -348,6 +351,7 @@ BEGIN
 END$$
 
 -- when player stats change, update globals too
+-- totals use deltas, avgs need a full recalc
 CREATE TRIGGER trg_pstats_after_update
 AFTER UPDATE ON Player_stats
 FOR EACH ROW
@@ -356,7 +360,10 @@ BEGIN
        SET total_playtime = total_playtime + (NEW.total_play_time - OLD.total_play_time),
            total_enemies_defeated = total_enemies_defeated + (NEW.enemies_defeated - OLD.enemies_defeated),
            total_coins = total_coins + (NEW.coins_earned - OLD.coins_earned),
-           total_cards_played = total_cards_played + (NEW.cards_played - OLD.cards_played)
+           total_cards_played = total_cards_played + (NEW.cards_played - OLD.cards_played),
+           avg_playTime = (SELECT IFNULL(AVG(total_play_time), 0) FROM Player_stats),
+           avg_deaths = (SELECT IFNULL(AVG(deaths), 0) FROM Player_stats),
+           avg_victories = (SELECT IFNULL(AVG(victories), 0) FROM Player_stats)
      WHERE global_id = 1;
 END$$
 
