@@ -135,26 +135,27 @@ async function savePlayerDeckToDB(cardIndices) {
 
 async function loadPlayerDeck(game) {
     const userId = localStorage.getItem("userId");
-    if (!userId) return;
-    try {
-        const res = await fetch(`http://localhost:3000/player-deck/${userId}`);
-        const data = await res.json();
-        if (data.success && data.cards.length > 0) {
-            const oldPersonal = new Set(game.personalPlayerCardIndices);
-            game.personalPlayerCardIndices = data.cards.slice();
-            // Keep pool-awarded cards, replace only the personal-hand entries
-            const poolCards = game.characterCards.filter(c => !oldPersonal.has(c.cardIndex));
-            const personalCards = data.cards
-                .filter(i => game.allCards[i])
-                .map(i => game.buildCharacterCardEntry(game.allCards[i], i));
-            game.characterCards = [...personalCards, ...poolCards];
-            game.repositionCardsArray(game.characterCards);
-        }
-    } catch (e) {}
+    if (userId) {
+        try {
+            const res = await fetch(`http://localhost:3000/player-deck/${userId}`);
+            const data = await res.json();
+            if (data.success && data.cards.length > 0) {
+                const oldPersonal = new Set(game.personalPlayerCardIndices);
+                game.personalPlayerCardIndices = data.cards.slice();
+                // Keep pool-awarded cards, replace only the personal-hand entries
+                const poolCards = game.characterCards.filter(c => !oldPersonal.has(c.cardIndex));
+                const personalCards = data.cards
+                    .filter(i => game.allCards[i])
+                    .map(i => game.buildCharacterCardEntry(game.allCards[i], i));
+                game.characterCards = [...personalCards, ...poolCards];
+                game.repositionCardsArray(game.characterCards);
+            }
+        } catch (e) {}
+    }
 
     // Always deal 2 random cards from the difficulty pool at the start of each duel
     const pool = game.difficultyCardPoolIndices.slice().sort(() => Math.random() - 0.5);
-    const dealt = pool.slice(0, 2)
+    const dealt = pool.slice(0, 0) //0 cartas para agregar dificultad
         .filter(i => game.allCards[i])
         .map(i => game.buildCharacterCardEntry(game.allCards[i], i));
     game.characterCards = [...game.characterCards, ...dealt];
