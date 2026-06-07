@@ -193,7 +193,7 @@ Game.prototype.draw = function(ctx) {
             ctx.fillStyle = "white";
             ctx.font = "45px MedievalSharp";
             ctx.textAlign = "center";
-            ctx.fillText("Your turn", canvasWidth / 2, 370);
+            ctx.fillText("Your turn", canvasWidth / 2, 400);
         }
         if (this.sunMessage) {
 

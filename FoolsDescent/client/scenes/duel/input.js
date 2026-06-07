@@ -99,6 +99,12 @@ Game.prototype.checkStartButton = function(mouseX, mouseY) {
                 this.showIntroText = false;
                 this.showPlayerCards = true;
                 this.showEnemyCards = true;
+                this.playerTurnMessage = true;
+
+                setTimeout(() => {
+                    if (this.gameOver) return;
+                    this.playerTurnMessage = false;
+                }, 2000);
 
             }, 5000);
         }
