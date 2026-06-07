@@ -131,6 +131,7 @@ CREATE TABLE Player_Deck (
     is_bound BOOLEAN NOT NULL DEFAULT FALSE,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (deck_id),
+    UNIQUE KEY uq_deck_user_card (user_id, card_id),
     CONSTRAINT fk_deck_user
         FOREIGN KEY (user_id) REFERENCES Player(user_id)
         ON DELETE CASCADE,
@@ -244,7 +245,7 @@ CREATE VIEW v_enemy_winrate AS
 SELECT e.enemy_name, e.difficulty_tier,
        COUNT(rec.encounter_id) AS times_fought,
        SUM(rec.defeated_successfully) AS times_defeated,
-       ROUND(100 * SUM(rec.defeated_successfully) / COUNT(rec.encounter_id), 1) AS win_rate_pct
+       ROUND(100 * SUM(rec.defeated_successfully) / NULLIF(COUNT(rec.encounter_id), 0), 1) AS win_rate_pct
 FROM Enemy e
 LEFT JOIN Run_Enemy_Encounters rec ON e.enemy_id = rec.enemy_id
 GROUP BY e.enemy_id, e.enemy_name, e.difficulty_tier;
@@ -254,7 +255,7 @@ CREATE VIEW v_difficulty_winrate AS
 SELECT e.difficulty_tier,
        COUNT(rec.encounter_id) AS times_fought,
        SUM(rec.defeated_successfully) AS times_defeated,
-       ROUND(100 * SUM(rec.defeated_successfully) / COUNT(rec.encounter_id), 1) AS win_rate_pct
+       ROUND(100 * SUM(rec.defeated_successfully) / NULLIF(COUNT(rec.encounter_id), 0), 1) AS win_rate_pct
 FROM Enemy e
 JOIN Run_Enemy_Encounters rec ON e.enemy_id = rec.enemy_id
 GROUP BY e.difficulty_tier;
@@ -275,12 +276,24 @@ FROM Cards c
 LEFT JOIN Player_Deck d ON c.card_id = d.card_id
 GROUP BY c.card_id, c.card_name, c.rarity;
 
+-- stats for the player's most recent run (current or last completed)
+CREATE VIEW v_current_run_stats AS
+SELECT cr.user_id, cr.run_id, cr.result,
+       COALESCE(SUM(CASE WHEN rec.defeated_successfully = 1 THEN 1 ELSE 0 END), 0) AS enemies_defeated,
+       COALESCE(SUM(CASE WHEN rec.defeated_successfully = 0 THEN 1 ELSE 0 END), 0) AS deaths,
+       COALESCE(SUM(rec.coins_gained), 0)  AS coins_earned,
+       COALESCE(SUM(rec.cards_played), 0)  AS cards_played,
+       COALESCE(SUM(rec.duration_sec), 0)  AS total_play_time
+FROM Current_Run cr
+LEFT JOIN Run_Enemy_Encounters rec ON cr.run_id = rec.run_id
+GROUP BY cr.run_id, cr.user_id, cr.result;
+
 -- runs still going
 CREATE VIEW v_active_runs AS
 SELECT r.run_id, p.username, r.start_time, r.coins_kept
 FROM Current_Run r
 JOIN Player p ON r.user_id = p.user_id
-WHERE r.end_time IS NULL;
+WHERE r.result = 'ongoing';
 
 -- upgrades each player bought
 CREATE VIEW v_player_upgrades AS

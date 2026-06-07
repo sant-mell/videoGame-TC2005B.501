@@ -25,11 +25,12 @@ async function saveNewDescent(game) { // saves a new descent run to the server, 
         });
         return response.ok;
     } catch (err) {
+        console.error(err);
         return false;
     }
 }
 
-async function saveProgress(game) { 
+async function saveProgress(game) {
     saveMapLocally(game);
     const saveData = game.getSaveData();
     try {
@@ -45,6 +46,7 @@ async function saveProgress(game) {
         });
         return response.ok;
     } catch (err) {
+        console.error(err);
         return false;
     }
 }
@@ -65,6 +67,7 @@ async function loadGame(game) {
         }
         return false;
     } catch (err) {
+        console.error(err);
         return false;
     }
 }

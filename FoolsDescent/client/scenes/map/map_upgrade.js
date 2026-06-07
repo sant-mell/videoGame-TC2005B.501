@@ -184,6 +184,5 @@ Game.prototype.checkCardPickerClick = function(mouseX, mouseY) {
 Game.prototype.pickCard = function(cardIndex) {
     let cards = localStorage.getItem("extraCards");
     localStorage.setItem("extraCards", cards ? cards + "," + cardIndex : "" + cardIndex);
-    console.log("picked card " + cardIndex);
     this.cardPickerOpen = false;
 };

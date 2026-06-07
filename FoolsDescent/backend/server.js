@@ -39,6 +39,10 @@ app.post("/register", async (req, res) => {
     const age = req.body.age;
     const gender = req.body.gender;
 
+    if (!fullName || !username || !password || !age || !gender) {
+        return res.json({ success: false });
+    }
+
     const sql = `
         INSERT INTO Player
         (full_name, username, password, age, gender)
@@ -59,6 +63,10 @@ app.post("/login", async (req, res) => {
 
     const username = req.body.username;
     const password = req.body.password;
+
+    if (!username || !password) {
+        return res.json({ success: false });
+    }
 
     const sql = `
         SELECT user_id FROM Player
@@ -82,6 +90,7 @@ app.post("/login", async (req, res) => {
 app.post("/new-descent", async (req, res) => {
 
     const userId = req.body.userId;
+    if (!userId) { return res.json({ success: false }); }
     const mapData = JSON.stringify(req.body.mapData);
 
     // a new descent resets the saved coins to 0
@@ -90,6 +99,7 @@ app.post("/new-descent", async (req, res) => {
         VALUES (?, 0, ?)
         ON DUPLICATE KEY UPDATE
             current_coins = 0,
+            current_map_position = 0,
             map_data = VALUES(map_data),
             saved_time = CURRENT_TIMESTAMP
     `;
@@ -119,6 +129,7 @@ app.post("/new-descent", async (req, res) => {
 app.post("/save-progress", async (req, res) => {
 
     const userId = req.body.userId;
+    if (!userId) { return res.json({ success: false }); }
     const currentCoins = req.body.currentCoins;
     const currentMapPosition = req.body.currentMapPosition || 0;
     const mapData = JSON.stringify(req.body.mapData);
@@ -148,7 +159,7 @@ app.post("/load-game", async (req, res) => {
     const userId = req.body.userId;
 
     const sql = `
-        SELECT current_coins, map_data
+        SELECT current_coins, current_map_position, map_data
         FROM Game_saveState
         WHERE user_id = ?
     `;
@@ -160,6 +171,7 @@ app.post("/load-game", async (req, res) => {
                 success: true,
                 saveData: {
                     currentCoins: rows[0].current_coins,
+                    currentMapPosition: rows[0].current_map_position,
                     mapData: rows[0].map_data
                 }
             });
@@ -195,14 +207,17 @@ app.post("/delete-save", async (req, res) => {
 app.post("/duel-result", async (req, res) => {
 
     const userId = req.body.userId;
+    if (!userId) { return res.json({ success: false }); }
     const won = req.body.won;
-    const enemyTier = req.body.enemyTier;
+    const rawTier = typeof req.body.enemyTier === 'string' ? req.body.enemyTier.toLowerCase() : '';
+    const enemyTier = rawTier;
     const coinsGained = req.body.coinsGained;
     const cardsPlayed = req.body.cardsPlayed;
     const durationSec = req.body.durationSec;
     const greatDeck = req.body.greatDeck;
 
-    const tier = enemyTier === "boss" ? "legendary" : enemyTier;
+    const tier = rawTier === 'boss' ? 'legendary' : rawTier;
+    if (!tier) { return res.json({ success: false }); }
 
     try {
         const [runs] = await db.query(
@@ -227,6 +242,9 @@ app.post("/duel-result", async (req, res) => {
             `SELECT enemy_id FROM Enemy WHERE difficulty_tier = ? ORDER BY enemy_id LIMIT 1`,
             [tier]
         );
+        if (enemies.length === 0) {
+            return res.json({ success: false });
+        }
         const enemyId = enemies[0].enemy_id;
 
         const [encounter] = await db.query(
@@ -254,11 +272,19 @@ app.post("/duel-result", async (req, res) => {
                  WHERE run_id = ?`,
                 [runId]
             );
+            await db.query(
+                `UPDATE Game_saveState SET duel_data = NULL WHERE user_id = ?`,
+                [userId]
+            );
         } else if (enemyTier === 'boss') {
             await db.query(
                 `UPDATE Current_Run SET result = 'victory', end_time = CURRENT_TIMESTAMP
                  WHERE run_id = ?`,
                 [runId]
+            );
+            await db.query(
+                `UPDATE Game_saveState SET duel_data = NULL WHERE user_id = ?`,
+                [userId]
             );
         }
 
@@ -273,6 +299,7 @@ app.post("/duel-result", async (req, res) => {
 app.post("/stats/personal", async (req, res) => {
 
     const userId = req.body.userId;
+    if (!userId) { return res.json({ success: false }); }
 
     const sql = `
         SELECT * FROM v_personal_stats
@@ -299,6 +326,9 @@ app.get("/stats/global", async (req, res) => {
 
     try {
         const [rows] = await db.query(sql);
+        if (rows.length === 0) {
+            return res.json({ success: true, stats: {} });
+        }
         res.json({ success: true, stats: rows[0] });
     } catch (err) {
         console.log(err);
@@ -310,6 +340,7 @@ app.get("/stats/global", async (req, res) => {
 app.post("/duel-checkpoint", async (req, res) => {
 
     const userId = req.body.userId;
+    if (!userId) { return res.json({ success: false }); }
     const duelData = JSON.stringify(req.body.duelData);
 
     const sql = `
@@ -425,6 +456,7 @@ app.post("/player-upgrade", async (req, res) => {
 app.post("/player-deck", async (req, res) => {
 
     const { userId, cards } = req.body;
+    if (!userId) { return res.json({ success: false }); }
 
     try {
         // keep bound cards (Binding upgrade) across wins and new descents
@@ -452,6 +484,42 @@ app.post("/player-deck", async (req, res) => {
             }
         }
         res.json({ success: true });
+    } catch (err) {
+        console.log(err);
+        res.json({ success: false });
+    }
+
+});
+
+app.post("/stats/current-run", async (req, res) => {
+
+    const userId = req.body.userId;
+    if (!userId) { return res.json({ success: false }); }
+
+    try {
+        const [runs] = await db.query(
+            `SELECT run_id, result FROM Current_Run
+             WHERE user_id = ? ORDER BY run_id DESC LIMIT 1`,
+            [userId]
+        );
+        if (runs.length === 0) {
+            return res.json({ success: false });
+        }
+        const runId = runs[0].run_id;
+        const [rows] = await db.query(
+            `SELECT
+                 COALESCE(SUM(CASE WHEN defeated_successfully = 1 THEN 1 ELSE 0 END), 0) AS enemies_defeated,
+                 COALESCE(SUM(CASE WHEN defeated_successfully = 0 THEN 1 ELSE 0 END), 0) AS deaths,
+                 COALESCE(SUM(coins_gained), 0)  AS coins_earned,
+                 COALESCE(SUM(cards_played), 0)  AS cards_played,
+                 COALESCE(SUM(duration_sec), 0)  AS total_play_time
+             FROM Run_Enemy_Encounters
+             WHERE run_id = ?`,
+            [runId]
+        );
+        const stats = rows[0];
+        stats.victories = runs[0].result === 'victory' ? 1 : 0;
+        res.json({ success: true, stats });
     } catch (err) {
         console.log(err);
         res.json({ success: false });

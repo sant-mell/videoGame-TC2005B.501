@@ -11,41 +11,40 @@ function roundOne(value) {
 
 async function loadPersonalStats() {
     const userId = localStorage.getItem("userId");
-    const response = await fetch("http://localhost:3000/stats/personal", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: userId })
-    });
-    const data = await response.json();
-    if (!data.success) {
-        return; // no duels played yet, leave the dashes
-    }
-    const s = data.stats;
-    document.getElementById("personalPlayTime").textContent = formatTime(s.total_play_time);
-    document.getElementById("personalDeaths").textContent = s.deaths;
-    document.getElementById("personalEnemies").textContent = s.enemies_defeated;
-    document.getElementById("personalVictories").textContent = s.victories;
-    document.getElementById("personalCoins").textContent = "$" + s.coins_earned;
-    document.getElementById("personalCards").textContent = s.cards_played;
+    if (!userId) return;
+    try {
+        const response = await fetch("http://localhost:3000/stats/current-run", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: userId })
+        });
+        const data = await response.json();
+        if (!data.success) return;
+        const s = data.stats;
+        document.getElementById("personalPlayTime").textContent = formatTime(s.total_play_time || 0);
+        document.getElementById("personalDeaths").textContent = s.deaths || 0;
+        document.getElementById("personalEnemies").textContent = s.enemies_defeated || 0;
+        document.getElementById("personalVictories").textContent = s.victories || 0;
+        document.getElementById("personalCoins").textContent = "$" + (s.coins_earned || 0);
+        document.getElementById("personalCards").textContent = s.cards_played || 0;
+    } catch (err) {}
 }
 
 async function loadGlobalStats() {
-    const response = await fetch("http://localhost:3000/stats/global");
-    const data = await response.json();
-    if (!data.success) {
-        return;
-    }
-    const s = data.stats;
-    if (s.total_players === 0 || s.total_players === null) {
-        return; // nobody has played yet
-    }
-    document.getElementById("globalPlayers").textContent = s.total_players;
-    document.getElementById("globalPlayTime").textContent = formatTime(s.avg_play_time);
-    document.getElementById("globalDeaths").textContent = roundOne(s.avg_deaths);
-    document.getElementById("globalEnemies").textContent = s.total_enemies_defeated;
-    document.getElementById("globalVictories").textContent = roundOne(s.avg_victories);
-    document.getElementById("globalCoins").textContent = "$" + s.total_coins;
-    document.getElementById("globalCards").textContent = s.total_cards_played;
+    try {
+        const response = await fetch("http://localhost:3000/stats/global");
+        const data = await response.json();
+        if (!data.success) return;
+        const s = data.stats;
+        if (!s || !s.total_players) return;
+        document.getElementById("globalPlayers").textContent = s.total_players;
+        document.getElementById("globalPlayTime").textContent = formatTime(s.avg_play_time || 0);
+        document.getElementById("globalDeaths").textContent = roundOne(s.avg_deaths || 0);
+        document.getElementById("globalEnemies").textContent = s.total_enemies_defeated || 0;
+        document.getElementById("globalVictories").textContent = roundOne(s.avg_victories || 0);
+        document.getElementById("globalCoins").textContent = "$" + (s.total_coins || 0);
+        document.getElementById("globalCards").textContent = s.total_cards_played || 0;
+    } catch (err) {}
 }
 
 loadPersonalStats();

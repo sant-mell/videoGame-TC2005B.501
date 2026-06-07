@@ -20,19 +20,27 @@ async function sendDuelResult(game) { // reports one finished duel to the server
                 greatDeck: greatDeck
             })
         });
-        return response.ok;
+        const data = await response.json();
+        return data.success === true;
     } catch (err) {
         return false;
     }
 }
 
-function finishDuel(game) { // records the result, then returns to the map to apply it
+async function finishDuel(game) { // records the result, then returns to the map to apply it
     const won = game.enemyLives <= 0;
     localStorage.setItem("duelWon", won ? "true" : "false");
     if (!won) {
-        savePlayerDeckToDB([]); // lose all cards on death (GDD)
+        await savePlayerDeckToDB([]); // lose all cards on death (GDD)
+    } else {
+        // save cards still in hand so they carry into the next duel
+        const remaining = game.characterCards
+            .filter(c => c.visible !== false)
+            .map(c => c.cardIndex);
+        await savePlayerDeckToDB(remaining);
     }
-    sendDuelResult(game);
+    await sendDuelResult(game);
+    await clearDuelCheckpoint();
     // give the player a moment to read the win/lose message, then go back to the map
     setTimeout(() => {
         window.location.href = "../map/map.html";

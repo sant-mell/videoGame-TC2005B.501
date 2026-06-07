@@ -10,36 +10,40 @@ registerForm.addEventListener("submit", async (event) => {
     const age = document.getElementById("age").value;
     const gender = document.getElementById("gender").value;
 
-    const response = await fetch("http://localhost:3000/register", {
+    try {
+        const response = await fetch("http://localhost:3000/register", {
 
-        method: "POST",
+            method: "POST",
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-        body: JSON.stringify({
+            body: JSON.stringify({
 
-            fullName: fullName,
-            username: username,
-            password: password,
-            age: age,
-            gender: gender
+                fullName: fullName,
+                username: username,
+                password: password,
+                age: age,
+                gender: gender
 
-        })
+            })
 
-    });
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (data.success) {
+        if (data.success) {
 
-        alert("Account created!");
+            alert("Account created!");
 
-    } else {
+        } else {
 
-        alert("Error creating account");
+            alert("Error creating account");
 
+        }
+    } catch (err) {
+        alert("Could not reach the server. Please try again.");
     }
 
 });

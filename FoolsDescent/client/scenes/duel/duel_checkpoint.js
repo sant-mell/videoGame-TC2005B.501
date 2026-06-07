@@ -92,7 +92,9 @@ async function saveDuelCheckpoint(game) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId: Number(userId), duelData: snapshot })
         });
-    } catch (e) {}
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 async function loadDuelCheckpoint(game) {
@@ -105,7 +107,9 @@ async function loadDuelCheckpoint(game) {
             restoreDuelSnapshot(game, data.duelData);
             return true;
         }
-    } catch (e) {}
+    } catch (e) {
+        console.error(e);
+    }
     return false;
 }
 
@@ -118,7 +122,9 @@ async function clearDuelCheckpoint() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId: Number(userId) })
         });
-    } catch (e) {}
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 async function savePlayerDeckToDB(cardIndices) {
@@ -130,7 +136,9 @@ async function savePlayerDeckToDB(cardIndices) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId: Number(userId), cards: cardIndices })
         });
-    } catch (e) {}
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 async function loadPlayerDeck(game) {
@@ -150,7 +158,9 @@ async function loadPlayerDeck(game) {
             game.characterCards = [...personalCards, ...poolCards];
             game.repositionCardsArray(game.characterCards);
         }
-    } catch (e) {}
+    } catch (e) {
+        console.error(e);
+    }
 
     // Always deal 2 random cards from the difficulty pool at the start of each duel
     const pool = game.difficultyCardPoolIndices.slice().sort(() => Math.random() - 0.5);

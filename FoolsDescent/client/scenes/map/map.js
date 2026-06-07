@@ -673,9 +673,10 @@ async function main() {
         }
     }
     else {
-        // a brand new descent, drop any leftover fight flags from a previous run
+        // a brand new descent, drop any leftover state from a previous run
         localStorage.removeItem("pendingFight");
         localStorage.removeItem("duelWon");
+        localStorage.removeItem("extraCards");
         await saveNewDescent(game);
         localStorage.setItem("continueRun", "true");
     }
