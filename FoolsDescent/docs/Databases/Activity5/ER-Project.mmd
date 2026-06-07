@@ -1,0 +1,133 @@
+---
+title: The Fool's Descent ER Diagram
+---
+classDiagram
+    class Player {
+        INT_UNSIGNED user_id PK
+        VARCHAR full_name
+        VARCHAR username UK
+        VARCHAR password
+        INT age
+        ENUM gender
+        TIMESTAMP last_update
+    }
+
+    class Cards {
+        INT_UNSIGNED card_id PK
+        VARCHAR card_name
+        VARCHAR rarity
+        TEXT description
+        VARCHAR image
+        TIMESTAMP last_update
+    }
+
+    class Enemy {
+        INT_UNSIGNED enemy_id PK
+        VARCHAR enemy_name
+        VARCHAR difficulty_tier
+        VARCHAR image
+        TIMESTAMP last_update
+    }
+
+    class Upgrades {
+        INT_UNSIGNED upgrade_id PK
+        VARCHAR upgrade_name
+        INT cost
+        TEXT effect
+        TIMESTAMP last_update
+    }
+
+    class Global_stats {
+        INT_UNSIGNED global_id PK
+        INT total_players
+        INT total_playtime
+        DECIMAL avg_playTime
+        DECIMAL avg_deaths
+        INT total_enemies_defeated
+        DECIMAL avg_victories
+        INT total_coins
+        INT total_cards_played
+        TIMESTAMP last_update
+    }
+
+    class Player_stats {
+        INT_UNSIGNED stats_id PK
+        INT_UNSIGNED user_id FK
+        INT total_play_time
+        INT deaths
+        INT enemies_defeated
+        INT victories
+        INT coins_earned
+        INT cards_played
+        TIMESTAMP last_update
+    }
+
+    class Current_Run {
+        INT_UNSIGNED run_id PK
+        INT_UNSIGNED user_id FK
+        TIMESTAMP start_time
+        TIMESTAMP end_time
+        VARCHAR result
+        INT coins_kept
+        TIMESTAMP last_update
+    }
+
+    class Game_saveState {
+        INT_UNSIGNED gameSave_id PK
+        INT_UNSIGNED user_id FK
+        INT current_coins
+        INT current_map_position
+        INT_UNSIGNED current_enemy_id FK
+        JSON map_data
+        JSON duel_data
+        TIMESTAMP saved_time
+        TIMESTAMP last_update
+    }
+
+    class Player_Deck {
+        INT_UNSIGNED deck_id PK
+        INT_UNSIGNED user_id FK
+        INT_UNSIGNED card_id FK
+        INT card_num
+        BOOLEAN is_bound
+        TIMESTAMP last_update
+    }
+
+    class PlayerUpgrade {
+        INT_UNSIGNED player_upgrade_id PK
+        INT_UNSIGNED gameSave_id FK
+        INT_UNSIGNED upgrade_id FK
+        TIMESTAMP date_acquired
+        TIMESTAMP last_update
+    }
+
+    class Run_Enemy_Encounters {
+        INT_UNSIGNED encounter_id PK
+        INT_UNSIGNED run_id FK
+        INT_UNSIGNED enemy_id FK
+        INT_UNSIGNED greatDeck_id FK
+        BOOLEAN defeated_successfully
+        INT coins_gained
+        INT cards_played
+        INT duration_sec
+        TIMESTAMP last_update
+    }
+
+    class Great_Deck {
+        INT_UNSIGNED greatDeck_id PK
+        INT_UNSIGNED encounter_id FK
+        TEXT deckCards
+        TIMESTAMP last_update
+    }
+
+    Player -- Player_stats : 1∶1
+    Player -- Current_Run : 1∶N
+    Player -- Game_saveState : 1∶1
+    Player -- Player_Deck : 1∶N
+    Cards -- Player_Deck : 1∶N
+    Enemy -- Game_saveState : 1∶N
+    Enemy -- Run_Enemy_Encounters : 1∶N
+    Upgrades -- PlayerUpgrade : 1∶N
+    Game_saveState -- PlayerUpgrade : 1∶N
+    Current_Run -- Run_Enemy_Encounters : 1∶N
+    Run_Enemy_Encounters -- Great_Deck : 1∶1

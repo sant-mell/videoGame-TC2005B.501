@@ -40,7 +40,7 @@ app.post("/register", (req, res) => {
     const gender = req.body.gender;
 
     const sql = `
-        INSERT INTO users
+        INSERT INTO Player
         (full_name, username, password, age, gender)
         VALUES (?, ?, ?, ?, ?)
     `;
@@ -81,7 +81,7 @@ app.post("/login", (req, res) => {
     const password = req.body.password;
 
     const sql = `
-        SELECT * FROM users
+        SELECT * FROM Player
         WHERE username = ? AND password = ?
     `;
 
@@ -103,7 +103,7 @@ app.post("/login", (req, res) => {
 
             res.json({
                 success: true,
-                userId: result[0].id
+                userId: result[0].user_id
             });
 
         } else {
@@ -127,7 +127,6 @@ app.post("/new-descent", (req, res) => {
         INSERT INTO Game_saveState (user_id, current_coins, map_data)
         VALUES (?, ?, ?)
         ON DUPLICATE KEY UPDATE
-            current_coins = 0,
             map_data = VALUES(map_data),
             saved_time = CURRENT_TIMESTAMP
     `;
