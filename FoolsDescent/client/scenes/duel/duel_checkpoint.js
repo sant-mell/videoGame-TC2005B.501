@@ -75,6 +75,8 @@ function restoreDuelSnapshot(game, snap) {
     game.enemyCharacterCards = enemyCards;
     game.repositionEnemyCards();
     game.showStartButton = false;
+    game.hasDealerIntro = false;
+    game.showDealerIntro = false;
     game.currentTurn = "player";
     game.showPlayerCards = true;
     game.showEnemyCards = true;
