@@ -56,6 +56,33 @@ class Game {
         this.enemyCanPlayCharacterCard = true;
         this.playerTurnMessage = false;
         this.usesPendingMagicianRepeat = true;
+        this.hasDealerIntro = true;
+        this.showDealerIntro = false;
+        this.dealerIntroIndex = 0;
+        this.dealerIntroLines = [
+            "So, the unassigned soul finally reaches my table.",
+            "Do you know what fate was before I changed it?",
+            "A predictable wheel. A thousand obedient lives turning exactly as written.",
+            "I held the Great Deck, and every soul received its card.",
+            "No one asked. No one wondered. No one surprised me.",
+            "So, I shuffled.",
+            "I scattered futures across the mortal plane and watched the world remember fear.",
+            "Hope became a wager. Death became a question.",
+            "And for the first time, existence had suspense.",
+            "But you, you were never dealt a future.",
+            "No card bears your name. No thread knows where to pull you.",
+            "Sit, Fool. Let us see whether you deserve a fate.",
+            "Amuse me..."
+        ];
+        this.dealerIntroButton = {
+            x: canvasWidth - 290,
+            y: canvasHeight - 86,
+            width: 160,
+            height: 42
+        };
+        this.dealerSpeechSound = new Audio("../../../assets/audio/BossSpeech.mov");
+        this.dealerSpeechSound.volume = 0.8;
+        this.dealerSpeechSound.loop = true;
         // card effect states
         this.coins = 0;
         this.pageOfPentaclesActive = false;
