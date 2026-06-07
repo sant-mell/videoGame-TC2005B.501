@@ -362,16 +362,14 @@ app.post("/duel-checkpoint", async (req, res) => {
     const duelData = JSON.stringify(req.body.duelData);
 
     const sql = `
-        INSERT INTO Game_saveState (user_id, current_coins, duel_data)
-        VALUES (?, 0, ?)
-        ON DUPLICATE KEY UPDATE
-            duel_data = VALUES(duel_data),
-            saved_time = CURRENT_TIMESTAMP
+        UPDATE Game_saveState
+        SET duel_data = ?, saved_time = CURRENT_TIMESTAMP
+        WHERE user_id = ?
     `;
 
     try {
-        await db.query(sql, [userId, duelData]);
-        res.json({ success: true });
+        const [result] = await db.query(sql, [duelData, userId]);
+        res.json({ success: result.affectedRows > 0 });
     } catch (err) {
         console.log(err);
         res.json({ success: false });

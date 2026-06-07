@@ -77,6 +77,8 @@ function restoreDuelSnapshot(game, snap) {
     game.enemyCharacterCards = enemyCards;
     game.repositionEnemyCards();
     game.showStartButton = false;
+    game.hasDealerIntro = false;
+    game.showDealerIntro = false;
     game.currentTurn = "player";
     game.showPlayerCards = true;
     game.showEnemyCards = true;
@@ -168,7 +170,7 @@ async function loadPlayerDeck(game) {
 
     // Always deal 2 random cards from the difficulty pool at the start of each duel
     const pool = game.difficultyCardPoolIndices.slice().sort(() => Math.random() - 0.5);
-    const dealt = pool.slice(0, 2)
+    const dealt = pool.slice(0, 0) //0 cartas para agregar dificultad
         .filter(i => game.allCards[i])
         .map(i => game.buildCharacterCardEntry(game.allCards[i], i));
     game.characterCards = [...game.characterCards, ...dealt];

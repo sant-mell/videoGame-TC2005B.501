@@ -1,0 +1,148 @@
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    background: #000000;
+    color: #ffffff;
+    font-family: "Silkscreen", MedievalSharp, Georgia, "Times New Roman", serif;
+    -webkit-font-smoothing: none;
+    text-rendering: geometricPrecision;
+}
+
+body {
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.intro-scene {
+    min-height: 100vh;
+    padding: 56px 72px;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.story-panel {
+    width: min(920px, 100%);
+    min-height: 440px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 56px;
+}
+
+.story-text {
+    flex: 1;
+    max-width: 680px;
+    font-size: clamp(16px, 1.45vw, 22px);
+    line-height: 1.7;
+    letter-spacing: 0;
+    text-shadow: 2px 2px 0 #2b2b2b;
+}
+
+.story-line {
+    margin: 0 0 18px;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: lineIn 1000ms ease forwards;
+}
+
+.fool-canvas {
+    width: 192px;
+    height: 256px;
+    image-rendering: pixelated;
+    opacity: 0;
+    flex: 0 0 auto;
+}
+
+.fool-canvas.visible {
+    animation: foolIn 900ms ease forwards;
+}
+
+.start-button,
+.done-button {
+    position: absolute;
+    min-width: 132px;
+    padding: 14px 24px;
+    border: 2px solid #ffffff;
+    background: #000000;
+    color: #ffffff;
+    font-size: 18px;
+    letter-spacing: 0;
+    font-family: "Silkscreen", MedievalSharp, Georgia, "Times New Roman", serif;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 300ms ease, background-color 200ms ease, color 200ms ease;
+}
+
+.start-button {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 260px;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.start-button.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.done-button {
+    right: 48px;
+    bottom: 36px;
+}
+
+.done-button.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.start-button:hover,
+.done-button:hover {
+    background: #ffffff;
+    color: #000000;
+}
+
+@keyframes lineIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes foolIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 760px) {
+    .intro-scene {
+        padding: 36px 24px 96px;
+    }
+
+    .story-panel {
+        min-height: auto;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .story-text {
+        font-size: 20px;
+    }
+
+    .fool-canvas {
+        width: 144px;
+        height: 192px;
+    }
+
+    .done-button {
+        right: 24px;
+        bottom: 24px;
+    }
+}
