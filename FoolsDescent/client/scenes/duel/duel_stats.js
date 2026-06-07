@@ -33,6 +33,9 @@ async function sendDuelResult(game) {
 async function finishDuel(game) {
     const won = game.enemyLives <= 0;
     localStorage.setItem("duelWon", won ? "true" : "false");
+    if (won) {
+        game.coins += 100; // base reward per GDD
+    }
     if (!won) {
         await savePlayerDeckToDB([]); // lose all cards on death (GDD)
     } else {

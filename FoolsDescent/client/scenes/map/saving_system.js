@@ -50,6 +50,20 @@ async function saveProgress(game) {
     }
 }
 
+async function clearDuelCheckpointFromMap() {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+    try {
+        await fetch("http://localhost:3000/clear-duel-checkpoint", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: Number(userId) })
+        });
+    } catch (e) {
+        console.error(e);
+    }
+}
+
 async function loadGame(game) {
     try {
         const response = await fetch("http://localhost:3000/load-game", {
