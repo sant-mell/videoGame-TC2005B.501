@@ -340,6 +340,41 @@ app.post("/clear-duel-checkpoint", async (req, res) => {
 
 });
 
+app.get("/player-deck/:userId", async (req, res) => {
+
+    const userId = req.params.userId;
+
+    const sql = `SELECT card_id FROM Player_Deck WHERE user_id = ?`;
+
+    try {
+        const [rows] = await db.query(sql, [userId]);
+        // card_id in DB is 1-based; JS card indices are 0-based
+        res.json({ success: true, cards: rows.map(r => r.card_id - 1) });
+    } catch (err) {
+        console.log(err);
+        res.json({ success: false, cards: [] });
+    }
+
+});
+
+app.post("/player-deck", async (req, res) => {
+
+    const { userId, cards } = req.body;
+
+    try {
+        await db.query(`DELETE FROM Player_Deck WHERE user_id = ?`, [userId]);
+        if (cards && cards.length > 0) {
+            const values = cards.map(c => [userId, c + 1]); // JS 0-based → DB 1-based
+            await db.query(`INSERT INTO Player_Deck (user_id, card_id) VALUES ?`, [values]);
+        }
+        res.json({ success: true });
+    } catch (err) {
+        console.log(err);
+        res.json({ success: false });
+    }
+
+});
+
 app.listen(3000, () => {
     console.log("Server running on port 3000");
 });

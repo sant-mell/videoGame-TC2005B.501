@@ -235,7 +235,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
     this.showFinalImage = true;
 
     // Probability: 70% they attack you, 30% they choose themselves
-    const enemyTargetsSelf = Math.random() < 0.10;
+    const enemyTargetsSelf = Math.random() < 0.30;
 
     setTimeout(() => {
         if (this.gameOver) return;
@@ -292,6 +292,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
     setTimeout(() => {
         this.showFinalImage = false;
 
+        if (!this.gameOver) saveDuelCheckpoint(this);
         if (this.gameOver) return;
 
         // If the enemy targeted themselves and it was a sun, they also get another turn

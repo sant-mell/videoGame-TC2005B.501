@@ -27,6 +27,9 @@ async function sendDuelResult(game) { // reports one finished duel to the server
 function finishDuel(game) { // records the result, then returns to the map to apply it
     const won = game.enemyLives <= 0;
     localStorage.setItem("duelWon", won ? "true" : "false");
+    if (!won) {
+        savePlayerDeckToDB([]); // lose all cards on death (GDD)
+    }
     sendDuelResult(game);
     // give the player a moment to read the win/lose message, then go back to the map
     setTimeout(() => {

@@ -253,7 +253,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
     this.showFinalImage = true;
 
     // 60% chance enemy targets self
-    const enemyTargetsSelf = Math.random() < 0.40;
+    const enemyTargetsSelf = Math.random() < 0.60;
 
     setTimeout(() => {
 
@@ -348,6 +348,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
         this.showFinalImage = false;
 
+        if (!this.gameOver) saveDuelCheckpoint(this);
         if (this.gameOver) return;
 
         // Enemy targeted themselves
