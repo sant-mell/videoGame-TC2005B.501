@@ -130,7 +130,10 @@ class Game {
         this.candleburn = new Audio("../../../assets/audio/candle_burning.mov");
         this.candleburn.volume = 0.8;
         this.candleblow = new Audio("../../../assets/audio/candle_blow.mov");
-        this.candleblow.volume = 0.4;
+        this.candleblow.volume = 0.8;
+        this.lastLifeSound = new Audio("../../../assets/audio/last_life.mp3");
+        this.lastLifeSound.volume = 0.1;
+        this.lastLifeSoundPlayed = false;
         this.cardSound = new Audio("../../../assets/audio/card.mpeg");
         this.cardSound.volume = 0.3;
         //Counters
@@ -268,6 +271,7 @@ class Game {
             7,
             0,
             3,
+            14,
             15
         ]);
 

@@ -189,6 +189,14 @@ Game.prototype.resolveEnemyDeckDraw = function() {
     if (this.handleEmptyEnemyDeckDraw()) return;
 
     this.currentGreatCard = this.greatDeck.shift();
+
+    this.pendingEnemyMoonHitPlayer = false;
+    this.pendingPlayerDefeatAfterSlide = false;
+    this.finalImage.position.x = canvasWidth / 2;
+    this.finalImage.position.y = canvasHeight / 2;
+    this.sunImage.position.x = canvasWidth / 2;
+    this.sunImage.position.y = canvasHeight / 2;
+
     this.showFinalImage = true;
 
     // Probability: 50% they attack you, 50% they choose themselves
@@ -220,26 +228,13 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             }
 
         } else {
-            if (!this.activateStrengthPower("player")) {
-                this.playerLives--;
-                this.updatePlayerCandles();
-            }
-            if (this.playerJusticeActive) {
-                if (!this.activateStrengthPower("enemy")) {
-                    this.enemyLives--;
-                }
-                this.justiceMessageUntil = performance.now() + 3000;
-                this.playerJusticeActive = false;
-                this.updateEnemyCandles();
-            }
-            if (this.playerLives <= 0 && !this.activateStarPower("player")) {
-                this.gameOver = true;
-            }
+            this.pendingEnemyMoonHitPlayer = true;
         }
     }
 
     if (this.currentGreatCard === "sun") {
         if (enemyTargetsSelf) {
+            this.sunMessageOwner = "enemy";
             this.sunMessage = true;
             setTimeout(() => { this.sunMessage = false; }, 2000);
         }
@@ -247,6 +242,13 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
     setTimeout(() => {
         this.showFinalImage = false;
+
+        if (this.pendingPlayerDefeatAfterSlide) {
+            this.pendingPlayerDefeatAfterSlide = false;
+            this.gameOver = true;
+            this.playPlayerCandleBlowSound();
+            return;
+        }
 
         if (!this.gameOver) saveDuelCheckpoint(this);
         if (this.gameOver) return;
