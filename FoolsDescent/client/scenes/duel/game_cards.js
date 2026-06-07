@@ -697,9 +697,8 @@ Game.prototype.saveRemainingPlayerCardsAfterWin = function() {
             return;
         }
 
-        if (!Array.isArray(this.personalPlayerCardIndices)) {
-            this.personalPlayerCardIndices = [];
-        }
+        // Reset so DB-loaded cards don't get duplicated with characterCards entries
+        this.personalPlayerCardIndices = [];
 
         for (let card of this.characterCards) {
             if (card.visible && typeof card.cardIndex === "number") {
@@ -707,5 +706,6 @@ Game.prototype.saveRemainingPlayerCardsAfterWin = function() {
             }
         }
 
+        savePlayerDeckToDB(this.personalPlayerCardIndices.slice());
         this.savedWinningCards = true;
 };

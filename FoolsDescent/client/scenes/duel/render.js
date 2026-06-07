@@ -407,6 +407,10 @@ Game.prototype.draw = function(ctx) {
             if (this.gameOver) {
                 this.startSound.pause();
                 this.showEnemyCards = false;
+                if (!this.statsSent) {
+                    this.statsSent = true;
+                    finishDuel(this);
+                }
                 if (this.playerLives <= 0){
                     ctx.fillStyle = "white";
                 ctx.font = "70px MedievalSharp";

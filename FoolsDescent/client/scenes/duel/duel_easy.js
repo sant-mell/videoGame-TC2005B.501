@@ -42,6 +42,8 @@ class Game {
         this.hoveredCard = null;
         //booleans
         this.gameOver = false;
+        this.statsSent = false;
+        this.enemyTier = "common";
         this.showStartButton = true;
         this.sunMessage = false;
         this.isEnemyShowing = true;
@@ -352,7 +354,7 @@ class Game {
     }
 }
 
-function main() {
+async function main() {
 
     const canvas = document.getElementById('canvas');
 
@@ -362,6 +364,9 @@ function main() {
     ctx = canvas.getContext('2d');
 
     game = new Game();
+
+    await loadPlayerDeck(game);
+    await loadDuelCheckpoint(game);
 
     drawScene(0);
 }
