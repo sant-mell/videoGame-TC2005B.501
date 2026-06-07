@@ -89,7 +89,6 @@ app.post("/new-descent", async (req, res) => {
         INSERT INTO Game_saveState (user_id, current_coins, map_data)
         VALUES (?, 0, ?)
         ON DUPLICATE KEY UPDATE
-            current_coins = 0,
             map_data = VALUES(map_data),
             saved_time = CURRENT_TIMESTAMP
     `;
@@ -127,7 +126,6 @@ app.post("/save-progress", async (req, res) => {
         INSERT INTO Game_saveState (user_id, current_coins, current_map_position, map_data)
         VALUES (?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE
-            current_coins = VALUES(current_coins),
             current_map_position = VALUES(current_map_position),
             map_data = VALUES(map_data),
             saved_time = CURRENT_TIMESTAMP
@@ -204,8 +202,11 @@ app.post("/duel-result", async (req, res) => {
 
     const tier = enemyTier === "boss" ? "legendary" : enemyTier;
 
+    const conn = await db.getConnection();
     try {
-        const [runs] = await db.query(
+        await conn.beginTransaction();
+
+        const [runs] = await conn.query(
             `SELECT run_id FROM Current_Run
              WHERE user_id = ? AND result = 'ongoing'
              ORDER BY run_id DESC LIMIT 1`,
@@ -216,20 +217,20 @@ app.post("/duel-result", async (req, res) => {
         if (runs.length > 0) {
             runId = runs[0].run_id;
         } else {
-            const [run] = await db.query(
+            const [run] = await conn.query(
                 `INSERT INTO Current_Run (user_id, result) VALUES (?, 'ongoing')`,
                 [userId]
             );
             runId = run.insertId;
         }
 
-        const [enemies] = await db.query(
+        const [enemies] = await conn.query(
             `SELECT enemy_id FROM Enemy WHERE difficulty_tier = ? ORDER BY enemy_id LIMIT 1`,
             [tier]
         );
         const enemyId = enemies[0].enemy_id;
 
-        const [encounter] = await db.query(
+        const [encounter] = await conn.query(
             `INSERT INTO Run_Enemy_Encounters
              (run_id, enemy_id, defeated_successfully, coins_gained, cards_played, duration_sec)
              VALUES (?, ?, ?, ?, ?, ?)`,
@@ -238,34 +239,49 @@ app.post("/duel-result", async (req, res) => {
         const encounterId = encounter.insertId;
 
         if (greatDeck) {
-            const [deck] = await db.query(
+            const [deck] = await conn.query(
                 `INSERT INTO Great_Deck (encounter_id, deckCards) VALUES (?, ?)`,
                 [encounterId, greatDeck]
             );
-            await db.query(
+            await conn.query(
                 `UPDATE Run_Enemy_Encounters SET greatDeck_id = ? WHERE encounter_id = ?`,
                 [deck.insertId, encounterId]
             );
         }
 
-        if (!won) {
-            await db.query(
+        if (won) {
+            await conn.query(
+                `UPDATE Game_saveState SET current_coins = current_coins + ?, duel_data = NULL WHERE user_id = ?`,
+                [coinsGained, userId]
+            );
+            if (enemyTier === 'boss') {
+                await conn.query(
+                    `UPDATE Current_Run SET result = 'victory', end_time = CURRENT_TIMESTAMP
+                     WHERE run_id = ?`,
+                    [runId]
+                );
+            }
+        } else {
+            await conn.query(
                 `UPDATE Current_Run SET result = 'defeat', end_time = CURRENT_TIMESTAMP
                  WHERE run_id = ?`,
                 [runId]
             );
-        } else if (enemyTier === 'boss') {
-            await db.query(
-                `UPDATE Current_Run SET result = 'victory', end_time = CURRENT_TIMESTAMP
-                 WHERE run_id = ?`,
-                [runId]
+            await conn.query(
+                `UPDATE Game_saveState SET duel_data = NULL, current_coins = FLOOR(current_coins / 2)
+                 WHERE user_id = ?`,
+                [userId]
             );
         }
 
+        await conn.commit();
         res.json({ success: true });
     } catch (err) {
+        await conn.rollback();
         console.log(err);
         res.json({ success: false });
+    } finally {
+        conn.release();
     }
 
 });
@@ -313,16 +329,14 @@ app.post("/duel-checkpoint", async (req, res) => {
     const duelData = JSON.stringify(req.body.duelData);
 
     const sql = `
-        INSERT INTO Game_saveState (user_id, current_coins, duel_data)
-        VALUES (?, 0, ?)
-        ON DUPLICATE KEY UPDATE
-            duel_data = VALUES(duel_data),
-            saved_time = CURRENT_TIMESTAMP
+        UPDATE Game_saveState
+        SET duel_data = ?, saved_time = CURRENT_TIMESTAMP
+        WHERE user_id = ?
     `;
 
     try {
-        await db.query(sql, [userId, duelData]);
-        res.json({ success: true });
+        const [result] = await db.query(sql, [duelData, userId]);
+        res.json({ success: result.affectedRows > 0 });
     } catch (err) {
         console.log(err);
         res.json({ success: false });
