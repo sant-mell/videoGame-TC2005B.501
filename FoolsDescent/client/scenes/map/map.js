@@ -403,6 +403,7 @@ class Game {
         this.upgradeOpen = false;
         this.currentUpgradeType = null;
         this.exitBtnRect = null;
+        this.acceptBtnRect = null;
         this.cardPickerOpen = false;
         this.cardCellRects = [];
         this.cardBackRect = null;
@@ -520,11 +521,11 @@ class Game {
                     this.currentId = n.id;
                     n.state = "visited";
                     this.updateAvailable();
-                    await saveProgress(this);
                     if (n.type === NODE_UPGRADE) {
                         this.currentUpgradeType = n.upgradeType;
                         this.upgradeOpen = true;
                     }
+                    await saveProgress(this);
                 }
                 break;
             }

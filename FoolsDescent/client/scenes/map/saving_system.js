@@ -39,6 +39,7 @@ async function saveProgress(game) {
             body: JSON.stringify({
                 userId: localStorage.getItem("userId"),
                 currentCoins: 0,
+                currentMapPosition: saveData.currentId || 0,
                 mapData: saveData
             })
         });

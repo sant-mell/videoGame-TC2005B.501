@@ -347,7 +347,8 @@ BEGIN
      WHERE global_id = 1;
 END$$
 
--- finished duel: update the player's stats (win = +victory +enemy, loss = +death)
+-- finished duel: update the player's stats (enemy kill = +enemy, loss = +death)
+-- victories are counted separately when the full run closes as a victory
 CREATE TRIGGER trg_encounter_after_insert
 AFTER INSERT ON Run_Enemy_Encounters
 FOR EACH ROW
@@ -359,7 +360,6 @@ BEGIN
            coins_earned     = coins_earned     + NEW.coins_gained,
            cards_played     = cards_played     + NEW.cards_played,
            enemies_defeated = enemies_defeated + (NEW.defeated_successfully = TRUE),
-           victories        = victories        + (NEW.defeated_successfully = TRUE),
            deaths           = deaths           + (NEW.defeated_successfully = FALSE)
      WHERE user_id = v_user;
 END$$
@@ -371,6 +371,18 @@ FOR EACH ROW
 BEGIN
     IF NEW.result = 'defeat' AND OLD.result <> 'defeat' AND NEW.coins_kept = OLD.coins_kept THEN
         SET NEW.coins_kept = FLOOR(OLD.coins_kept / 2);
+    END IF;
+END$$
+
+-- on run victory: count it as a completed run in player stats
+CREATE TRIGGER trg_run_after_update
+AFTER UPDATE ON Current_Run
+FOR EACH ROW
+BEGIN
+    IF NEW.result = 'victory' AND OLD.result <> 'victory' THEN
+        UPDATE Player_stats
+           SET victories = victories + 1
+         WHERE user_id = NEW.user_id;
     END IF;
 END$$
 

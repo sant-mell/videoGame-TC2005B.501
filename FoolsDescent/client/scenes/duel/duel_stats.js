@@ -5,6 +5,7 @@ async function sendDuelResult(game) { // reports one finished duel to the server
     const won = game.enemyLives <= 0;
     const cardsPlayed = game.characterCards.filter(c => c.visible === false).length;
     const durationSec = Math.round((Date.now() - duelStartMs) / 1000);
+    const greatDeck = Array.isArray(game.greatDeck) ? game.greatDeck.join(",") : "";
     try {
         const response = await fetch("http://localhost:3000/duel-result", {
             method: "POST",
@@ -15,7 +16,8 @@ async function sendDuelResult(game) { // reports one finished duel to the server
                 enemyTier: game.enemyTier,
                 coinsGained: game.coins,
                 cardsPlayed: cardsPlayed,
-                durationSec: durationSec
+                durationSec: durationSec,
+                greatDeck: greatDeck
             })
         });
         return response.ok;

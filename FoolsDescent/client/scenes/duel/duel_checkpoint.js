@@ -159,4 +159,15 @@ async function loadPlayerDeck(game) {
         .map(i => game.buildCharacterCardEntry(game.allCards[i], i));
     game.characterCards = [...game.characterCards, ...dealt];
     game.repositionCardsArray(game.characterCards);
+
+    // Extra card picked from map upgrade node (consumed once then cleared)
+    const extraCardsStr = localStorage.getItem("extraCards");
+    if (extraCardsStr) {
+        const extras = extraCardsStr.split(",").map(Number)
+            .filter(i => game.allCards[i])
+            .map(i => game.buildCharacterCardEntry(game.allCards[i], i));
+        game.characterCards = [...game.characterCards, ...extras];
+        game.repositionCardsArray(game.characterCards);
+        localStorage.removeItem("extraCards");
+    }
 }

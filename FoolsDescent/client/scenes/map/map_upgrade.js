@@ -62,6 +62,7 @@ Game.prototype.drawUpgradePanel = function(ctx) {
     ctx.strokeRect(exitX, exitY, 165, 40);
     ctx.fillStyle = "#ffffff";
     ctx.fillText("Exit Upgrade", exitX + 82, exitY + 26);
+    this.acceptBtnRect = { x: acceptX, y: acceptY, w: 165, h: 40 };
     this.exitBtnRect = { x: exitX, y: exitY, w: 165, h: 40 };
 
     ctx.textAlign = "left";
@@ -69,9 +70,32 @@ Game.prototype.drawUpgradePanel = function(ctx) {
 };
 
 Game.prototype.checkUpgradeClick = function(mouseX, mouseY) {
+    if (!this.exitBtnRect) return;
     let e = this.exitBtnRect;
     if (mouseX >= e.x && mouseX <= e.x + e.w && mouseY >= e.y && mouseY <= e.y + e.h) {
         this.upgradeOpen = false;
+        return;
+    }
+    let a = this.acceptBtnRect;
+    if (a && mouseX >= a.x && mouseX <= a.x + a.w && mouseY >= a.y && mouseY <= a.y + a.h) {
+        this.acceptUpgrade();
+    }
+};
+
+Game.prototype.acceptUpgrade = async function() {
+    this.upgradeOpen = false;
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+        try {
+            await fetch("http://localhost:3000/player-upgrade", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId: Number(userId), upgradeId: this.currentUpgradeType + 1 })
+            });
+        } catch (e) {}
+    }
+    if (this.currentUpgradeType === UPGRADE_CARD) {
+        this.cardPickerOpen = true;
     }
 };
 
