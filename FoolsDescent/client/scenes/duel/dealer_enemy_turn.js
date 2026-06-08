@@ -1,6 +1,13 @@
 Game.prototype.dealer_enemy_turn = function() {
 
         if (this.gameOver) return;
+        if (this.showIntroText) {
+            setTimeout(() => {
+                if (this.gameOver) return;
+                this.dealer_enemy_turn();
+            }, 250);
+            return;
+        }
         if (this.greatDeck.length <= 0) return;
     
         if (this.enemyTurnBlocked) {
@@ -8,6 +15,10 @@ Game.prototype.dealer_enemy_turn = function() {
             this.showPlayerCards = true;
             this.showEnemyCards = false;
             this.currentTurn = "player";
+            this.playerTurnMessage = true;
+            setTimeout(() => {
+                this.playerTurnMessage = false;
+            }, 2000);
             return;
         }
     

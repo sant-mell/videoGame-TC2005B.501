@@ -77,7 +77,7 @@ Game.prototype.draw = function(ctx) {
             ctx.textAlign = "center";
             ctx.fillText(this.activeEnemyCard.infoText, canvasWidth / 2, 100);
         }
-        if (this.showIntroText) {
+        if (this.showIntroText && !this.gameOver) {
 
             ctx.fillStyle = "white";
             ctx.font = "50px MedievalSharp";
