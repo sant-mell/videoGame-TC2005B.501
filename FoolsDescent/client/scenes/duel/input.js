@@ -9,6 +9,11 @@ Game.prototype.createEventListeners = function() {
 
             this.checkStartButton(mouseX, mouseY);
 
+            if (this.showDealerIntro) {
+                this.checkDealerIntroClick(mouseX, mouseY);
+                return;
+            }
+
             if (this.showTwoPentaclesChoice) {
                 this.checkTwoPentaclesClick(mouseX, mouseY);
                 return;
@@ -45,6 +50,10 @@ Game.prototype.checkCardHover = function(mouseX, mouseY) {
 
         this.hoveredCard = null;
 
+        if (this.showDealerIntro) {
+            return;
+        }
+
         if (this.isPlayerTurnInputLocked()) {
             return;
         }
@@ -76,8 +85,8 @@ Game.prototype.checkCardHover = function(mouseX, mouseY) {
 };
 
 Game.prototype.checkStartButton = function(mouseX, mouseY) {
-        if (!this.gameOver && this.startSound.paused){
-        this.startSound.play();
+        if (!this.gameOver && this.startSound.paused && !this.hasDealerIntro){
+            this.startSound.play();
         }
         if (!this.showStartButton) {
             return;
@@ -90,6 +99,11 @@ Game.prototype.checkStartButton = function(mouseX, mouseY) {
             mouseY <= this.startButton.y + this.startButton.height
         ) {
 
+            if (this.hasDealerIntro) {
+                this.startDealerIntro();
+                return;
+            }
+
             this.showStartButton = false;
 
             this.showIntroText = true;
@@ -99,8 +113,73 @@ Game.prototype.checkStartButton = function(mouseX, mouseY) {
                 this.showIntroText = false;
                 this.showPlayerCards = true;
                 this.showEnemyCards = true;
+                this.playerTurnMessage = true;
+
+                setTimeout(() => {
+                    if (this.gameOver) return;
+                    this.playerTurnMessage = false;
+                }, 2000);
 
             }, 5000);
         }
     
+};
+
+Game.prototype.startDealerIntro = function() {
+        this.showStartButton = false;
+        this.showDealerIntro = true;
+        this.dealerIntroIndex = 0;
+
+        if (this.dealerSpeechSound) {
+            this.dealerSpeechSound.currentTime = 0;
+            this.dealerSpeechSound.play().catch(() => {});
+        }
+};
+
+Game.prototype.checkDealerIntroClick = function(mouseX, mouseY) {
+        const button = this.dealerIntroButton;
+
+        if (
+            mouseX < button.x ||
+            mouseX > button.x + button.width ||
+            mouseY < button.y ||
+            mouseY > button.y + button.height
+        ) {
+            return;
+        }
+
+        this.dealerIntroIndex++;
+
+        if (this.dealerIntroIndex >= this.dealerIntroLines.length) {
+            this.finishDealerIntro();
+        }
+};
+
+Game.prototype.finishDealerIntro = function() {
+        this.showDealerIntro = false;
+        this.hasDealerIntro = false;
+
+        if (this.dealerSpeechSound) {
+            this.dealerSpeechSound.pause();
+        }
+
+        if (!this.gameOver && this.startSound.paused) {
+            this.startSound.play();
+        }
+
+        this.showIntroText = true;
+
+        setTimeout(() => {
+
+            this.showIntroText = false;
+            this.showPlayerCards = true;
+            this.showEnemyCards = true;
+            this.playerTurnMessage = true;
+
+            setTimeout(() => {
+                if (this.gameOver) return;
+                this.playerTurnMessage = false;
+            }, 2000);
+
+        }, 5000);
 };

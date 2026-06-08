@@ -26,21 +26,12 @@ const ENEMY_RARE = 1;
 const ENEMY_EPIC = 2;
 
 function pickDifficulty(fight) {
-    let r = Math.random();
     if (fight === 1) {
         return ENEMY_COMMON;
     } else if (fight === 2) {
-        if (r < 0.20) {
-            return ENEMY_COMMON;
-        } else {
-            return ENEMY_RARE;
-        }
+        return ENEMY_RARE;
     } else {
-        if (r < 0.40) {
-            return ENEMY_RARE;
-        } else {
-            return ENEMY_EPIC;
-        }
+        return ENEMY_EPIC;
     }
 }
 
@@ -275,11 +266,6 @@ class Game {
         this.startSound = new Audio("../../../assets/audio/Map.mp3");
         this.startSound.volume = 0.2;
         this.startSound.loop = true;
-        const savedTime = localStorage.getItem("mapMusicTime");
-
-        if (savedTime !== null) {
-        this.startSound.currentTime = Number(savedTime);
-}
     }
 
     initObjects() {
@@ -417,6 +403,7 @@ class Game {
         this.upgradeOpen = false;
         this.currentUpgradeType = null;
         this.exitBtnRect = null;
+        this.acceptBtnRect = null;
         this.cardPickerOpen = false;
         this.cardCellRects = [];
         this.cardBackRect = null;
@@ -506,11 +493,10 @@ class Game {
     async arrive() {
         for (let n of this.nodes) {
             if (n.x === this.fool.tx && n.y === this.fool.ty) {
-                this.currentId = n.id;
-                n.state = "visited";
-                this.updateAvailable();
-                await saveProgress(this);
                 if (n.type === NODE_ENEMY) {
+                    // a fight node is consumed only if it is won, so don't mark it
+                    // visited or save here: just remember which node is being fought
+                    localStorage.setItem("pendingFight", n.id);
                     let fight;
                     if (n.id === 1 || n.id === 2) {
                         fight = 1;
@@ -521,25 +507,25 @@ class Game {
                     }
                     let diff = pickDifficulty(fight);
                     if (diff === ENEMY_COMMON) {
-                        localStorage.setItem("mapMusicTime", this.startSound.currentTime);
-                        this.startSound.pause();
                         window.location.href = "../duel/duel_easy.html";
                     } else if (diff === ENEMY_RARE) {
-                        localStorage.setItem("mapMusicTime", this.startSound.currentTime);
-                        this.startSound.pause();
                         window.location.href = "../duel/duel_intermedio.html";
                     } else {
-                        localStorage.setItem("mapMusicTime", this.startSound.currentTime);
-                        this.startSound.pause();
                         window.location.href = "../duel/duel.html";
                     }
                 } else if (n.type === NODE_BOSS) {
-                    localStorage.setItem("mapMusicTime", this.startSound.currentTime);
-                    this.startSound.pause();
+                    localStorage.setItem("pendingFight", n.id);
                     window.location.href = "../duel/duel_dealer.html";
-                } else if (n.type === NODE_UPGRADE) {
-                    this.currentUpgradeType = n.upgradeType;
-                    this.upgradeOpen = true;
+                } else {
+                    // rest and upgrade nodes have no duel, so they are consumed on arrival
+                    this.currentId = n.id;
+                    n.state = "visited";
+                    this.updateAvailable();
+                    if (n.type === NODE_UPGRADE) {
+                        this.currentUpgradeType = n.upgradeType;
+                        this.upgradeOpen = true;
+                    }
+                    await saveProgress(this);
                 }
                 break;
             }
@@ -631,32 +617,39 @@ class Game {
         if (this.fool.moving) return;
         let dx = mouseX - n.x;
         let dy = mouseY - n.y;
-        // check both directions in the edge list so the fool can also return left
-        let isConnected = false;
-        for (let i = 0; i < this.edges.length; i++) {
-            let from = this.edges[i][0];
-            let to = this.edges[i][1];
-            if (from === this.currentId) {
-                if (to === n.id) {
-                    isConnected = true;
-                    break;
-                }
-            } else if (to === this.currentId) {
-                if (from === n.id) {
-                    isConnected = true;
-                    break;
-                }
-            }
-        }
-        if (Math.sqrt(dx * dx + dy * dy) <= 40) {
-            if (n.id !== this.currentId) {
-                if (isConnected) {
-                    console.log("node clicked: " + n.id);
-                    this.fool.setTarget(n.x, n.y);
-                }
-            }
+        if (Math.sqrt(dx * dx + dy * dy) <= 40 && n.state === "available") {
+            console.log("node clicked: " + n.id);
+            this.fool.setTarget(n.x, n.y);
         }
     }
+}
+
+// resolves a duel the player just returned from. the fought node becomes visited
+// only on a win; otherwise it stays available so it can be challenged again
+async function applyPendingFight(game) {
+    const pending = localStorage.getItem("pendingFight");
+    if (pending === null) {
+        return;
+    }
+    const won = localStorage.getItem("duelWon") === "true";
+    localStorage.removeItem("pendingFight");
+    localStorage.removeItem("duelWon");
+    if (!won) {
+        return; // lost or abandoned, leave the node available to be revisited
+    }
+    const nodeId = parseInt(pending, 10);
+    const node = game.nodes.find(n => n.id === nodeId);
+    if (!node) {
+        return;
+    }
+    game.currentId = nodeId;
+    node.state = "visited";
+    game.fool.x = node.x;
+    game.fool.y = node.y;
+    game.fool.tx = node.x;
+    game.fool.ty = node.y;
+    game.updateAvailable();
+    await saveProgress(game);
 }
 
 // sets up the canvas and starts the game
@@ -667,17 +660,28 @@ async function main() {
     ctx = canvas.getContext('2d');
     game = new Game();
     if (localStorage.getItem("continueRun") === "true") {
-        const loaded = await loadGame(game);
+        let loaded = await loadGame(game);
         if (!loaded) {
             // DB unavailable or not logged in, restore from local backup if it exists
-            if (!loadMapLocally(game)) {
-                await saveNewDescent(game);
-            }
+            loaded = loadMapLocally(game);
+        }
+        if (!loaded) {
+            await saveNewDescent(game);
+        } else {
+            // resolve the result of a duel the player just came back from
+            await applyPendingFight(game);
         }
     }
     else {
-        await saveNewDescent(game);
-        localStorage.setItem("continueRun", "true");
+        // a brand new descent, drop any leftover state from a previous run
+        localStorage.removeItem("pendingFight");
+        localStorage.removeItem("duelWon");
+        localStorage.removeItem("extraCards");
+        localStorage.setItem("playerCoins", "0");
+        const saved = await saveNewDescent(game);
+        if (saved) {
+            localStorage.setItem("continueRun", "true");
+        }
     }
     drawScene(0);
 }

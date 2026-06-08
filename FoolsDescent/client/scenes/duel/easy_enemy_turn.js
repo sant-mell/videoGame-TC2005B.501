@@ -142,7 +142,7 @@ Game.prototype.easy_enemy_turn = function() {
 
                         this.pendingMagicianAction();
 
-                    }, 1500);
+                    }, 800);
 
                     setTimeout(() => {
 
@@ -167,7 +167,7 @@ Game.prototype.easy_enemy_turn = function() {
 
                         this.repositionEnemyCards();
 
-                    }, 3000);
+                    }, 1800);
 
                     return;
                 }
@@ -250,10 +250,17 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
     this.currentGreatCard = this.greatDeck.shift();
 
+    this.pendingEnemyMoonHitPlayer = false;
+    this.pendingPlayerDefeatAfterSlide = false;
+    this.finalImage.position.x = canvasWidth / 2;
+    this.finalImage.position.y = canvasHeight / 2;
+    this.sunImage.position.x = canvasWidth / 2;
+    this.sunImage.position.y = canvasHeight / 2;
+
     this.showFinalImage = true;
 
     // 60% chance enemy targets self
-    const enemyTargetsSelf = Math.random() < 0.60;
+    const enemyTargetsSelf = Math.random() < 0.40;
 
     setTimeout(() => {
 
@@ -300,32 +307,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
         } else {
 
-            if (!this.activateStrengthPower("player")) {
-
-                this.playerLives--;
-            }
-
-            if (this.playerJusticeActive) {
-
-                if (!this.activateStrengthPower("enemy")) {
-
-                    this.enemyLives--;
-                }
-
-                this.justiceMessageUntil =
-                    performance.now() + 3000;
-
-                this.playerJusticeActive = false;
-
-                this.updateEnemyCandles();
-            }
-
-            if (
-                this.playerLives <= 0 &&
-                !this.activateStarPower("player")
-            ) {
-                this.gameOver = true;
-            }
+            this.pendingEnemyMoonHitPlayer = true;
         }
     }
 
@@ -333,6 +315,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
         if (enemyTargetsSelf) {
 
+            this.sunMessageOwner = "enemy";
             this.sunMessage = true;
 
             setTimeout(() => {
@@ -347,6 +330,14 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
         this.showFinalImage = false;
 
+        if (this.pendingPlayerDefeatAfterSlide) {
+            this.pendingPlayerDefeatAfterSlide = false;
+            this.gameOver = true;
+            this.playPlayerCandleBlowSound();
+            return;
+        }
+
+        if (!this.gameOver) saveDuelCheckpoint(this);
         if (this.gameOver) return;
 
         // Enemy targeted themselves
@@ -361,8 +352,6 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             }
 
             // Moon self-hit = player turn
-            this.enemyStrengthActive = false;
-
             if (this.playerTurnBlocked) {
 
                 this.playerTurnBlocked = false;
@@ -431,8 +420,6 @@ Game.prototype.resolveEnemyDeckDraw = function() {
         }
 
         // Normal player turn
-        this.enemyStrengthActive = false;
-
         this.currentTurn = "player";
 
         this.showEnemyCards = true;

@@ -150,6 +150,16 @@ Game.prototype.draw = function(ctx) {
             );
             }
         }
+        if (this.lastLifeMessage) {
+            ctx.fillStyle = "white";
+            ctx.font = "32px MedievalSharp";
+            ctx.textAlign = "center";
+            ctx.fillText(
+                "Last Life!",
+                canvasWidth - 280,
+                canvasHeight - 230
+            );
+        }
         if (this.turnBlockedMessage) {
 
             ctx.font = "40px serif";
@@ -189,13 +199,20 @@ Game.prototype.draw = function(ctx) {
         if (this.showStartButton) {
             this.drawCustomHitbox(ctx, this.startButton);
         }
+        if (this.showDealerIntro) {
+            this.drawDealerIntro(ctx);
+        }
         if (this.playerTurnMessage) {
             ctx.fillStyle = "white";
             ctx.font = "45px MedievalSharp";
             ctx.textAlign = "center";
-            ctx.fillText("Your turn", canvasWidth / 2, 370);
+            ctx.fillText("Your turn", canvasWidth / 2, 400);
         }
         if (this.sunMessage) {
+
+            const sunExtraTurnText = this.sunMessageOwner === "enemy"
+                ? "Enemy gets another turn"
+                : "You get another turn";
 
             ctx.fillStyle = "white";
             ctx.font = "40px MedievalSharp";
@@ -206,7 +223,7 @@ Game.prototype.draw = function(ctx) {
                 100
             );
             ctx.fillText(
-                "You get another turn",
+                sunExtraTurnText,
                 canvasWidth / 2,
                 140
             );
@@ -407,7 +424,19 @@ Game.prototype.draw = function(ctx) {
             if (this.gameOver) {
                 this.startSound.pause();
                 this.showEnemyCards = false;
-                if (this.playerLives <= 0){
+
+                if (this.playerLives <= 0 && !this.playerDefeatSequenceStarted) {
+                    this.playPlayerCandleBlowSound();
+                }
+
+                if (!this.statsSent) {
+                    this.statsSent = true;
+                    finishDuel(this);
+                }
+                if (
+                    this.playerLives <= 0 &&
+                    performance.now() >= (this.playerDefeatTextReadyAt || 0)
+                ){
                     ctx.fillStyle = "white";
                 ctx.font = "70px MedievalSharp";
                 ctx.textAlign = "center";
@@ -438,6 +467,64 @@ Game.prototype.draw = function(ctx) {
             }
     
 };
+
+Game.prototype.drawDealerIntro = function(ctx) {
+        const box = {
+            x: 130,
+            y: canvasHeight - 182,
+            width: 940,
+            height: 142
+        };
+        const button = this.dealerIntroButton;
+        const text = this.dealerIntroLines[this.dealerIntroIndex] || "";
+
+        ctx.save();
+        ctx.fillStyle = "rgba(25, 15, 42, 0.94)";
+        ctx.strokeStyle = "#c9a44c";
+        ctx.lineWidth = 4;
+        ctx.shadowColor = "#4b2f80";
+        ctx.shadowBlur = 18;
+        ctx.fillRect(box.x, box.y, box.width, box.height);
+        ctx.strokeRect(box.x, box.y, box.width, box.height);
+        ctx.shadowBlur = 0; 
+
+        ctx.fillStyle = "#e8d7ff";
+        ctx.font = "40px MedievalSharp";
+        ctx.textAlign = "left";
+        this.drawWrappedText(ctx, text, box.x + 25, box.y + 42, box.width - 25, 32);
+
+        ctx.fillStyle = "#12091f";
+        ctx.strokeStyle = "#c9a44c";
+        ctx.lineWidth = 2;
+        ctx.fillRect(button.x, button.y, button.width, button.height);
+        ctx.strokeRect(button.x, button.y, button.width, button.height);
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "20px MedievalSharp";
+        ctx.textAlign = "center";
+        ctx.fillText("CONTINUE", button.x + button.width / 2, button.y + 28);
+        ctx.restore();
+};
+
+Game.prototype.drawWrappedText = function(ctx, text, x, y, maxWidth, lineHeight) {
+        const words = text.split(" ");
+        let line = "";
+
+        for (let i = 0; i < words.length; i++) {
+            const testLine = line.length > 0 ? line + " " + words[i] : words[i];
+
+            if (ctx.measureText(testLine).width > maxWidth && line.length > 0) {
+                ctx.fillText(line, x, y);
+                line = words[i];
+                y += lineHeight;
+            } else {
+                line = testLine;
+            }
+        }
+
+        ctx.fillText(line, x, y);
+};
+
 Game.prototype.drawCustomHitbox = function(ctx, hitbox) {
         if (hitbox === this.startButton) {
 

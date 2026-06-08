@@ -27,6 +27,7 @@ class Game {
         //CHOOSE ENEMY HERE!!
         this.chooseEnemy = 2; //<--- CHOOSE ENEMY (only Dealer here; this.chooseEnemy is unused)
         //^^^^^^ CHOOSE ENEMY ^^^^^^
+        this.enemyName = "The Dealer";
 
         //enemy card
         this.activeEnemyCard = null;
@@ -40,6 +41,8 @@ class Game {
         this.hoveredCard = null;
         //booleans
         this.gameOver = false;
+        this.statsSent = false;
+        this.enemyTier = "boss";
         this.showStartButton = true;
         this.sunMessage = false;
         this.isEnemyShowing = true;
@@ -54,6 +57,33 @@ class Game {
         this.enemyCanPlayCharacterCard = true;
         this.playerTurnMessage = false;
         this.usesPendingMagicianRepeat = true;
+        this.hasDealerIntro = true;
+        this.showDealerIntro = false;
+        this.dealerIntroIndex = 0;
+        this.dealerIntroLines = [
+            "So, the unassigned soul finally reaches my table.",
+            "Do you know what fate was before I changed it?",
+            "A predictable wheel. A thousand obedient lives turning exactly as written.",
+            "I held the Great Deck, and every soul received its card.",
+            "No one asked. No one wondered. No one surprised me.",
+            "So, I shuffled.",
+            "I scattered futures across the mortal plane and watched the world remember fear.",
+            "Hope became a wager. Death became a question.",
+            "And for the first time, existence had suspense.",
+            "But you, you were never dealt a future.",
+            "No card bears your name. No thread knows where to pull you.",
+            "Sit, Fool. Let us see whether you deserve a fate.",
+            "Amuse me..."
+        ];
+        this.dealerIntroButton = {
+            x: canvasWidth - 290,
+            y: canvasHeight - 86,
+            width: 160,
+            height: 42
+        };
+        this.dealerSpeechSound = new Audio("../../../assets/audio/BossSpeech.mov");
+        this.dealerSpeechSound.volume = 0.8;
+        this.dealerSpeechSound.loop = true;
         // card effect states
         this.coins = 0;
         this.pageOfPentaclesActive = false;
@@ -100,7 +130,10 @@ class Game {
         this.candleburn = new Audio("../../../assets/audio/candle_burning.mov");
         this.candleburn.volume = 0.8;
         this.candleblow = new Audio("../../../assets/audio/candle_blow.mov");
-        this.candleblow.volume = 0.4;
+        this.candleblow.volume = 0.8;
+        this.lastLifeSound = new Audio("../../../assets/audio/last_life.mp3");
+        this.lastLifeSound.volume = 0.1;
+        this.lastLifeSoundPlayed = false;
         this.cardSound = new Audio("../../../assets/audio/card.mpeg");
         this.cardSound.volume = 0.3;
         //Counters
@@ -220,8 +253,8 @@ class Game {
         // All card definitions in the pool
         this.allCards = this.buildAllCards();
         //this.personalPlayerCardIndices = [9, 6];
-        // Choose the player card pool; 3 random cards are dealt from it.
-        //this.characterCards = this.chooseStartingCards([11, 0, 14, 13, 3, 8, 12]);
+        // Choose the player card pool; 2 random cards are dealt from it.
+        //this.characterCards = this.chooseStartingCards([11, 0, 14, 13, 12]);
         // Gives two random cards at the start of the duel, they get added to the players deck
         let cards = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; // All cards
 
@@ -238,6 +271,7 @@ class Game {
             7,
             0,
             3,
+            14,
             15
         ]);
 
@@ -332,7 +366,7 @@ class Game {
     }
 }
 
-function main() {
+async function main() {
 
     const canvas = document.getElementById('canvas');
 
@@ -342,6 +376,9 @@ function main() {
     ctx = canvas.getContext('2d');
 
     game = new Game();
+
+    await loadPlayerDeck(game);
+    await loadDuelCheckpoint(game);
 
     drawScene(0);
 }

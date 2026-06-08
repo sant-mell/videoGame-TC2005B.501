@@ -62,6 +62,7 @@ Game.prototype.drawUpgradePanel = function(ctx) {
     ctx.strokeRect(exitX, exitY, 165, 40);
     ctx.fillStyle = "#ffffff";
     ctx.fillText("Exit Upgrade", exitX + 82, exitY + 26);
+    this.acceptBtnRect = { x: acceptX, y: acceptY, w: 165, h: 40 };
     this.exitBtnRect = { x: exitX, y: exitY, w: 165, h: 40 };
 
     ctx.textAlign = "left";
@@ -69,9 +70,43 @@ Game.prototype.drawUpgradePanel = function(ctx) {
 };
 
 Game.prototype.checkUpgradeClick = function(mouseX, mouseY) {
+    if (!this.exitBtnRect) return;
     let e = this.exitBtnRect;
     if (mouseX >= e.x && mouseX <= e.x + e.w && mouseY >= e.y && mouseY <= e.y + e.h) {
         this.upgradeOpen = false;
+        return;
+    }
+    let a = this.acceptBtnRect;
+    if (a && mouseX >= a.x && mouseX <= a.x + a.w && mouseY >= a.y && mouseY <= a.y + a.h) {
+        this.acceptUpgrade();
+    }
+};
+
+Game.prototype.acceptUpgrade = async function() {
+    const userId = localStorage.getItem("userId");
+    if (!userId) { this.upgradeOpen = false; return; }
+    try {
+        const res = await fetch("http://localhost:3000/player-upgrade", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: Number(userId), upgradeId: this.currentUpgradeType + 1 })
+        });
+        const data = await res.json();
+        if (!data.success) {
+            this.upgradeOpen = false;
+            return; // not enough coins or server error
+        }
+        // keep local coins in sync
+        const prev = parseInt(localStorage.getItem("playerCoins") || "0");
+        const costs = [300, 400, 100]; // Card Binding, Life Extension, Extra Card
+        localStorage.setItem("playerCoins", Math.max(0, prev - costs[this.currentUpgradeType]));
+    } catch (e) {
+        this.upgradeOpen = false;
+        return;
+    }
+    this.upgradeOpen = false;
+    if (this.currentUpgradeType === UPGRADE_CARD) {
+        this.cardPickerOpen = true;
     }
 };
 
@@ -160,6 +195,5 @@ Game.prototype.checkCardPickerClick = function(mouseX, mouseY) {
 Game.prototype.pickCard = function(cardIndex) {
     let cards = localStorage.getItem("extraCards");
     localStorage.setItem("extraCards", cards ? cards + "," + cardIndex : "" + cardIndex);
-    console.log("picked card " + cardIndex);
     this.cardPickerOpen = false;
 };

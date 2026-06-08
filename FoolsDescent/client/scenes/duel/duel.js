@@ -24,6 +24,7 @@ class Game {
         
         // Automatically chooses the enemy (1 or 2)
         this.chooseEnemy = Math.floor(Math.random() * 2) + 1;
+        this.enemyName = this.chooseEnemy === 1 ? "Mad Monarch" : "Killer Queen";
 
         //enemy card
         this.activeEnemyCard = null;
@@ -37,6 +38,8 @@ class Game {
         this.hoveredCard = null;
         //booleans
         this.gameOver = false;
+        this.statsSent = false;
+        this.enemyTier = "epic";
         this.showStartButton = true;
         this.sunMessage = false;
         this.isEnemyShowing = true;
@@ -96,7 +99,10 @@ class Game {
         this.candleburn = new Audio("../../../assets/audio/candle_burning.mov");
         this.candleburn.volume = 0.8;
         this.candleblow = new Audio("../../../assets/audio/candle_blow.mov");
-        this.candleblow.volume = 0.4;
+        this.candleblow.volume = 0.8;
+        this.lastLifeSound = new Audio("../../../assets/audio/last_life.mp3");
+        this.lastLifeSound.volume = 0.1;
+        this.lastLifeSoundPlayed = false;
         this.cardSound = new Audio("../../../assets/audio/card.mpeg");
         this.cardSound.volume = 0.3;
 
@@ -238,7 +244,7 @@ class Game {
 
         // Manually choose starting cards by index (pass amount to deal all of them)
         // this.characterCards = this.chooseStartingCards([0, 6, 14, 1, 13], 5);
-        //this.personalPlayerCardIndices = [12, 13];
+        this.personalPlayerCardIndices = [7, 8];
         //this.characterCards = this.chooseStartingCards([11, 12, 14]);
 
          // Gives two random cards at the start of the duel, they get added to the players deck
@@ -247,8 +253,8 @@ class Game {
         // Random order
         cards.sort(() => Math.random() - 0.5);
 
-        // Chooses two
-        this.characterCards = this.chooseStartingCards(cards.slice(0, 2));
+        // Choose one
+        this.characterCards = this.chooseStartingCards(cards.slice(0, 14));
 
         // Enemy character cards
         this.enemyCharacterCards = this.chooseEnemyCards([
@@ -353,7 +359,7 @@ class Game {
     }
 }
 
-function main() {
+async function main() {
 
     const canvas = document.getElementById('canvas');
 
@@ -363,6 +369,9 @@ function main() {
     ctx = canvas.getContext('2d');
 
     game = new Game();
+
+    await loadPlayerDeck(game);
+    await loadDuelCheckpoint(game);
 
     drawScene(0);
 }

@@ -253,10 +253,15 @@ Game.prototype.buildAllCards = function() {
 
                     const randomCard =
                         foolCards[Math.floor(Math.random() * foolCards.length)];
+                    const foolOwner = this.currentTurn;
                     
                     this.lastPlayedAction = randomCard.action;
                     this.foolRandomCardName = randomCard.name;
-                    this.foolRandomCardInfo = randomCard.infoText;
+                    this.foolRandomCardInfo = this.getCardInfoTextForTurn(
+                        randomCard.name,
+                        foolOwner,
+                        randomCard.infoText
+                    );
 
                     randomCard.action();
                 }
@@ -465,6 +470,7 @@ Game.prototype.activateStarPower = function(target) {
             this.playerLives = 1;
             this.playerStarActive = false;
             this.candleBurnPlayed = false;
+            this.playPlayerLastLifeSound(true);
             this.updatePlayerCandles();
         }
 
@@ -504,6 +510,7 @@ Game.prototype.activateStrengthPower = function(target) {
         }
 	
 	    this.playerStrengthActive = false;
+        this.playPlayerLastLifeSound(true);
 
     this.strengthMessage = true;
 
@@ -523,6 +530,7 @@ Game.prototype.resolveNoResultTie = function() {
     if (this.playerStrengthActive) {
         this.playerLives = 1;
         this.playerStrengthActive = false;
+        this.playPlayerLastLifeSound(true);
         protectionActivated = true;
     }
 
@@ -648,7 +656,7 @@ Game.prototype.addPlayerCardFromPool = function() {
         return true;
 };
 
-Game.prototype.chooseStartingCards = function(indices, amount = 2) {
+Game.prototype.chooseStartingCards = function(indices, amount = 0) {
         this.difficultyCardPoolIndices = indices.slice();
         this.playerCardPoolIndices = indices.slice();
         this.availablePlayerCardIndices = indices.slice();
@@ -697,9 +705,8 @@ Game.prototype.saveRemainingPlayerCardsAfterWin = function() {
             return;
         }
 
-        if (!Array.isArray(this.personalPlayerCardIndices)) {
-            this.personalPlayerCardIndices = [];
-        }
+        // Reset so DB-loaded cards don't get duplicated with characterCards entries
+        this.personalPlayerCardIndices = [];
 
         for (let card of this.characterCards) {
             if (card.visible && typeof card.cardIndex === "number") {
@@ -707,5 +714,6 @@ Game.prototype.saveRemainingPlayerCardsAfterWin = function() {
             }
         }
 
+        savePlayerDeckToDB(this.personalPlayerCardIndices.slice());
         this.savedWinningCards = true;
 };

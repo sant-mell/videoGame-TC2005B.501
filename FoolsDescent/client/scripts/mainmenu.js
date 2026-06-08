@@ -5,38 +5,43 @@ loginButton.addEventListener("click", async () => {
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-    const response = await fetch("http://localhost:3000/login", {
+    try {
+        const response = await fetch("http://localhost:3000/login", {
 
-        method: "POST",
+            method: "POST",
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-        body: JSON.stringify({
+            body: JSON.stringify({
 
-            username: username,
-            password: password
+                username: username,
+                password: password
 
-        })
+            })
 
-    });
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (data.success) {
+        if (data.success) {
 
-        localStorage.setItem("userId", data.userId);
-        localStorage.setItem("continueRun", "false");
+            localStorage.setItem("userId", data.userId);
+            localStorage.setItem("username", username);
+            localStorage.setItem("continueRun", "false");
 
-        alert("Login successful!");
+            alert("Login successful!");
 
-        window.location.href = "menu.html";
+            window.location.href = "menu.html";
 
-    } else {
+        } else {
 
-        alert("Incorrect username or password");
+            alert("Incorrect username or password");
 
+        }
+    } catch (err) {
+        alert("Could not reach the server. Please try again.");
     }
 
 });

@@ -13,6 +13,10 @@ Game.prototype.update = function(deltaTime) {
     }
     this.startPendingRewardCard();
     this.saveRemainingPlayerCardsAfterWin();
+    if (this.gameOver && !this.checkpointCleared) {
+        this.checkpointCleared = true;
+        clearDuelCheckpoint();
+    }
         let dt = deltaTime / 1000;
 
         if (this.isCenterCardAnimating) {
@@ -98,7 +102,11 @@ Game.prototype.update = function(deltaTime) {
                         this.finalImage.position.y = this.downtargetY;
                         this.isCardSliding = false;
                         this.candleBurnPlayed = false;
-                        this.updatePlayerCandles();
+                        if (this.pendingEnemyMoonHitPlayer) {
+                            this.resolvePendingEnemyMoonHitPlayer();
+                        } else {
+                            this.updatePlayerCandles();
+                        }
                 
                         setTimeout(() => {
                             this.showFinalImage = false;

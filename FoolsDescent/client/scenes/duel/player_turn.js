@@ -41,6 +41,7 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
     
             if (!this.activateStrengthPower("player")) {
                 this.playerLives--;
+                this.updatePlayerCandles();
     
                 if (this.playerJusticeActive) {
     
@@ -64,7 +65,8 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
         if (this.currentGreatCard === "sun") {
     
             this.currentTurn = "player";
-    
+
+            this.sunMessageOwner = "player";
             this.sunMessage = true;
     
             if (this.pageOfPentaclesActive) {
@@ -109,8 +111,9 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
                 this.enemyTurn();
 
             } else {
-    
+
                 this.showPlayerCards = true;
+                this.showEnemyCards = true;
             }
     
         }, 3000);
@@ -164,7 +167,7 @@ Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
                     if (this.gameOver) return;
                     cardEntry.infoText = this.pendingMagicianInfoText;
                     this.pendingMagicianAction();
-                }, 2000);
+                }, 800);
             
                 setTimeout(() => {
                     if (this.gameOver) return;
@@ -174,7 +177,7 @@ Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
                     cardEntry.infoText = "Repeating the last card played...";
                     this.showEnemyCards = true;
                     this.repositionCards();
-                }, 4000);
+                }, 1800);
             
                 return;
             }
@@ -325,6 +328,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
             if (this.currentGreatCard === "moon") {
                 if (!this.activateStrengthPower("player")) {
                     this.playerLives--;
+                    this.updatePlayerCandles();
                     if (this.playerJusticeActive) {
                         if (!this.activateStrengthPower("enemy")) {
                             this.enemyLives--;
@@ -344,6 +348,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
             // IF SUN -> PLAYER GETS ANOTHER TURN
             if (this.currentGreatCard === "sun") {
                 this.currentTurn = "player";
+                this.sunMessageOwner = "player";
                 this.sunMessage = true;
 
                 setTimeout(() => {
@@ -370,11 +375,13 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
                 }
                 if (this.currentTurn === "enemy") {
                     this.enemyJusticeActive = false;
+                    this.enemyStrengthActive = false;
                     this.playerStrengthActive = false;
                     if (this.gameOver) return;
                     this.enemyTurn();
                 } else {
                     this.showPlayerCards = true;
+                    this.showEnemyCards = true;
                 }
 
             }, 3000);
@@ -412,6 +419,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
                 if (this.enemyJusticeActive) {
                     if (!this.activateStrengthPower("player")) {
                         this.playerLives--;
+                        this.updatePlayerCandles();
                     }
                 
                     this.justiceMessageUntil = performance.now() + 3000;
@@ -450,6 +458,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
 
 	        // enemy turn starts
 	        this.enemyJusticeActive = false;
+        this.enemyStrengthActive = false;
         this.playerStrengthActive = false;
 	        this.enemyTurn();
 

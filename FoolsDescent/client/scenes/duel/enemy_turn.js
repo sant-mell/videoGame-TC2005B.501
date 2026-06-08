@@ -118,7 +118,7 @@ Game.prototype.enemyTurn = function() {
                             if (this.gameOver) return;
                             enemyCard.infoText = this.pendingMagicianInfoText;
                             this.pendingMagicianAction();
-                        }, 1500);
+                        }, 800);
 
                         setTimeout(() => {
                             if (this.gameOver) return;
@@ -130,7 +130,7 @@ Game.prototype.enemyTurn = function() {
                             this.activeEnemyCard = null;
                             this.enemyCharacterCards.splice(chosenIndex, 1);
                             this.repositionEnemyCards();
-                        }, 3000);
+                        }, 1800);
 
                         return;
                     }
@@ -185,10 +185,18 @@ Game.prototype.resolveEnemyDeckDraw = function() {
     if (this.handleEmptyEnemyDeckDraw()) return;
 
     this.currentGreatCard = this.greatDeck.shift();
+
+    this.pendingEnemyMoonHitPlayer = false;
+    this.pendingPlayerDefeatAfterSlide = false;
+    this.finalImage.position.x = canvasWidth / 2;
+    this.finalImage.position.y = canvasHeight / 2;
+    this.sunImage.position.x = canvasWidth / 2;
+    this.sunImage.position.y = canvasHeight / 2;
+
     this.showFinalImage = true;
 
-    // Probability: 60% they attack you, 40% they choose themselves
-    const enemyTargetsSelf = Math.random() < 0.40;
+    // Probability: 80% they attack you, 20% they choose themselves
+    const enemyTargetsSelf = Math.random() < 0.20;
 
     setTimeout(() => {
         if (this.gameOver) return;
@@ -216,25 +224,13 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             }
 
         } else {
-            if (!this.activateStrengthPower("player")) {
-                this.playerLives--;
-            }
-            if (this.playerJusticeActive) {
-                if (!this.activateStrengthPower("enemy")) {
-                    this.enemyLives--;
-                }
-                this.justiceMessageUntil = performance.now() + 3000;
-                this.playerJusticeActive = false;
-                this.updateEnemyCandles();
-            }
-            if (this.playerLives <= 0 && !this.activateStarPower("player")) {
-                this.gameOver = true;
-            }
+            this.pendingEnemyMoonHitPlayer = true;
         }
     }
 
     if (this.currentGreatCard === "sun") {
         if (enemyTargetsSelf) {
+            this.sunMessageOwner = "enemy";
             this.sunMessage = true;
             setTimeout(() => { this.sunMessage = false; }, 2000);
         }
@@ -243,6 +239,14 @@ Game.prototype.resolveEnemyDeckDraw = function() {
     setTimeout(() => {
         this.showFinalImage = false;
 
+        if (this.pendingPlayerDefeatAfterSlide) {
+            this.pendingPlayerDefeatAfterSlide = false;
+            this.gameOver = true;
+            this.playPlayerCandleBlowSound();
+            return;
+        }
+
+        if (!this.gameOver) saveDuelCheckpoint(this);
         if (this.gameOver) return;
 
         // If the enemy targeted themselves and it was a sun, they also get another turn
@@ -254,8 +258,6 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             }
 
 	            // If they targeted themselves and it was a moon, it's now the players turn
-            this.enemyStrengthActive = false;
-
             if (this.playerTurnBlocked) {
                 this.playerTurnBlocked = false;
                 this.currentTurn = "enemy";
@@ -301,7 +303,6 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             return;
         }
 
-        this.enemyStrengthActive = false;
 	        this.currentTurn = "player";
 	        this.showEnemyCards = true;
 
