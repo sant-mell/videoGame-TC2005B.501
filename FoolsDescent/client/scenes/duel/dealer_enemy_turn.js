@@ -242,8 +242,8 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
     this.showFinalImage = true;
 
-    // Probability: 70% they attack you, 30% they choose themselves
-    const enemyTargetsSelf = Math.random() < 0.30;
+    // Probability: 90% they attack you, 10% they choose themselves
+    const enemyTargetsSelf = Math.random() < 0.10;
 
     setTimeout(() => {
         if (this.gameOver) return;
