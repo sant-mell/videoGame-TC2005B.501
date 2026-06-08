@@ -29,6 +29,8 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
         this.isDiscardSliding = this.discardCardType != null;
 
         this.showFinalImage = true;
+        const isTwoPentaclesSun = this.currentGreatCard === "sun";
+        const twoPentaclesResolveDelay = isTwoPentaclesSun ? 3500 : 3000;
 
         setTimeout(() => {
 
@@ -66,7 +68,7 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
 
             this.currentTurn = "player";
 
-            this.sunMessage = true;
+            this.sunMessageOwner = "player";
 
             if (this.pageOfPentaclesActive) {
 
@@ -78,9 +80,16 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
 
             setTimeout(() => {
 
+                if (this.gameOver) return;
+                this.sunMessage = true;
+
+            }, 1200);
+
+            setTimeout(() => {
+
                 this.sunMessage = false;
 
-            }, 2000);
+            }, 3200);
         }
 
         setTimeout(() => {
@@ -112,9 +121,10 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
             } else {
 
                 this.showPlayerCards = true;
+                this.showEnemyCards = true;
             }
 
-        }, 3000);
+        }, twoPentaclesResolveDelay);
 
 };
 
@@ -344,6 +354,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
             // IF SUN -> PLAYER GETS ANOTHER TURN
             if (this.currentGreatCard === "sun") {
                 this.currentTurn = "player";
+                this.sunMessageOwner = "player";
                 this.sunMessage = true;
 
                 setTimeout(() => {
@@ -376,6 +387,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
                     this.easy_enemy_turn();
                 } else {
                     this.showPlayerCards = true;
+                    this.showEnemyCards = true;
                 }
 
             }, 3000);

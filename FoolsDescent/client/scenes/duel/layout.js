@@ -6,6 +6,12 @@ Game.prototype.updatePlayerCandles = function() {
                 this.maxLivesMessage = false;
             }, 2000);
         }
+        if (this.playerLives > 1) {
+            this.lastLifeSoundPlayed = false;
+        }
+        if (this.playerLives > 0) {
+            this.candleBlowPlayed = false;
+        }
         if (this.playerLives === 6){
                 this.player_candles.setSprite(
                 "../../../assets/images/Candles.png",
@@ -57,6 +63,7 @@ Game.prototype.updatePlayerCandles = function() {
                 "../../../assets/images/Candles.png",
                 new Rect(710, 70, 280, 570)
             );
+            this.playPlayerLastLifeSound();
             if (!this.candleBurnPlayed) {
                 this.candleburn.play();
                 this.candleBurnPlayed = true;
@@ -67,12 +74,95 @@ Game.prototype.updatePlayerCandles = function() {
                 "../../../assets/images/Candles.png",
                 new Rect(1050, 70, 280, 570)
             );
-            if (!this.candleBurnPlayed) {
-                this.candleburn.play();
-                this.candleBurnPlayed = true;
-            }
         }
     
+};
+
+Game.prototype.playPlayerCandleBlowSound = function() {
+        if (this.candleBlowPlayed) {
+            return;
+        }
+
+        this.candleBlowPlayed = true;
+        this.playerDefeatSequenceStarted = true;
+        this.playerDefeatTextReadyAt = performance.now() + 900;
+
+        if (!this.candleblow) {
+            return;
+        }
+
+        this.candleblow.currentTime = 0;
+        this.candleblow.play().catch(() => {});
+};
+
+Game.prototype.resolvePendingEnemyMoonHitPlayer = function() {
+        if (!this.pendingEnemyMoonHitPlayer) {
+            return;
+        }
+
+        this.pendingEnemyMoonHitPlayer = false;
+
+        if (!this.activateStrengthPower("player")) {
+            this.playerLives--;
+            this.updatePlayerCandles();
+        }
+
+        if (this.playerJusticeActive) {
+            if (!this.activateStrengthPower("enemy")) {
+                this.enemyLives--;
+            }
+
+            this.justiceMessageUntil = performance.now() + 3000;
+            this.playerJusticeActive = false;
+            this.updateEnemyCandles();
+        }
+
+        if (this.playerLives <= 0 && !this.activateStarPower("player")) {
+            this.pendingPlayerDefeatAfterSlide = true;
+        } else if (this.playerLives > 0) {
+            this.pendingPlayerDefeatAfterSlide = false;
+        }
+};
+
+Game.prototype.playPlayerLastLifeSound = function(force = false) {
+        if (!this.lastLifeSound) {
+            return;
+        }
+
+        if (!force && this.lastLifeSoundPlayed) {
+            return;
+        }
+
+        this.lastLifeMessage = true;
+        if (this.lastLifeMessageTimeout) {
+            clearTimeout(this.lastLifeMessageTimeout);
+        }
+        this.lastLifeMessageTimeout = setTimeout(() => {
+            this.lastLifeMessage = false;
+        }, 6000);
+
+        if (this.startSound && !this.startSound.paused && !this.gameOver) {
+            this.lastLifeResumeMainMusic = true;
+            this.startSound.pause();
+        }
+
+        this.lastLifeSound.currentTime = 0;
+        this.lastLifeSound.onended = () => {
+            this.lastLifeMessage = false;
+
+            if (
+                this.lastLifeResumeMainMusic &&
+                !this.gameOver &&
+                this.startSound &&
+                this.startSound.paused
+            ) {
+                this.startSound.play().catch(() => {});
+            }
+
+            this.lastLifeResumeMainMusic = false;
+        };
+        this.lastLifeSound.play().catch(() => {});
+        this.lastLifeSoundPlayed = true;
 };
 
 Game.prototype.updateEnemyCandles = function() {

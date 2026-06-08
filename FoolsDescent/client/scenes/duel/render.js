@@ -77,7 +77,7 @@ Game.prototype.draw = function(ctx) {
             ctx.textAlign = "center";
             ctx.fillText(this.activeEnemyCard.infoText, canvasWidth / 2, 100);
         }
-        if (this.showIntroText) {
+        if (this.showIntroText && !this.gameOver) {
 
             ctx.fillStyle = "white";
             ctx.font = "50px MedievalSharp";
@@ -150,6 +150,16 @@ Game.prototype.draw = function(ctx) {
             );
             }
         }
+        if (this.lastLifeMessage) {
+            ctx.fillStyle = "white";
+            ctx.font = "32px MedievalSharp";
+            ctx.textAlign = "center";
+            ctx.fillText(
+                "Last Life!",
+                canvasWidth - 280,
+                canvasHeight - 230
+            );
+        }
         if (this.turnBlockedMessage) {
 
             ctx.font = "40px serif";
@@ -200,6 +210,10 @@ Game.prototype.draw = function(ctx) {
         }
         if (this.sunMessage) {
 
+            const sunExtraTurnText = this.sunMessageOwner === "enemy"
+                ? "Enemy gets another turn"
+                : "You get another turn";
+
             ctx.fillStyle = "white";
             ctx.font = "40px MedievalSharp";
             ctx.textAlign = "center";
@@ -209,7 +223,7 @@ Game.prototype.draw = function(ctx) {
                 100
             );
             ctx.fillText(
-                "You get another turn",
+                sunExtraTurnText,
                 canvasWidth / 2,
                 140
             );
@@ -410,11 +424,19 @@ Game.prototype.draw = function(ctx) {
             if (this.gameOver) {
                 this.startSound.pause();
                 this.showEnemyCards = false;
+
+                if (this.playerLives <= 0 && !this.playerDefeatSequenceStarted) {
+                    this.playPlayerCandleBlowSound();
+                }
+
                 if (!this.statsSent) {
                     this.statsSent = true;
                     finishDuel(this);
                 }
-                if (this.playerLives <= 0){
+                if (
+                    this.playerLives <= 0 &&
+                    performance.now() >= (this.playerDefeatTextReadyAt || 0)
+                ){
                     ctx.fillStyle = "white";
                 ctx.font = "70px MedievalSharp";
                 ctx.textAlign = "center";
@@ -464,7 +486,7 @@ Game.prototype.drawDealerIntro = function(ctx) {
         ctx.shadowBlur = 18;
         ctx.fillRect(box.x, box.y, box.width, box.height);
         ctx.strokeRect(box.x, box.y, box.width, box.height);
-        ctx.shadowBlur = 0;
+        ctx.shadowBlur = 0; 
 
         ctx.fillStyle = "#e8d7ff";
         ctx.font = "40px MedievalSharp";

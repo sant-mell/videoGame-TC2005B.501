@@ -253,10 +253,15 @@ Game.prototype.buildAllCards = function() {
 
                     const randomCard =
                         foolCards[Math.floor(Math.random() * foolCards.length)];
+                    const foolOwner = this.currentTurn;
                     
                     this.lastPlayedAction = randomCard.action;
                     this.foolRandomCardName = randomCard.name;
-                    this.foolRandomCardInfo = randomCard.infoText;
+                    this.foolRandomCardInfo = this.getCardInfoTextForTurn(
+                        randomCard.name,
+                        foolOwner,
+                        randomCard.infoText
+                    );
 
                     randomCard.action();
                 }
@@ -337,6 +342,7 @@ Game.prototype.destroyHalfOpponentCards = function() {
 Game.prototype.isPlayerTurnInputLocked = function() {
     return Boolean(
         this.playerInputLocked ||
+        this.showIntroText ||
         this.pendingRewardCard ||
         this.isRewardCardSliding ||
         this.isCenterCardAnimating
@@ -426,6 +432,13 @@ Game.prototype.startPendingRewardCard = function() {
 };
 
 Game.prototype.buildGreatDeck = function(awardPlayerCard = false) {
+    if (this.gameOver) {
+        this.showIntroText = false;
+        this.pendingRewardCard = false;
+        this.playerInputLocked = false;
+        return;
+    }
+
     const sunCount = Math.floor(Math.random() * 4) +1;
     const moonCount = Math.floor(Math.random() * 4) +1;
 
@@ -437,17 +450,24 @@ Game.prototype.buildGreatDeck = function(awardPlayerCard = false) {
     this.sunCount = sunCount;
     this.moonCount = moonCount;
     this.showIntroText = true;
+    this.playerInputLocked = true;
 
     if (awardPlayerCard) {
         this.pendingRewardCard = true;
-        this.playerInputLocked = true;
     }
 
     setTimeout(() => {
-        this.showIntroText = false;
-        if (awardPlayerCard && this.gameOver) {
+        if (this.gameOver) {
+            this.showIntroText = false;
             this.finishRewardCardSlide();
-        } else if (awardPlayerCard) {
+            return;
+        }
+
+        this.showIntroText = false;
+        if (!awardPlayerCard) {
+            this.playerInputLocked = false;
+        }
+        if (awardPlayerCard) {
             this.startPendingRewardCard();
         }
     }, 5000);
@@ -465,6 +485,7 @@ Game.prototype.activateStarPower = function(target) {
             this.playerLives = 1;
             this.playerStarActive = false;
             this.candleBurnPlayed = false;
+            this.playPlayerLastLifeSound(true);
             this.updatePlayerCandles();
         }
 
@@ -504,6 +525,7 @@ Game.prototype.activateStrengthPower = function(target) {
         }
 	
 	    this.playerStrengthActive = false;
+        this.playPlayerLastLifeSound(true);
 
     this.strengthMessage = true;
 
@@ -523,6 +545,7 @@ Game.prototype.resolveNoResultTie = function() {
     if (this.playerStrengthActive) {
         this.playerLives = 1;
         this.playerStrengthActive = false;
+        this.playPlayerLastLifeSound(true);
         protectionActivated = true;
     }
 
