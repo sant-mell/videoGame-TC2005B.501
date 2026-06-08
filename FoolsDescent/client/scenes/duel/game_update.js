@@ -1,5 +1,10 @@
 Game.prototype.update = function(deltaTime) {
     this.resolveNoResultTie();
+    if (this.gameOver) {
+        this.showIntroText = false;
+        this.pendingRewardCard = false;
+        this.playerInputLocked = false;
+    }
     if (
         this.greatDeck.length === 0 &&
         !this.gameOver &&
