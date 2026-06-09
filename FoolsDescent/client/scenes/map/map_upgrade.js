@@ -33,7 +33,7 @@ Game.prototype.drawUpgradePanel = function(ctx) {
     ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    const costs = [300, 400, 100];
+    const costs = [100, 150, 50];
     const cost = costs[this.currentUpgradeType];
     const playerCoins = parseInt(localStorage.getItem("playerCoins") || "0");
     const canAfford = playerCoins >= cost;
@@ -104,9 +104,18 @@ Game.prototype.acceptUpgrade = async function() {
     const userId = localStorage.getItem("userId");
     if (!userId) { this.upgradeOpen = false; return; }
 
-    const costs = [300, 400, 100];
+    const costs = [100, 150, 50];
     const playerCoins = parseInt(localStorage.getItem("playerCoins") || "0");
     if (playerCoins < costs[this.currentUpgradeType]) return;
+
+    // sync localStorage coins to DB so sp_buy_upgrade sees the correct balance
+    try {
+        await fetch("http://localhost:3000/debug/set-coins", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: Number(userId), amount: playerCoins })
+        });
+    } catch (e) {}
 
     try {
         const res = await fetch("http://localhost:3000/player-upgrade", {

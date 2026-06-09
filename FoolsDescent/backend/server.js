@@ -493,6 +493,18 @@ app.post("/stats/my-upgrades", async (req, res) => {
     }
 });
 
+app.post("/debug/set-coins", async (req, res) => {
+    const { userId, amount } = req.body;
+    if (!userId || amount === undefined) return res.json({ success: false });
+    try {
+        await db.query("UPDATE Game_saveState SET current_coins = ? WHERE user_id = ?", [amount, userId]);
+        res.json({ success: true, coins: amount });
+    } catch (err) {
+        console.log(err);
+        res.json({ success: false });
+    }
+});
+
 app.listen(3000, () => {
     console.log("Server running on port 3000");
 });

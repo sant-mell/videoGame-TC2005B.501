@@ -32,9 +32,9 @@ INSERT INTO Enemy (enemy_name, difficulty_tier, image) VALUES
 ('The Dealer', 'legendary', 'enemies/Dealer.png');
 
 INSERT INTO Upgrades (upgrade_name, cost, effect) VALUES
-('Card Binding', 300, 'Bind a card so it returns to your hand next duel even after being used'),
-('Life Extension', 400, 'Increase your maximum life above the baseline of 3'),
-('Extra Card', 100, 'Purchase one random card to use in your next duel');
+('Card Binding', 100, 'Bind a card so it returns to your hand next duel even after being used'),
+('Life Extension', 150, 'Increase your maximum life above the baseline of 3'),
+('Extra Card', 50, 'Purchase one random card to use in your next duel');
 
 INSERT INTO Player (full_name, username, password, age, gender) VALUES
 ('Mateo Aguilar', 'mateo_aguilar1', 'pass1001', 25, 'Female'),

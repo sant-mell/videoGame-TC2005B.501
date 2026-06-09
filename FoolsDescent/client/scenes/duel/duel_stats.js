@@ -49,6 +49,7 @@ async function finishDuel(game) {
         await savePlayerDeckToDB(remaining);
     }
     await sendDuelResult(game);
+    game.coins = 0;
     await clearDuelCheckpoint();
     // give the player a moment to read the win/lose message, then go back to the map
     setTimeout(() => {
