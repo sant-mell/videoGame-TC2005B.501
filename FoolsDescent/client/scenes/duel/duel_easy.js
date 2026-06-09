@@ -49,6 +49,7 @@ class Game {
         this.isEnemyShowing = true;
         this.isShowingDefeatedEnemy = false;
         this.strengthMessage = false;
+        this.noMoonCardsMessage = false;
         this.turnBlockedMessage = false;
         this.justiceMessageUntil = 0;
         this.playerHandBlocked = false;
@@ -246,10 +247,10 @@ class Game {
         //simulation for remaining personal cards from last duels
         //this.personalPlayerCardIndices = [3, 4, 8, 10];
         // Choose the player card pool; 2 random cards are dealt from it.
-        //this.characterCards = this.chooseStartingCards([5]); //([0, 1, 2, 3, 4, 5])
+        //this.characterCards = this.chooseStartingCards([5]); //([0, 1, 2, 3, 4, 5])//
 
         // they get added to the players deck
-        let cards = [0, 1, 2, 3, 4, 5]; // Common only
+        let cards = [0, 1, 2, 3, 4, 5]; // Common cards only
 
         // Random order
         cards.sort(() => Math.random() - 0.5);
@@ -259,11 +260,10 @@ class Game {
 
         // Enemy character cards (easy enemy: Magician, Chariot, Star, Strength)
         this.enemyCharacterCards = this.chooseEnemyCards([
-            //0, // Magician
-            //1,
+            0, // Magician
+            1,
             3,
-            4,
-            8
+            4
         ]);
 
         this.maindeck = {

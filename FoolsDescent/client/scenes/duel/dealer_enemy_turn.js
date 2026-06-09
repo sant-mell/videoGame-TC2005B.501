@@ -12,6 +12,7 @@ Game.prototype.dealer_enemy_turn = function() {
     
         if (this.enemyTurnBlocked) {
             this.enemyTurnBlocked = false;
+            this.playerStrengthActive = false;
             this.showPlayerCards = true;
             this.showEnemyCards = false;
             this.currentTurn = "player";
@@ -311,6 +312,8 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             this.playPlayerCandleBlowSound();
             return;
         }
+
+        this.playerStrengthActive = false;
 
         if (!this.gameOver) saveDuelCheckpoint(this);
         if (this.gameOver) return;
