@@ -423,6 +423,7 @@ class Game {
         this.bindingCellRects = [];
         this.bindingBackRect = null;
         this.testMode = false;
+        this.isArriving = false;
 
         this.upgradeNames = ["Card Binding", "Life Extension", "Extra Card"];
     }
@@ -511,6 +512,8 @@ class Game {
 
     // called when the fool reaches a node, marks it visited and updates what's available
     async arrive() {
+        if (this.isArriving) return;
+        this.isArriving = true;
         for (let n of this.nodes) {
             if (n.x === this.fool.tx && n.y === this.fool.ty) {
                 if (n.type === NODE_ENEMY) {
@@ -555,6 +558,7 @@ class Game {
                 break;
             }
         }
+        this.isArriving = false;
     }
 
     // locks everything then unlocks only the nodes connected to where the fool is now
@@ -710,6 +714,7 @@ async function applyPendingFight(game) {
         return;
     }
     const nodeId = parseInt(pending, 10);
+    if (isNaN(nodeId)) return;
     const node = game.nodes.find(n => n.id === nodeId);
     if (!node) {
         return;

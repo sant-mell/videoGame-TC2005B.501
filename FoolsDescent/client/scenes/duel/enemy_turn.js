@@ -12,6 +12,7 @@ Game.prototype.enemyTurn = function() {
     
         if (this.enemyTurnBlocked) {
             this.enemyTurnBlocked = false;
+            this.enemyHandBlocked = false;
             this.showPlayerCards = true;
             this.showEnemyCards = false;
             this.currentTurn = "player";

@@ -381,6 +381,7 @@ async function main() {
     await loadPlayerDeck(game);
     await loadPlayerUpgrades(game);
     await loadDuelCheckpoint(game);
+    await saveDuelCheckpoint(game);
 
     drawScene(0);
 }

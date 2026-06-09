@@ -244,7 +244,7 @@ class Game {
 
         // Manually choose starting cards by index (pass amount to deal all of them)
         // this.characterCards = this.chooseStartingCards([0, 6, 14, 1, 13], 5);
-        this.personalPlayerCardIndices = [7, 8];
+        this.personalPlayerCardIndices = [];
         //this.characterCards = this.chooseStartingCards([11, 12, 14]);
 
          // Gives two random cards at the start of the duel, they get added to the players deck
@@ -373,6 +373,7 @@ async function main() {
     await loadPlayerDeck(game);
     await loadPlayerUpgrades(game);
     await loadDuelCheckpoint(game);
+    await saveDuelCheckpoint(game);
 
     drawScene(0);
 }

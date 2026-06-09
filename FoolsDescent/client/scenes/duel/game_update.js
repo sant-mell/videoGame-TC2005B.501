@@ -1,5 +1,7 @@
 Game.prototype.update = function(deltaTime) {
-    this.resolveNoResultTie();
+    if (!this.isCardSliding && !this.isDiscardSliding && !this.isRewardCardSliding) {
+        this.resolveNoResultTie();
+    }
     if (this.gameOver) {
         this.showIntroText = false;
         this.pendingRewardCard = false;

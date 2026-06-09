@@ -239,7 +239,7 @@ Game.prototype.repositionCards = function() {
         const spacing = 100;
         const visible = []; 
         for (let c of this.characterCards) {
-            if (c.visible) visible.push(c.object);
+            if (c.visible !== false) visible.push(c.object);
         }
         const n = visible.length;
         if (n === 0) return;
@@ -254,7 +254,7 @@ Game.prototype.repositionCards = function() {
 Game.prototype.repositionCardsArray = function(cards) {
         const y = canvasHeight - 108;
         const spacing = 100;
-        const visible = cards.filter(c => c.visible).map(c => c.object);
+        const visible = cards.filter(c => c.visible !== false).map(c => c.object);
         const n = visible.length;
         if (n === 0) return;
         const startX = canvasWidth / 2 - ((n - 1) * spacing) / 2;

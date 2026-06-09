@@ -2,7 +2,7 @@
 const duelStartMs = Date.now();
 
 async function sendDuelResult(game) {
-    const won = game.enemyLives <= 0;
+    const won = game.enemyLives <= 0 && game.playerLives > 0;
     // ignore cards that were already used before this session started
     const cardsPlayed = game.characterCards.filter(c => c.visible === false).length - (game.cardsPlayedOffset || 0);
     const durationSec = Math.round((Date.now() - duelStartMs) / 1000);
@@ -17,7 +17,7 @@ async function sendDuelResult(game) {
                 enemyTier: game.enemyTier,
                 enemyName: game.enemyName,
                 coinsGained: game.coins,
-                kingOfPentaclesActive: game.kingOfPentaclesActive || false,
+                kingOfPentaclesActive: (game.kingOfPentaclesActive && game.kingOfPentaclesOwner === "player") || false,
                 cardsPlayed: cardsPlayed,
                 durationSec: durationSec,
                 greatDeck: greatDeck
@@ -31,10 +31,11 @@ async function sendDuelResult(game) {
 }
 
 async function finishDuel(game) {
-    const won = game.enemyLives <= 0;
+    const won = game.enemyLives <= 0 && game.playerLives > 0;
     localStorage.setItem("duelWon", won ? "true" : "false");
     if (won) {
-        game.coins += game.kingOfPentaclesActive ? 200 : 100;
+        const playerOwnsKing = game.kingOfPentaclesActive && game.kingOfPentaclesOwner === "player";
+        game.coins += playerOwnsKing ? 200 : 100;
         const prev = parseInt(localStorage.getItem("playerCoins") || "0");
         localStorage.setItem("playerCoins", String(prev + game.coins));
     }

@@ -75,19 +75,32 @@ function startVictory() {
 
 startButton.addEventListener("click", startVictory);
 
-descentButton.addEventListener("click", () => {
-    victorySound.pause();
-    // clear the boss fight result so the map starts a fresh run
+async function resetForNewDescent() {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+        try {
+            await fetch("http://localhost:3000/reset-deck", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId: Number(userId) })
+            });
+        } catch (e) {}
+    }
     localStorage.removeItem("pendingFight");
     localStorage.removeItem("duelWon");
+    localStorage.removeItem("extraCards");
+    localStorage.removeItem("pendingEnemyChoice");
     localStorage.setItem("continueRun", "false");
+}
+
+descentButton.addEventListener("click", async () => {
+    victorySound.pause();
+    await resetForNewDescent();
     window.location.href = "map.html";
 });
 
-menuButton.addEventListener("click", () => {
+menuButton.addEventListener("click", async () => {
     victorySound.pause();
-    localStorage.removeItem("pendingFight");
-    localStorage.removeItem("duelWon");
-    localStorage.setItem("continueRun", "false");
+    await resetForNewDescent();
     window.location.href = "../../frontend/menu.html";
 });

@@ -324,6 +324,21 @@ app.get("/player-upgrades/:userId", async (req, res) => {
 
 });
 
+app.post("/reset-deck", async (req, res) => {
+
+    const userId = req.body.userId;
+    if (!userId) { return res.json({ success: false }); }
+
+    try {
+        await db.query("DELETE FROM Player_Deck WHERE user_id = ?", [userId]);
+        res.json({ success: true });
+    } catch (err) {
+        console.log(err);
+        res.json({ success: false });
+    }
+
+});
+
 app.post("/bind-card", async (req, res) => {
 
     const { userId, cardIndex } = req.body;

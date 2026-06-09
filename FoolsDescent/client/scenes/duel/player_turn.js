@@ -72,9 +72,10 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
             this.sunMessageOwner = "player";
     
             if (this.pageOfPentaclesActive) {
-    
-                this.coins += this.kingOfPentaclesActive ? 100 : 50;
-    
+
+                const playerOwnsKing = this.kingOfPentaclesActive && this.kingOfPentaclesOwner === "player";
+                this.coins += playerOwnsKing ? 100 : 50;
+
                 this.pageOfPentaclesActive = false;
                 this.kingOfPentaclesActive = false;
                 this.kingOfPentaclesOwner = "";
@@ -325,6 +326,8 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
 
             this.showCenterImage = false;
 
+            if (this.greatDeck.length === 0) return;
+
             // DRAW TOP CARD
             this.currentGreatCard = this.greatDeck.shift();
             this.isGreatCardResolving = true;
@@ -407,6 +410,8 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         ) {
 
         this.showCenterImage = false;
+
+        if (this.greatDeck.length === 0) return;
 
         // DRAW TOP CARD
         this.currentGreatCard = this.greatDeck.shift();
