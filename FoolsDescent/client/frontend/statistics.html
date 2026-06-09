@@ -5,47 +5,314 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistics | The Fool's Descent</title>
     <link rel="stylesheet" href="statistics.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <style>
+        .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+        .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+        @media (max-width: 750px) { .two-col, .three-col { grid-template-columns: 1fr; } }
+
+        .sect-heading {
+            font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+            color: #6a5080; margin: 2.2rem 0 1rem; padding-bottom: 0.4rem;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+        .sect-heading.personal { color: #9a90dd; border-color: rgba(127,119,221,0.3); }
+        .sect-heading.global   { color: #b8943a; border-color: rgba(201,168,76,0.3); }
+
+        .stat-panel, .chart-panel, .lb-panel {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px; padding: 1.2rem 1.4rem;
+        }
+        .stat-panel.p  { border-color: rgba(127,119,221,0.2); }
+        .chart-panel.p { border-color: rgba(127,119,221,0.2); }
+        .stat-panel.g  { border-color: rgba(201,168,76,0.15); }
+        .chart-panel.g { border-color: rgba(201,168,76,0.15); }
+        .lb-panel      { border-color: rgba(201,168,76,0.15); }
+
+        .panel-label {
+            font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+            color: #8070a0; margin: 0 0 1rem;
+        }
+
+        .stats-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .stats-table tr { border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .stats-table tr:last-child { border-bottom: none; }
+        .stats-table td { padding: 0.55rem 0.3rem; }
+        .stats-table td:first-child { color: #a090b8; }
+        .stats-table td:last-child  { text-align: right; font-weight: 600; color: #f0e6d0; }
+
+        .chart-wrap { position: relative; width: 100%; }
+        .chart-wrap.h180 { height: 180px; }
+        .chart-wrap.h220 { height: 220px; }
+        .chart-wrap.h260 { height: 260px; }
+        .chart-wrap.h320 { height: 320px; }
+        .chart-empty { display: none; color: #6a5080; font-size: 0.85rem; padding: 1rem 0; }
+
+        /* DOUGHNUT FIX: canvas must fill the relative container */
+        .donut-wrap   { display: flex; gap: 1.2rem; align-items: center; }
+        .donut-canvas { flex: 0 0 140px; height: 140px; position: relative; }
+        .donut-canvas canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
+        .donut-legend { display: flex; flex-direction: column; gap: 0.7rem; }
+        .donut-item   { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
+        .donut-dot    { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .donut-val    { font-weight: 600; font-size: 1rem; color: #f0e6d0; }
+        .donut-lbl    { color: #a090b8; font-size: 0.78rem; }
+
+        .lb-row      { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0;
+                        border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.88rem; }
+        .lb-row:last-child { border-bottom: none; }
+        .lb-row.lb-me { color: #c9a84c; font-weight: 600; }
+        .lb-rank  { width: 1.8rem; text-align: center; flex-shrink: 0; color: #a090b8; }
+        .lb-name  { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .lb-val   { font-variant-numeric: tabular-nums; color: #f0e6d0; }
+
+        .diff-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 1rem; }
+        .diff-table th { color: #8070a0; font-weight: 500; text-align: left; padding: 0.3rem 0.4rem;
+                          border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .diff-table td { padding: 0.35rem 0.4rem; color: #d0c8e0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .diff-table tr:last-child td { border-bottom: none; }
+
+        /* deck */
+        .deck-scroll { max-height: 240px; overflow-y: auto; margin-top: 0.8rem; }
+        .deck-scroll::-webkit-scrollbar { width: 4px; }
+        .deck-scroll::-webkit-scrollbar-thumb { background: rgba(127,119,221,0.3); border-radius: 2px; }
+        .deck-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+        .deck-table th { color: #8070a0; font-weight: 500; text-align: left; padding: 0.3rem 0.4rem;
+                          border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .deck-table td { padding: 0.32rem 0.4rem; color: #d0c8e0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .deck-table tr:last-child td { border-bottom: none; }
+        .deck-meta { font-size: 0.78rem; color: #8070a0; margin-bottom: 0.6rem; }
+        .deck-meta span { color: #f0e6d0; font-weight: 600; }
+
+        /* upgrades */
+        .upgrade-row { display: flex; justify-content: space-between; align-items: center;
+                        padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.88rem; }
+        .upgrade-row:last-child { border-bottom: none; }
+        .upgrade-name { color: #d0c8e0; }
+        .upgrade-cost { color: #c9a84c; font-weight: 600; }
+        .lb-name { color: #d0c8e0; }
+    </style>
 </head>
 <body>
+<div class="statistics-container">
 
-    <div class="statistics-container">
+    <h1 class="title">STATISTICS</h1>
 
-        <h1 class="title">STATISTICS</h1>
+    <!-- ══════════════════════════════════════════════════════
+         PERSONAL
+    ══════════════════════════════════════════════════════ -->
+    <p class="sect-heading personal">⚔️ &nbsp;Your Descent</p>
 
-        <div class="content-container">
+    <!-- Overview + Doughnut -->
+    <div class="two-col">
 
-            <div class="stats-panel">
-                <h2 class="panel-title">YOUR DESCENT</h2>
-                <ul class="stats-list">
-                    <li><span>Total Play Time</span><span id="personalPlayTime">-</span></li>
-                    <li><span>Deaths</span><span id="personalDeaths">-</span></li>
-                    <li><span>Enemies Defeated</span><span id="personalEnemies">-</span></li>
-                    <li><span>Victories</span><span id="personalVictories">-</span></li>
-                    <li><span>Coins Earned</span><span id="personalCoins">-</span></li>
-                    <li><span>Cards Played</span><span id="personalCards">-</span></li>
-                </ul>
-            </div>
-
-            <div class="stats-panel">
-                <h2 class="panel-title">ALL PLAYERS</h2>
-                <ul class="stats-list">
-                    <li><span>Total Players</span><span id="globalPlayers">-</span></li>
-                    <li><span>Average Play Time</span><span id="globalPlayTime">-</span></li>
-                    <li><span>Average Deaths</span><span id="globalDeaths">-</span></li>
-                    <li><span>Total Enemies Defeated</span><span id="globalEnemies">-</span></li>
-                    <li><span>Average Victories</span><span id="globalVictories">-</span></li>
-                    <li><span>Total Coins</span><span id="globalCoins">-</span></li>
-                    <li><span>Total Cards Played</span><span id="globalCards">-</span></li>
-                </ul>
-            </div>
-
+        <div class="stat-panel p">
+            <p class="panel-label">Lifetime Stats</p>
+            <table class="stats-table">
+                <tbody>
+                    <tr><td>Total Play Time</td><td id="personalPlayTime">—</td></tr>
+                    <tr><td>Deaths</td><td id="personalDeaths">—</td></tr>
+                    <tr><td>Enemies Defeated</td><td id="personalEnemies">—</td></tr>
+                    <tr><td>Victories</td><td id="personalVictories">—</td></tr>
+                    <tr><td>Coins Earned</td><td id="personalCoins">—</td></tr>
+                    <tr><td>Cards Played</td><td id="personalCards">—</td></tr>
+                </tbody>
+            </table>
         </div>
 
-        <a href="menu.html"><button class="back-button">BACK</button></a>
+        <div class="chart-panel p">
+            <p class="panel-label">Victories vs Deaths</p>
+            <div class="donut-wrap">
+                <div class="donut-canvas">
+                    <canvas id="chart-p-winloss"></canvas>
+                </div>
+                <div class="donut-legend">
+                    <div class="donut-item">
+                        <span class="donut-dot" style="background:#1d9e75"></span>
+                        <div><div class="donut-val" id="p-stat-vic">—</div><div class="donut-lbl">Victories</div></div>
+                    </div>
+                    <div class="donut-item">
+                        <span class="donut-dot" style="background:#d85a30"></span>
+                        <div><div class="donut-val" id="p-stat-deaths">—</div><div class="donut-lbl">Deaths</div></div>
+                    </div>
+                    <div class="donut-item">
+                        <span class="donut-dot" style="background:#7f77dd"></span>
+                        <div><div class="donut-val" id="p-stat-enems">—</div><div class="donut-lbl">Enemies defeated</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 
-    <script src="../scripts/statistics.js"></script>
+    <!-- Last Run summary -->
+    <div class="chart-panel p" style="margin-bottom:1.5rem;">
+        <p class="panel-label">Last Run</p>
+        <div id="current-run-panel">
+            <p style="color:#6a5080;font-size:0.85rem">Loading…</p>
+        </div>
+    </div>
 
+    <!-- Deck + Upgrades -->
+    <div class="two-col">
+
+        <div class="chart-panel p">
+            <p class="panel-label">Your Deck</p>
+            <p class="deck-meta">Unique cards: <span id="p-deck-total">—</span></p>
+            <div class="donut-wrap" style="margin-bottom:1rem;">
+                <div class="donut-canvas">
+                    <canvas id="chart-p-deck-rarity"></canvas>
+                </div>
+                <div class="donut-legend">
+                    <div class="donut-item">
+                        <span class="donut-dot" style="background:#c9a84c"></span>
+                        <div><div class="donut-lbl">Legendary</div></div>
+                    </div>
+                    <div class="donut-item">
+                        <span class="donut-dot" style="background:#7f77dd"></span>
+                        <div><div class="donut-lbl">Rare</div></div>
+                    </div>
+                    <div class="donut-item">
+                        <span class="donut-dot" style="background:#378add"></span>
+                        <div><div class="donut-lbl">Common</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="deck-scroll">
+                <table class="deck-table">
+                    <thead><tr><th>Card</th><th>Rarity</th><th style="text-align:right">Copies</th></tr></thead>
+                    <tbody id="deck-table-body">
+                        <tr><td colspan="3" style="color:#6a5080">Loading…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="chart-panel p">
+            <p class="panel-label">Upgrades Acquired</p>
+            <div id="personal-upgrades-list">
+                <p style="color:#6a5080;font-size:0.85rem">Loading…</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         GLOBAL
+    ══════════════════════════════════════════════════════ -->
+    <p class="sect-heading global">🌐 &nbsp;All Players</p>
+
+    <div class="two-col">
+
+        <div class="stat-panel g">
+            <p class="panel-label">Global Totals & Averages</p>
+            <table class="stats-table">
+                <tbody>
+                    <tr><td>Total Players</td><td id="globalPlayers">—</td></tr>
+                    <tr><td>Avg Play Time</td><td id="globalPlayTime">—</td></tr>
+                    <tr><td>Avg Deaths</td><td id="globalDeaths">—</td></tr>
+                    <tr><td>Total Enemies Defeated</td><td id="globalEnemies">—</td></tr>
+                    <tr><td>Avg Victories</td><td id="globalVictories">—</td></tr>
+                    <tr><td>Total Coins</td><td id="globalCoins">—</td></tr>
+                    <tr><td>Total Cards Played</td><td id="globalCards">—</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="chart-panel g">
+            <p class="panel-label">All Players — Victories vs Deaths</p>
+            <div class="donut-wrap" style="margin-top:0.5rem;">
+                <div class="donut-canvas">
+                    <canvas id="chart-g-winloss"></canvas>
+                </div>
+                <div class="donut-legend">
+                    <div class="donut-item">
+                        <span class="donut-dot" style="background:#1d9e75"></span>
+                        <div><div class="donut-val" id="g-stat-vic">—</div><div class="donut-lbl">Total victories</div></div>
+                    </div>
+                    <div class="donut-item">
+                        <span class="donut-dot" style="background:#d85a30"></span>
+                        <div><div class="donut-val" id="g-stat-deaths">—</div><div class="donut-lbl">Total deaths</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Leaderboards -->
+    <p class="sect-heading global">🏆 &nbsp;Leaderboards</p>
+    <div class="two-col">
+        <div class="lb-panel">
+            <p class="panel-label">Top 10 — Victories</p>
+            <div id="leaderboard-victories">
+                <div class="lb-row"><span style="color:#6a5080;font-size:0.82rem;">Loading…</span></div>
+            </div>
+        </div>
+        <div class="lb-panel">
+            <p class="panel-label">🪙 Top 10 — Coins Earned</p>
+            <div id="leaderboard-coins">
+                <div class="lb-row"><span style="color:#6a5080;font-size:0.82rem;">Loading…</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- G2: Difficulty -->
+    <div class="chart-panel g" style="margin-bottom:1.5rem;">
+        <p class="panel-label">Win Rate by Difficulty Tier</p>
+        <p style="font-size:0.75rem;color:#6a5080;margin:0 0 0.6rem;">
+            <span style="color:#1d9e75">■</span> Win % (left) &nbsp;
+            <span style="color:rgba(176,160,192,0.5)">■</span> Times fought (right)
+        </p>
+        <div class="chart-wrap h220">
+            <canvas id="chart-g-difficulty"></canvas>
+        </div>
+        <table class="diff-table">
+            <thead><tr><th>Difficulty</th><th>Fights</th><th>Defeats</th><th>Win %</th></tr></thead>
+            <tbody id="difficulty-table-body">
+                <tr><td colspan="4" style="color:#6a5080">Loading…</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Enemy win rates -->
+    <div class="chart-panel p" style="margin-bottom:1.5rem;">
+        <p class="panel-label">Win Rate vs Each Enemy</p>
+        <p style="font-size:0.75rem;color:#6a5080;margin:0 0 0.6rem;">
+            <span style="color:#1d9e75">■</span> ≥ 50% &nbsp;
+            <span style="color:#d85a30">■</span> &lt; 50%
+        </p>
+        <div class="chart-wrap h220">
+            <canvas id="chart-p-enemy"></canvas>
+        </div>
+    </div>
+
+    <!-- G3 + G4 -->
+    <div class="two-col">
+        <div class="chart-panel g">
+            <p class="panel-label">Most Popular Cards</p>
+            <p style="font-size:0.75rem;color:#6a5080;margin:0 0 0.6rem;">
+                <span style="color:#c9a84c">■</span> Legendary &nbsp;
+                <span style="color:#7f77dd">■</span> Rare &nbsp;
+                <span style="color:#378add">■</span> Common &nbsp;
+                <span style="color:rgba(176,160,192,0.4)">■</span> Total copies
+            </p>
+            <div class="chart-wrap h320">
+                <canvas id="chart-g-cards"></canvas>
+            </div>
+        </div>
+        <div class="chart-panel g">
+            <p class="panel-label">Most Purchased Upgrades</p>
+            <div class="chart-wrap h320">
+                <canvas id="chart-g-upgrades"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <a href="menu.html"><button class="back-button">BACK</button></a>
+
+</div>
+<script src="../frontend/statistics.js"></script>
 </body>
 </html>

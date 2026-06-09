@@ -680,7 +680,10 @@ async function main() {
             loaded = loadMapLocally(game);
         }
         if (!loaded) {
-            await saveNewDescent(game);
+            alert("No saved descent found. Starting a new one.");
+            localStorage.setItem("continueRun", "false");
+            window.location.href = "../../frontend/menu.html";
+            return;
         } else {
             // resolve the result of a duel the player just came back from
             await applyPendingFight(game);

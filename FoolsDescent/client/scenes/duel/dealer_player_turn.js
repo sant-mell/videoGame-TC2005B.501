@@ -18,6 +18,7 @@ Game.prototype.activateTwoPentacles = function() {
 Game.prototype.resolveTwoPentacles = function(chosenIndex) {
 
         this.currentGreatCard = this.twoPentaclesCards[chosenIndex];
+        this.isGreatCardResolving = true;
 
         this.showTwoPentaclesChoice = false;
 
@@ -76,6 +77,7 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
 
                 this.pageOfPentaclesActive = false;
                 this.kingOfPentaclesActive = false;
+                this.kingOfPentaclesOwner = "";
             }
 
             setTimeout(() => {
@@ -94,6 +96,7 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
 
         setTimeout(() => {
 
+            this.isGreatCardResolving = false;
             this.showFinalImage = false;
 
             if (this.playerLives <= 0) {
@@ -316,6 +319,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
 
             // DRAW TOP CARD
             this.currentGreatCard = this.greatDeck.shift();
+            this.isGreatCardResolving = true;
 
             this.showFinalImage = true;
 
@@ -356,6 +360,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
                 }, 2000);
             }
             setTimeout(() => {
+                this.isGreatCardResolving = false;
                 this.showFinalImage = false;
 
                 if (this.gameOver) {
@@ -402,6 +407,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
 
         // DRAW TOP CARD
         this.currentGreatCard = this.greatDeck.shift();
+        this.isGreatCardResolving = true;
 
         this.showFinalImage = true;
 
@@ -440,7 +446,8 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         this.currentTurn = "enemy";
 
         setTimeout(() => {
-        this.showFinalImage = false;
+            this.isGreatCardResolving = false;
+            this.showFinalImage = false;
 
         if (this.gameOver) return;
 

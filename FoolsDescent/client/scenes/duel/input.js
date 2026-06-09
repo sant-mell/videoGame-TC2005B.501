@@ -15,11 +15,24 @@ Game.prototype.createEventListeners = function() {
             }
 
             if (this.showTwoPentaclesChoice) {
+                if (this.currentTurn !== "player") {
+                    return;
+                }
                 this.checkTwoPentaclesClick(mouseX, mouseY);
                 return;
             }
 
             if (this.isPlayerTurnInputLocked()) {
+                return;
+            }
+
+            if (
+                this.gameOver ||
+                this.currentTurn !== "player" ||
+                this.isCardSliding ||
+                this.showFinalImage ||
+                this.isGreatCardResolving
+            ) {
                 return;
             }
 
