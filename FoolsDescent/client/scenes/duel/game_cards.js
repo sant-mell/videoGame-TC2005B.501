@@ -163,7 +163,10 @@ Game.prototype.buildAllCards = function() {
                 sprite: { src: "../../../assets/images/Rare Cards.png", rect: new Rect(875, 10, 210, 400) },
                 infoText: "Win for double coins, but lose for double coin loss!",
                 description: "Doubles your gained coins if you win, but also doubles your lost coins if you lose",
-                action: () => { this.kingOfPentaclesActive = true; }
+                action: () => {
+                    this.kingOfPentaclesActive = true;
+                    this.kingOfPentaclesOwner = this.currentTurn;
+                }
             },
             {
                 //11
@@ -379,6 +382,18 @@ Game.prototype.handleEmptyEnemyDeckDraw = function() {
         return false;
     }
 
+    if (
+        this.gameOver ||
+        this.pendingPlayerDefeatAfterSlide ||
+        this.playerLives <= 0 ||
+        this.enemyLives <= 0
+    ) {
+        this.showIntroText = false;
+        this.pendingRewardCard = false;
+        this.playerInputLocked = false;
+        return true;
+    }
+
     this.showCenterImage = false;
     this.showFinalImage = false;
     this.isCenterCardAnimating = false;
@@ -432,7 +447,12 @@ Game.prototype.startPendingRewardCard = function() {
 };
 
 Game.prototype.buildGreatDeck = function(awardPlayerCard = false) {
-    if (this.gameOver) {
+    if (
+        this.gameOver ||
+        this.pendingPlayerDefeatAfterSlide ||
+        this.playerLives <= 0 ||
+        this.enemyLives <= 0
+    ) {
         this.showIntroText = false;
         this.pendingRewardCard = false;
         this.playerInputLocked = false;

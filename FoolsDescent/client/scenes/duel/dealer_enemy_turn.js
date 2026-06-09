@@ -243,6 +243,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
     if (this.handleEmptyEnemyDeckDraw()) return;
 
     this.currentGreatCard = this.greatDeck.shift();
+    this.isGreatCardResolving = true;
 
     this.pendingEnemyMoonHitPlayer = false;
     this.pendingPlayerDefeatAfterSlide = false;
@@ -277,6 +278,11 @@ Game.prototype.resolveEnemyDeckDraw = function() {
                 this.justiceMessageUntil = performance.now() + 3000;
                 this.enemyJusticeActive = false;
                 this.updatePlayerCandles();
+                if (this.playerLives <= 0 && !this.activateStarPower("player")) {
+                    this.pendingPlayerDefeatAfterSlide = true;
+                } else if (this.playerLives > 0) {
+                    this.pendingPlayerDefeatAfterSlide = false;
+                }
             }
             if (this.enemyLives <= 0 && !this.activateStarPower("enemy")) {
                 this.gameOver = true;
@@ -296,6 +302,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
     }
 
     setTimeout(() => {
+        this.isGreatCardResolving = false;
         this.showFinalImage = false;
 
         if (this.pendingPlayerDefeatAfterSlide) {

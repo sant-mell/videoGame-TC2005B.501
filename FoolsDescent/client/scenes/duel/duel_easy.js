@@ -63,6 +63,7 @@ class Game {
         this.coins = 0;
         this.pageOfPentaclesActive = false;
         this.kingOfPentaclesActive = false;
+        this.kingOfPentaclesOwner = "";
         this.playerStarActive = false;
         this.enemyStarActive = false;
         this.starMessage = false;
@@ -244,11 +245,11 @@ class Game {
         this.allCards = this.buildAllCards();
         
         //simulation for remaining personal cards from last duels
-        //this.personalPlayerCardIndices = [0, 3];
+        this.personalPlayerCardIndices = [3, 4, 8, 10];
         // Choose the player card pool; 2 random cards are dealt from it.
         //this.characterCards = this.chooseStartingCards([5]); //([0, 1, 2, 3, 4, 5])
 
-        // Gives two random cards at the start of the duel, they get added to the players deck
+        // they get added to the players deck
         let cards = [0, 1, 2, 3, 4, 5]; // Common only
 
         // Random order
@@ -259,11 +260,11 @@ class Game {
 
         // Enemy character cards (easy enemy: Magician, Chariot, Star, Strength)
         this.enemyCharacterCards = this.chooseEnemyCards([
-            0, // Magician
-            1,
+            //0, // Magician
+            //1,
             3,
-            4
-            
+            4,
+            8
         ]);
 
         this.maindeck = {
