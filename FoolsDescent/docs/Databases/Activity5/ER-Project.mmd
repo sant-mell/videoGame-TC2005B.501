@@ -14,7 +14,7 @@ classDiagram
 
     class Cards {
         INT_UNSIGNED card_id PK
-        VARCHAR card_name
+        VARCHAR card_name UK
         VARCHAR rarity
         TEXT description
         VARCHAR image
@@ -23,7 +23,7 @@ classDiagram
 
     class Enemy {
         INT_UNSIGNED enemy_id PK
-        VARCHAR enemy_name
+        VARCHAR enemy_name UK
         VARCHAR difficulty_tier
         VARCHAR image
         TIMESTAMP last_update
@@ -31,7 +31,7 @@ classDiagram
 
     class Upgrades {
         INT_UNSIGNED upgrade_id PK
-        VARCHAR upgrade_name
+        VARCHAR upgrade_name UK
         INT cost
         TEXT effect
         TIMESTAMP last_update
@@ -91,6 +91,7 @@ classDiagram
         INT card_num
         BOOLEAN is_bound
         TIMESTAMP last_update
+        %% UNIQUE (user_id, card_id)
     }
 
     class PlayerUpgrade {

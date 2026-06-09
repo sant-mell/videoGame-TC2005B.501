@@ -93,12 +93,11 @@ app.post("/new-descent", async (req, res) => {
     if (!userId) { return res.json({ success: false }); }
     const mapData = JSON.stringify(req.body.mapData);
 
-    // a new descent resets the saved coins to 0
+    // coins carry over into the next descent (GDD: "starting from zero but with the money collected")
     const sql = `
         INSERT INTO Game_saveState (user_id, current_coins, map_data)
         VALUES (?, 0, ?)
         ON DUPLICATE KEY UPDATE
-            current_coins = 0,
             current_map_position = 0,
             map_data = VALUES(map_data),
             saved_time = CURRENT_TIMESTAMP

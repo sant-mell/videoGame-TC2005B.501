@@ -26,12 +26,15 @@ const ENEMY_RARE = 1;
 const ENEMY_EPIC = 2;
 
 function pickDifficulty(fight) {
+    const r = Math.random();
     if (fight === 1) {
         return ENEMY_COMMON;
     } else if (fight === 2) {
-        return ENEMY_RARE;
+        // GDD: 20% common, 80% rare
+        return r < 0.2 ? ENEMY_COMMON : ENEMY_RARE;
     } else {
-        return ENEMY_EPIC;
+        // GDD: 40% rare, 60% epic
+        return r < 0.4 ? ENEMY_RARE : ENEMY_EPIC;
     }
 }
 
@@ -631,11 +634,22 @@ async function applyPendingFight(game) {
     if (pending === null) {
         return;
     }
-    const won = localStorage.getItem("duelWon") === "true";
+    const duelWonRaw = localStorage.getItem("duelWon");
+    // null here means the player hit back before the duel finished
+    const fightCompleted = duelWonRaw !== null;
+    const won = duelWonRaw === "true";
     localStorage.removeItem("pendingFight");
     localStorage.removeItem("duelWon");
+    if (!fightCompleted) {
+        // backed out mid-duel, wipe the checkpoint so next attempt starts fresh
+        await clearDuelCheckpointFromMap();
+        return;
+    }
     if (!won) {
-        return; // lost or abandoned, leave the node available to be revisited
+        // roguelite: defeat resets the run; coins were already halved by the server
+        localStorage.setItem("continueRun", "false");
+        window.location.reload();
+        return;
     }
     const nodeId = parseInt(pending, 10);
     const node = game.nodes.find(n => n.id === nodeId);
@@ -681,6 +695,7 @@ async function main() {
         const saved = await saveNewDescent(game);
         if (saved) {
             localStorage.setItem("continueRun", "true");
+            await loadGame(game); // sync real coins from DB since new descent preserves them
         }
     }
     drawScene(0);

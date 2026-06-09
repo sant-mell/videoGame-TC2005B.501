@@ -21,6 +21,7 @@ function getDuelSnapshot(game) {
             ? game.difficultyCardPoolIndices.slice() : [],
         pageOfPentaclesActive: game.pageOfPentaclesActive,
         kingOfPentaclesActive: game.kingOfPentaclesActive,
+        kingOfPentaclesOwner: game.kingOfPentaclesOwner,
         playerStarActive: game.playerStarActive,
         enemyStarActive: game.enemyStarActive,
         playerStrengthActive: game.playerStrengthActive,
@@ -50,6 +51,7 @@ function restoreDuelSnapshot(game, snap) {
     game.lastPlayedName = snap.lastPlayedName;
     game.pageOfPentaclesActive = snap.pageOfPentaclesActive;
     game.kingOfPentaclesActive = snap.kingOfPentaclesActive;
+    game.kingOfPentaclesOwner = snap.kingOfPentaclesOwner || "";
     game.playerStarActive = snap.playerStarActive;
     game.enemyStarActive = snap.enemyStarActive;
     game.playerStrengthActive = snap.playerStrengthActive;
@@ -168,9 +170,11 @@ async function loadPlayerDeck(game) {
         console.error(e);
     }
 
-    // Always deal 2 random cards from the difficulty pool at the start of each duel
+    // GDD: 3 cards for common, 4 rare, 5 epic, 6 legendary
+    const tierCounts = { common: 3, rare: 4, epic: 5, boss: 6 };
+    const dealCount = tierCounts[game.enemyTier] || 3;
     const pool = game.difficultyCardPoolIndices.slice().sort(() => Math.random() - 0.5);
-    const dealt = pool.slice(0, 0) //0 cartas para agregar dificultad
+    const dealt = pool.slice(0, dealCount)
         .filter(i => game.allCards[i])
         .map(i => game.buildCharacterCardEntry(game.allCards[i], i));
     game.characterCards = [...game.characterCards, ...dealt];

@@ -57,6 +57,7 @@ class Game {
         this.coins = 0;
         this.pageOfPentaclesActive = false;
         this.kingOfPentaclesActive = false;
+        this.kingOfPentaclesOwner = "";
         this.playerStarActive = false;
         this.enemyStarActive = false;
         this.starMessage = false;
