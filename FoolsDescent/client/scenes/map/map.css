@@ -40,3 +40,20 @@ body {
     border-radius: 10px;
     cursor: default;
 }
+
+.back-button{
+    width: 250px;
+    height: 65px;
+    margin-top: 40px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #e6c07b;
+    background-color: #38435a;
+    border: 5px solid #5a4128;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.back-button:hover{
+    background-color: #4a5670;
+}
