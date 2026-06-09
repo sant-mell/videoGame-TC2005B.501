@@ -10,5 +10,6 @@
 - - Upgrade Binding no abre a veces
   - Justice si lanzas al enemigo y tienes una vida no te mata
   - new descent keeps cards and lifes, even after u die
+  - we souldnt let enemies repeat on a single run
 
 ---
