@@ -284,14 +284,28 @@ class Game {
         upgradeTypes[1] = upgradeTypes[r];
         upgradeTypes[r] = temp;
 
-        // fill middle 6 nodes, 1 enemy and 1 upgrade per column
-        // enemy and difficulty are fixed at generation so re-entering a node always shows the same foe
+        // track (diff, variant) pairs so no enemy repeats in the same run
+        const usedEnemies = new Set();
+        function pickUniqueEnemy(diff) {
+            if (!usedEnemies.has(diff + "_1")) {
+                usedEnemies.add(diff + "_1");
+                return 1;
+            }
+            if (!usedEnemies.has(diff + "_2")) {
+                usedEnemies.add(diff + "_2");
+                return 2;
+            }
+            return randomRange(2, 1);
+        }
+
+        // fill 4 columns of 2 nodes each: 1 enemy + 1 upgrade per column
+        // col 4 gets a random upgrade type (may repeat an earlier column)
         let pool = [];
         for (let i = 0; i < 3; i++) {
             let uType = upgradeTypes[i];
             let fight = i + 1;
             let diff = pickDifficulty(fight);
-            let chosenEnemy = randomRange(2, 1);
+            let chosenEnemy = pickUniqueEnemy(diff);
             let enemyItem = { frame: NODE_FRAMES[0], sheet: "nodes", type: NODE_ENEMY, upgradeType: null, chosenEnemy, chosenDifficulty: diff };
             let upgradeItem = { frame: UPGRADE_FRAMES[uType], sheet: "upgradeNodes", type: NODE_UPGRADE, upgradeType: uType, chosenEnemy: null, chosenDifficulty: null };
             if (Math.random() < 0.5) {
@@ -302,17 +316,32 @@ class Game {
                 pool.push(enemyItem);
             }
         }
+        // col 4: random upgrade type, fight difficulty same as col 3
+        let col4uType = [UPGRADE_BINDING, UPGRADE_LIFE, UPGRADE_CARD][randomRange(3)];
+        let col4diff = pickDifficulty(3);
+        let col4enemy = pickUniqueEnemy(col4diff);
+        let col4enemyItem = { frame: NODE_FRAMES[0], sheet: "nodes", type: NODE_ENEMY, upgradeType: null, chosenEnemy: col4enemy, chosenDifficulty: col4diff };
+        let col4upgradeItem = { frame: UPGRADE_FRAMES[col4uType], sheet: "upgradeNodes", type: NODE_UPGRADE, upgradeType: col4uType, chosenEnemy: null, chosenDifficulty: null };
+        if (Math.random() < 0.5) {
+            pool.push(col4enemyItem);
+            pool.push(col4upgradeItem);
+        } else {
+            pool.push(col4upgradeItem);
+            pool.push(col4enemyItem);
+        }
 
-        let n1 = pool[0], n2 = pool[1], n3 = pool[2], n4 = pool[3], n5 = pool[4], n6 = pool[5];
+        let n1 = pool[0], n2 = pool[1], n3 = pool[2], n4 = pool[3], n5 = pool[4], n6 = pool[5], n7 = pool[6], n8 = pool[7];
         this.nodes = [
             new Node(0, 120, 300, "visited", NODE_FRAMES[2], "nodes", NODE_REST),
-            new Node(1, 360, 180, "available", n1.frame, n1.sheet, n1.type, n1.upgradeType, n1.chosenEnemy, n1.chosenDifficulty),
-            new Node(2, 360, 420, "available", n2.frame, n2.sheet, n2.type, n2.upgradeType, n2.chosenEnemy, n2.chosenDifficulty),
-            new Node(3, 600, 180, "locked", n3.frame, n3.sheet, n3.type, n3.upgradeType, n3.chosenEnemy, n3.chosenDifficulty),
-            new Node(4, 600, 420, "locked", n4.frame, n4.sheet, n4.type, n4.upgradeType, n4.chosenEnemy, n4.chosenDifficulty),
-            new Node(5, 840, 180, "locked", n5.frame, n5.sheet, n5.type, n5.upgradeType, n5.chosenEnemy, n5.chosenDifficulty),
-            new Node(6, 840, 420, "locked", n6.frame, n6.sheet, n6.type, n6.upgradeType, n6.chosenEnemy, n6.chosenDifficulty),
-            new Node(7, 1080, 300, "locked", BIG_CASTLE, "castle", NODE_BOSS),
+            new Node(1, 312, 180, "available", n1.frame, n1.sheet, n1.type, n1.upgradeType, n1.chosenEnemy, n1.chosenDifficulty),
+            new Node(2, 312, 420, "available", n2.frame, n2.sheet, n2.type, n2.upgradeType, n2.chosenEnemy, n2.chosenDifficulty),
+            new Node(3, 504, 180, "locked", n3.frame, n3.sheet, n3.type, n3.upgradeType, n3.chosenEnemy, n3.chosenDifficulty),
+            new Node(4, 504, 420, "locked", n4.frame, n4.sheet, n4.type, n4.upgradeType, n4.chosenEnemy, n4.chosenDifficulty),
+            new Node(5, 696, 180, "locked", n5.frame, n5.sheet, n5.type, n5.upgradeType, n5.chosenEnemy, n5.chosenDifficulty),
+            new Node(6, 696, 420, "locked", n6.frame, n6.sheet, n6.type, n6.upgradeType, n6.chosenEnemy, n6.chosenDifficulty),
+            new Node(7, 888, 180, "locked", n7.frame, n7.sheet, n7.type, n7.upgradeType, n7.chosenEnemy, n7.chosenDifficulty),
+            new Node(8, 888, 420, "locked", n8.frame, n8.sheet, n8.type, n8.upgradeType, n8.chosenEnemy, n8.chosenDifficulty),
+            new Node(9, 1080, 300, "locked", BIG_CASTLE, "castle", NODE_BOSS),
         ];
 
         this.edges = [];
@@ -343,11 +372,9 @@ class Game {
             if (Math.random() < 0.5) { to = 3; } else { to = 4; }
             let duplicate = false;
             for (let i = 0; i < this.edges.length; i++) {
-                if (this.edges[i][0] === from) {
-                    if (this.edges[i][1] === to) {
-                        duplicate = true;
-                        break;
-                    }
+                if (this.edges[i][0] === from && this.edges[i][1] === to) {
+                    duplicate = true;
+                    break;
                 }
             }
             if (!duplicate) {
@@ -385,11 +412,9 @@ class Game {
             if (Math.random() < 0.5) { to = 5; } else { to = 6; }
             let alreadyIn = false;
             for (let i = 0; i < this.edges.length; i++) {
-                if (this.edges[i][0] === from) {
-                    if (this.edges[i][1] === to) {
-                        alreadyIn = true;
-                        break;
-                    }
+                if (this.edges[i][0] === from && this.edges[i][1] === to) {
+                    alreadyIn = true;
+                    break;
                 }
             }
             if (!alreadyIn) {
@@ -403,8 +428,48 @@ class Game {
             }
         }
 
-        this.edges.push([5, 7]);
-        this.edges.push([6, 7]);
+        // col3 to col4
+        let col4top = 7;
+        let col4bot = 8;
+        if (this.nodes[5].type === NODE_UPGRADE) {
+            if (this.nodes[7].type === NODE_UPGRADE) {
+                col4top = 8;
+                col4bot = 7;
+            }
+        }
+        if (this.nodes[6].type === NODE_UPGRADE) {
+            if (this.nodes[8].type === NODE_UPGRADE) {
+                col4top = 8;
+                col4bot = 7;
+            }
+        }
+        this.edges.push([5, col4top]);
+        this.edges.push([6, col4bot]);
+        if (Math.random() < 0.5) {
+            let from;
+            let to;
+            if (Math.random() < 0.5) { from = 5; } else { from = 6; }
+            if (Math.random() < 0.5) { to = 7; } else { to = 8; }
+            let alreadyIn = false;
+            for (let i = 0; i < this.edges.length; i++) {
+                if (this.edges[i][0] === from && this.edges[i][1] === to) {
+                    alreadyIn = true;
+                    break;
+                }
+            }
+            if (!alreadyIn) {
+                if (this.nodes[from].type === NODE_UPGRADE) {
+                    if (this.nodes[to].type !== NODE_UPGRADE) {
+                        this.edges.push([from, to]);
+                    }
+                } else {
+                    this.edges.push([from, to]);
+                }
+            }
+        }
+
+        this.edges.push([7, 9]);
+        this.edges.push([8, 9]);
 
         this.currentId = 0;
         this.fool = new Fool(120, 300);
@@ -535,8 +600,10 @@ class Game {
                             fight = 1;
                         } else if (n.id === 3 || n.id === 4) {
                             fight = 2;
-                        } else {
+                        } else if (n.id === 5 || n.id === 6) {
                             fight = 3;
+                        } else {
+                            fight = 4;
                         }
                         diff = pickDifficulty(fight);
                     }
