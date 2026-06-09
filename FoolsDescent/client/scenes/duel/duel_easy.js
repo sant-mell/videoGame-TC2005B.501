@@ -247,10 +247,10 @@ class Game {
         //simulation for remaining personal cards from last duels
         //this.personalPlayerCardIndices = [3, 4, 8, 10];
         // Choose the player card pool; 2 random cards are dealt from it.
-        //this.characterCards = this.chooseStartingCards([5]); //([0, 1, 2, 3, 4, 5])
+        //this.characterCards = this.chooseStartingCards([5]); //([0, 1, 2, 3, 4, 5])//
 
         // they get added to the players deck
-        let cards = [0, 1, 2, 3, 4, 5]; // Common only
+        let cards = [0, 1, 2, 3, 4, 5]; // Common cards only
 
         // Random order
         cards.sort(() => Math.random() - 0.5);
