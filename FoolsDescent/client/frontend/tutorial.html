@@ -8,20 +8,363 @@
 </head>
 <body>
 
+    <div class="magic-symbol symbol1">☽</div>
+    <div class="magic-symbol symbol2">☼</div>
+    <div class="magic-symbol symbol3">✦</div>
+    <div class="magic-symbol symbol4">♃</div>
+
     <div class="tutorial-container">
 
         <h1 class="title">TUTORIAL</h1>
 
         <div class="tutorial-box">
 
-            <div class="section">
-                <h2>GAMEPLAY</h2>
-                <div class="content-box"></div>
+            <div class="content-box gameplay-tutorial">
+
+                    <p class="flavor-text">
+                        "You are The Fool. The only soul born without a fate. Now you must gamble the right to exist."
+                    </p>
+
+                    <!-- ── OVERVIEW ── -->
+                    <div class="gameplay-page">
+                        <p class="oracle-quote">"Every journey into the unknown begins with a single step but ends with fate."</p>
+
+                        <div class="gameplay-block">
+                            <p class="gameplay-text">
+                                The Fool's Descent is a roguelike card game where you navigate a procedurally generated map and confront opponents at a tarot table. Your goal is simple: descend, survive, and ultimately face <span class="highlight">The Dealer</span> himself, the architect of fate, before he reshuffles the world into oblivion.
+                            </p>
+                            <p class="gameplay-text">
+                                You begin every run with nothing. No cards. No money. No destiny. Your first round in a duel is fought with an empty hand, pure chance, pure fate. You earn cards each time the Great Deck finishes during a duel, that becomes the foundation of your descent.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- ── THE MAP ── -->
+                    <div class="gameplay-page">
+                        <h3 class="gameplay-section-title">♃ THE MAP ♃</h3>
+                        <p class="oracle-quote">"The path is never the same twice. Neither is the fate that waits at the end."</p>
+
+                        <div class="gameplay-block">
+                            <p class="gameplay-text">
+                                When you Descent, a procedurally generated map unfolds before you, a web of nodes, each holding a different fate. You start on the far left and advance toward the right, choosing which path to walk.
+                            </p>
+                            <p class="gameplay-text">
+                                Every map contains exactly <span class="highlight">8 nodes</span>: 4 enemies, 3 upgrades, and 1 rest site. No two descents are alike.
+                            </p>
+                        </div>
+
+                        <div class="map-nodes-grid">
+                            <div class="node-entry enemy-node">
+                                <div class="node-icon">⚔</div>
+                                <h4>Enemy</h4>
+                                <p>Face an opponent at the tarot table. Win to earn coins and new cards. Lose and you'll start over, keeping only half of your coins.</p>
+                            </div>
+                            <div class="node-entry upgrade-node">
+                                <div class="node-icon">✦</div>
+                                <h4>Upgrade</h4>
+                                <p>Spend your coins to strengthen your descent. Bind cards so they survive into the next duel, extend your maximum lives, or purchase a new card for your arsenal.</p>
+                            </div>
+                            <div class="node-entry rest-node">
+                                <div class="node-icon">☽</div>
+                                <h4>Rest</h4>
+                                <p>Nothing happens here. Breathe. Reconsider your strategy. The descent will not wait long.</p>
+                            </div>
+                        </div>
+                        <div class="tuto-image-wrapper">
+                            <img src="../../assets/images/map_tuto.png" alt="Map Preview" class="tuto-image">
+                            <p class="tuto-image-caption">☽ The path ahead is never the same twice ☽</p>
+                        </div>
+                    </div>
+
+                    <!-- ── THE DUEL ── -->
+                    <div class="gameplay-page">
+                        <h3 class="gameplay-section-title">☿ THE DUEL ☿</h3>
+                        <p class="oracle-quote">"This is not a game. This is a negotiation with the end."</p>
+
+                        <div class="gameplay-block">
+                            <p class="gameplay-text">
+                                Every encounter takes place at the tarot table. Two forces face each other, you and your opponent, each with lives on the line and cards in hand. At the center lies the <span class="highlight">Great Deck</span>: a shuffled pile of Sun and Moon cards that will determine who lives and who falls.
+                            </p>
+                        </div>
+
+                        <div class="duel-steps">
+                            <div class="duel-step">
+                                <div class="step-number">I</div>
+                                <div class="step-content">
+                                    <h4>The Great Deck is Revealed</h4>
+                                    <p>Before the duel begins, the Sun and Moon cards that compose the Great Deck are briefly shown to both players, then shuffled and placed face-down at the center of the table. Memorize what you saw.</p>
+                                </div>
+                            </div>
+                            <div class="duel-step">
+                                <div class="step-number">II</div>
+                                <div class="step-content">
+                                    <h4>Play a Character Card (Optional)</h4>
+                                    <p>Before fate speaks, you may play one card from your Character Deck to intervene. Discard it from your hand after use, your options narrow with every decision.</p>
+                                </div>
+                            </div>
+                            <div class="duel-step">
+                                <div class="step-number">III</div>
+                                <div class="step-content">
+                                    <h4>Choose a Target</h4>
+                                    <p>You must direct the top card of the Great Deck toward either <span class="highlight">yourself</span> or your <span class="highlight">enemy</span>. This is the gamble. This is the game.</p>
+                                </div>
+                            </div>
+                            <div class="duel-step">
+                                <div class="step-number">IV</div>
+                                <div class="step-content">
+                                    <h4>Fate is Resolved</h4>
+                                    <p>The card is flipped and its effect applied to whoever you chose.</p>
+                                    <div class="fate-outcomes">
+                                        <div class="outcome sun-outcome">
+                                            <span class="outcome-icon">☼</span>
+                                            <span class="outcome-label">SUN → Self</span>
+                                            <span class="outcome-desc">Grants an extra turn.</span>
+                                        </div>
+                                        <div class="outcome sun-bad-outcome">
+                                            <span class="outcome-icon">☼</span>
+                                            <span class="outcome-label">SUN → Enemy</span>
+                                            <span class="outcome-desc">Nothing happens. A wasted blessing.</span>
+                                        </div>
+                                        <div class="outcome moon-outcome">
+                                            <span class="outcome-icon">☽</span>
+                                            <span class="outcome-label">MOON → Anyone</span>
+                                            <span class="outcome-desc">The target loses one life.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="duel-step">
+                                <div class="step-number">V</div>
+                                <div class="step-content">
+                                    <h4>The Enemy Takes Their Turn</h4>
+                                    <p>Your opponent follows the same process. They will use their own Character Cards and choose a target. Stay alert, every enemy has different habits, different aggression, and different decks.</p>
+                                </div>
+                            </div>
+                            <div class="duel-step">
+                                <div class="step-number">VI</div>
+                                <div class="step-content">
+                                    <h4>Repeat Until One Falls</h4>
+                                    <p>The cycle continues until one side runs out of lives. Win and claim your coins and new cards. Fall and lose everything you carried, except half of your coins and the wisdom of your failure.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tuto-image-wrapper">
+                            <img src="../../assets/images/duel_tuto.png" alt="Duel Preview" class="tuto-image">
+                            <p class="tuto-image-caption">☼ Every card you play is a wager against fate ☼</p>
+                        </div>
+                    </div>
+
+                    <!-- ── COINS ── -->
+                    <div class="gameplay-page last-gameplay-page">
+                        <h3 class="gameplay-section-title">☼ COINS & DEATH ☼</h3>
+                        <p class="oracle-quote">"Even ruin leaves something behind."</p>
+
+                        <div class="coins-grid">
+                            <div class="coin-block">
+                                <div class="coin-icon">¢</div>
+                                <h4>Earning Coins</h4>
+                                <p>Win a duel and claim <span class="highlight">100 coins</span>. Spend them on the map at upgrade nodes to build your deck and extend your survival.</p>
+                            </div>
+                            <div class="coin-block">
+                                <div class="coin-icon">✦</div>
+                                <h4>On Defeat</h4>
+                                <p>When you fall, your cards are lost. But fate is not entirely cruel, you keep <span class="highlight">half of your coins</span>, enough to begin again with something but in the beginning of the map.</p>
+                            </div>
+                        </div>
+
+                        <div class="gameplay-block final-reminder">
+                            <p class="gameplay-text" style="text-align:center; font-style: italic; color: #d9c27f; font-size: 1.15rem;">
+                                "The Great Deck always runs out. The question is whether you run out first."
+                            </p>
+                        </div>
+                    </div>
             </div>
 
             <div class="section">
                 <h2>CARDS</h2>
-                <div class="content-box"></div>
+
+                <div class="content-box cards-tutorial">
+
+                    <p class="flavor-text">
+                        "The Great Deck writes destiny. These Arcana allow you to rewrite it."
+                    </p>
+
+                    <!-- ── COMMON ── -->
+                    <div class="arcana-page common-page">
+
+                        <h3 class="rarity-title common-title">☿ COMMON ARCANA ☿</h3>
+
+                        <p class="oracle-quote">"Even the smallest fate can change the course of a life."</p>
+
+                        <div class="tarot-grid">
+
+                            <div class="tarot-entry">
+                                <div class="tarot-card common magician"></div>
+                                <div class="roman">I</div>
+                                <h4>The Magician</h4>
+                                <p class="card-effect">Repeats the effect of the last Character Card played during the duel.</p>
+                                <p class="fortune">"The arcana remembers."</p>
+                            </div>
+
+                            <div class="tarot-entry">
+                                <div class="tarot-card common chariot"></div>
+                                <div class="roman">VII</div>
+                                <h4>The Chariot</h4>
+                                <p class="card-effect">Discards the top card of the Great Deck before it can affect anyone.</p>
+                                <p class="fortune">"What never arrives can never harm you."</p>
+                            </div>
+
+                            <div class="tarot-entry">
+                                <div class="tarot-card common star"></div>
+                                <div class="roman">XVII</div>
+                                <h4>The Star</h4>
+                                <p class="card-effect">Revives you with one life after reaching zero.</p>
+                                <p class="fortune">"Hope shines brightest in darkness."</p>
+                            </div>
+
+                            <div class="tarot-entry">
+                                <div class="tarot-card common page"></div>
+                                <h4>Page of Pentacles</h4>
+                                <p class="card-effect">Grants 50 bonus coins after victory.</p>
+                                <p class="fortune">"Fortune favors preparation."</p>
+                            </div>
+
+                            <div class="tarot-entry">
+                                <div class="tarot-card common strength"></div>
+                                <div class="roman">VIII</div>
+                                <h4>Strength</h4>
+                                <p class="card-effect">You cannot die during the next round.</p>
+                                <p class="fortune">"The lion kneels before true courage."</p>
+                            </div>
+
+                            <div class="tarot-entry">
+                                <div class="tarot-card common pentacles"></div>
+                                <h4>Two of Pentacles</h4>
+                                <p class="card-effect">Draw two cards and choose one for yourself.</p>
+                                <p class="fortune">"Balance reveals hidden paths."</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- ── RARE ── -->
+                    <div class="arcana-page rare-page">
+
+                        <h3 class="rarity-title rare-title">☽ RARE ARCANA ☽</h3>
+
+                        <p class="oracle-quote">"Knowledge of fate is often more dangerous than fate itself."</p>
+
+                        <div class="tarot-grid">
+
+                            <div class="tarot-entry">
+                                <div class="tarot-card rare priestess"></div>
+                                <div class="roman">II</div>
+                                <h4>The High Priestess</h4>
+                                <p class="card-effect">Reveal the next card waiting in the Great Deck.</p>
+                                <p class="fortune">"The future whispers before it strikes."</p>
+                            </div>
+
+                            <div class="tarot-entry">
+                                <div class="tarot-card rare hermit"></div>
+                                <div class="roman">IX</div>
+                                <h4>The Hermit</h4>
+                                <p class="card-effect">Skip your opponent's next turn.</p>
+                                <p class="fortune">"Silence can be louder than destiny."</p>
+                            </div>
+
+                            <div class="tarot-entry">
+                                <div class="tarot-card rare justice"></div>
+                                <div class="roman">XI</div>
+                                <h4>Justice</h4>
+                                <p class="card-effect">If you lose a life next turn, your opponent loses one too.</p>
+                                <p class="fortune">"Every debt must be paid."</p>
+                            </div>
+
+                            <div class="tarot-entry">
+                                <div class="tarot-card rare wheel"></div>
+                                <div class="roman">X</div>
+                                <h4>Wheel of Fortune</h4>
+                                <p class="card-effect">Shuffle the Great Deck.</p>
+                                <p class="fortune">"The wheel turns for all."</p>
+                            </div>
+
+                            <div class="tarot-entry">
+                                <div class="tarot-card rare king"></div>
+                                <h4>King of Pentacles</h4>
+                                <p class="card-effect">Double rewards on victory. Double losses on defeat.</p>
+                                <p class="fortune">"Greed bargains with fate."</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- ── EPIC ── -->
+                    <div class="arcana-page epic-page">
+
+                        <h3 class="rarity-title epic-title">♄ EPIC ARCANA ♄</h3>
+
+                        <p class="oracle-quote">"Some destinies are too powerful to remain unchanged."</p>
+
+                        <div class="tarot-grid">
+
+                            <div class="tarot-entry">
+                                <div class="tarot-card epic lovers"></div>
+                                <div class="roman">VI</div>
+                                <h4>The Lovers</h4>
+                                <p class="card-effect">Permanently remove one Moon card.</p>
+                                <p class="fortune">"Love defies even death."</p>
+                            </div>
+
+                            <div class="tarot-entry">
+                                <div class="tarot-card epic tower"></div>
+                                <div class="roman">XVI</div>
+                                <h4>The Tower</h4>
+                                <p class="card-effect">Destroy half of the enemy Character Deck.</p>
+                                <p class="fortune">"Everything built can fall."</p>
+                            </div>
+
+                            <div class="tarot-entry">
+                                <div class="tarot-card epic devil"></div>
+                                <div class="roman">XV</div>
+                                <h4>The Devil</h4>
+                                <p class="card-effect">Gain two lives but add a Moon card.</p>
+                                <p class="fortune">"Every gift demands a price."</p>
+                            </div>
+
+                            <div class="tarot-entry">
+                                <div class="tarot-card epic hanged"></div>
+                                <div class="roman">XII</div>
+                                <h4>The Hanged Man</h4>
+                                <p class="card-effect">Blocks the other player from using their Character Deck during their next turn.</p>
+                                <p class="fortune">"Surrender is sometimes the only path forward."</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- ── THE FOOL (LEGENDARY) ── -->
+                    <div class="fool-page">
+
+                        <div class="fool-glow"></div>
+
+                        <div class="fool-stars">✦ ✦ ✦</div>
+
+                        <h2 class="fool-title">☼ THE FOOL ☼</h2>
+
+                        <div class="tarot-card legendary fool-card-sprite"></div>
+
+                        <p class="fool-lore">The only soul born without an assigned fate.</p>
+
+                        <p class="fool-description">
+                            Randomly invokes the power of any card in existence.
+                            No prophecy can predict what happens next.
+                        </p>
+
+                        <p class="fortune">"The card that even The Dealer fears."</p>
+
+                    </div>
+
+                </div>
             </div>
 
         </div>
