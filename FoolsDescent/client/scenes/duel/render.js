@@ -195,6 +195,7 @@ Game.prototype.draw = function(ctx) {
             ctx.fillText("Coins: $" + this.coins, 140, 55);
 
             ctx.textAlign = "center";
+            this.drawPowerSymbols(ctx);
         }
         if (this.showStartButton) {
             this.drawCustomHitbox(ctx, this.startButton);
@@ -523,6 +524,181 @@ Game.prototype.drawWrappedText = function(ctx, text, x, y, maxWidth, lineHeight)
         }
 
         ctx.fillText(line, x, y);
+};
+
+Game.prototype.drawPowerSymbols = function(ctx) {
+        if (!this.symbolsImage) {
+            this.symbolsImage = new Image();
+            this.symbolsImage.src = "../../../assets/images/Symbols.png";
+        }
+
+        if (!this.symbolsImage.complete) {
+            return;
+        }
+
+        const cropSize = 540;
+        const symbolSize = 60;
+        const playerStarSymbolX = canvasWidth / 2 + 380;
+        const playerStarSymbolY = 420;
+        const playerJusticeSymbolX = canvasWidth / 2 + 450;
+        const playerJusticeSymbolY = 490;
+        const playerStrengthSymbolX = canvasWidth / 2 + 380;
+        const playerStrengthSymbolY = 490;
+        const playerKingSymbolX = canvasWidth / 2 + 450;
+        const playerKingSymbolY = 420;
+
+        const enemyStarSymbolX = canvasWidth / 2 + 230;
+        const enemyStarSymbolY = 110;
+        const enemyJusticeSymbolX = canvasWidth / 2 + 300;
+        const enemyJusticeSymbolY = 180;
+        const enemyStrengthSymbolX = canvasWidth / 2 + 220;
+        const enemyStrengthSymbolY = 180;
+        const enemyKingSymbolX = canvasWidth / 2 + 300;
+        const enemyKingSymbolY = 110;
+
+        const symbolCrops = {
+            star: {
+                x: 0,
+                y: 0,
+                width: cropSize,
+                height: cropSize - 50
+            },
+            justice: {
+                x: cropSize,
+                y: 0,
+                width: cropSize,
+                height: cropSize - 30
+            },
+            strength: {
+                x: cropSize,
+                y: cropSize - 20,
+                width: cropSize,
+                height: cropSize + 20
+            },
+            king: {
+                x: 0,
+                y: cropSize,
+                width: cropSize,
+                height: cropSize
+            } 
+        };
+
+        if (this.playerStarActive) {
+            this.drawPowerSymbol(
+                ctx,
+                "star",
+                playerStarSymbolX,
+                playerStarSymbolY,
+                symbolSize,
+                cropSize,
+                symbolCrops
+            );
+        }
+        if (this.playerJusticeActive) {
+            this.drawPowerSymbol(
+                ctx,
+                "justice",
+                playerJusticeSymbolX,
+                playerJusticeSymbolY,
+                symbolSize,
+                cropSize,
+                symbolCrops
+            );
+        }
+        if (this.playerStrengthActive) {
+            this.drawPowerSymbol(
+                ctx,
+                "strength",
+                playerStrengthSymbolX,
+                playerStrengthSymbolY,
+                symbolSize,
+                cropSize,
+                symbolCrops
+            );
+        }
+        if (
+            this.kingOfPentaclesActive &&
+            (this.kingOfPentaclesOwner === "player" || !this.kingOfPentaclesOwner)
+        ) {
+            this.drawPowerSymbol(
+                ctx,
+                "king",
+                playerKingSymbolX,
+                playerKingSymbolY,
+                symbolSize,
+                cropSize,
+                symbolCrops
+            );
+        }
+
+        if (this.enemyStarActive) {
+            this.drawPowerSymbol(
+                ctx,
+                "star",
+                enemyStarSymbolX,
+                enemyStarSymbolY,
+                symbolSize,
+                cropSize,
+                symbolCrops
+            );
+        }
+        if (this.enemyJusticeActive) {
+            this.drawPowerSymbol(
+                ctx,
+                "justice",
+                enemyJusticeSymbolX,
+                enemyJusticeSymbolY,
+                symbolSize,
+                cropSize,
+                symbolCrops
+            );
+        }
+        if (this.enemyStrengthActive) {
+            this.drawPowerSymbol(
+                ctx,
+                "strength",
+                enemyStrengthSymbolX,
+                enemyStrengthSymbolY,
+                symbolSize,
+                cropSize,
+                symbolCrops
+            );
+        }
+        if (this.kingOfPentaclesActive && this.kingOfPentaclesOwner === "enemy") {
+            this.drawPowerSymbol(
+                ctx,
+                "king",
+                enemyKingSymbolX,
+                enemyKingSymbolY,
+                symbolSize,
+                cropSize,
+                symbolCrops
+            );
+        }
+};
+
+Game.prototype.drawPowerSymbol = function(
+    ctx,
+    symbol,
+    x,
+    y,
+    symbolSize,
+    cropSize,
+    symbolCrops
+) {
+        const crop = symbolCrops[symbol];
+
+        ctx.drawImage(
+            this.symbolsImage,
+            crop.x,
+            crop.y,
+            crop.width,
+            crop.height,
+            x,
+            y,
+            symbolSize,
+            symbolSize
+        );
 };
 
 Game.prototype.drawCustomHitbox = function(ctx, hitbox) {

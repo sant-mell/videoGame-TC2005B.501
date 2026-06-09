@@ -8,6 +8,10 @@ Game.prototype.update = function(deltaTime) {
     if (
         this.greatDeck.length === 0 &&
         !this.gameOver &&
+        !this.pendingPlayerDefeatAfterSlide &&
+        !this.isGreatCardResolving &&
+        this.playerLives > 0 &&
+        this.enemyLives > 0 &&
         !this.showTwoPentaclesChoice &&
         !this.showCenterImage &&
         !this.showFinalImage &&

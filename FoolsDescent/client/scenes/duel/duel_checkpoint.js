@@ -21,6 +21,7 @@ function getDuelSnapshot(game) {
             ? game.difficultyCardPoolIndices.slice() : [],
         pageOfPentaclesActive: game.pageOfPentaclesActive,
         kingOfPentaclesActive: game.kingOfPentaclesActive,
+        kingOfPentaclesOwner: game.kingOfPentaclesOwner,
         playerStarActive: game.playerStarActive,
         enemyStarActive: game.enemyStarActive,
         playerStrengthActive: game.playerStrengthActive,
@@ -50,6 +51,7 @@ function restoreDuelSnapshot(game, snap) {
     game.lastPlayedName = snap.lastPlayedName;
     game.pageOfPentaclesActive = snap.pageOfPentaclesActive;
     game.kingOfPentaclesActive = snap.kingOfPentaclesActive;
+    game.kingOfPentaclesOwner = snap.kingOfPentaclesOwner || "";
     game.playerStarActive = snap.playerStarActive;
     game.enemyStarActive = snap.enemyStarActive;
     game.playerStrengthActive = snap.playerStrengthActive;
