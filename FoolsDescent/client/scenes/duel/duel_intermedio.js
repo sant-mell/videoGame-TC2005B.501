@@ -49,6 +49,7 @@ class Game {
         this.isEnemyShowing = true;
         this.isShowingDefeatedEnemy = false;
         this.strengthMessage = false;
+        this.noMoonCardsMessage = false;
         this.turnBlockedMessage = false;
         this.justiceMessageUntil = 0;
         this.playerHandBlocked = false;

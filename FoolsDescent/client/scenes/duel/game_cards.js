@@ -182,12 +182,19 @@ Game.prototype.buildAllCards = function() {
                 name: "The Lovers",
                 sprite: { src: "../../../assets/images/Legendary Cards.png", rect: new Rect(20, 10, 210, 400) },
                 infoText: "Removing one Moon from the Great Deck...",
-                description: "Removes one Moon card from the Great Deck",
-                action: () => {
-                    const idx = this.greatDeck.indexOf("moon");
-                    if (idx !== -1) this.greatDeck.splice(idx, 1);
-                }
-            },
+	                description: "Removes one Moon card from the Great Deck",
+	                action: () => {
+	                    const idx = this.greatDeck.indexOf("moon");
+	                    if (idx !== -1) {
+                            this.greatDeck.splice(idx, 1);
+                        } else {
+                            this.noMoonCardsMessage = true;
+                            setTimeout(() => {
+                                this.noMoonCardsMessage = false;
+                            }, 2000);
+                        }
+	                }
+	            },
             {
                 //12
                 name: "The Hanged Man",

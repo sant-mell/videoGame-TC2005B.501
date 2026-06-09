@@ -119,7 +119,6 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
     
             if (this.currentTurn === "enemy") {
 
-                this.playerStrengthActive = false;
                 this.enemyTurn();
 
             } else {
@@ -392,7 +391,6 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
                 if (this.currentTurn === "enemy") {
                     this.enemyJusticeActive = false;
                     this.enemyStrengthActive = false;
-                    this.playerStrengthActive = false;
                     if (this.gameOver) return;
                     this.enemyTurn();
                 } else {
@@ -459,7 +457,6 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         // CHECK IF ENEMY LOST
         if (this.enemyLives <= 0) {
             if (this.activateStarPower("enemy")) {
-                this.playerStrengthActive = false;
                 this.enemyTurn();
                 return;
             }
@@ -479,7 +476,6 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
 	        // enemy turn starts
 	        this.enemyJusticeActive = false;
         this.enemyStrengthActive = false;
-        this.playerStrengthActive = false;
 	        this.enemyTurn();
 
         }, 3000);
