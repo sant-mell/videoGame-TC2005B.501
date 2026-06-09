@@ -149,6 +149,24 @@ async function savePlayerDeckToDB(cardIndices) {
     }
 }
 
+async function loadPlayerUpgrades(game) {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+    try {
+        const res = await fetch(`http://localhost:3000/player-upgrades/${userId}`);
+        const data = await res.json();
+        if (!data.success) return;
+        const lifeExtCount = data.upgrades.filter(u => u.upgrade_id === 2).length;
+        const bonus = Math.min(lifeExtCount, 6 - game.playerLives);
+        if (bonus > 0) {
+            game.playerLives = Math.min(6, game.playerLives + bonus);
+            game.updatePlayerCandles();
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
 async function loadPlayerDeck(game) {
     const userId = localStorage.getItem("userId");
     if (!userId) return;

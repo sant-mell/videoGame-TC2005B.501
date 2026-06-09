@@ -488,6 +488,7 @@ Game.prototype.buildGreatDeck = function(awardPlayerCard = false) {
             this.playerInputLocked = false;
         }
         if (awardPlayerCard) {
+            this.currentTurn = "player";
             this.startPendingRewardCard();
         }
     }, 5000);

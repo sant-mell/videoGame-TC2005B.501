@@ -1,0 +1,52 @@
+.action-buttons {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 400ms ease;
+}
+
+.action-buttons.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.action-btn {
+    min-width: 200px;
+    padding: 14px 24px;
+    border: 2px solid #ffffff;
+    background: #000000;
+    color: #ffffff;
+    font-size: 18px;
+    font-family: "Silkscreen", MedievalSharp, Georgia, "Times New Roman", serif;
+    cursor: pointer;
+    transition: background-color 200ms ease, color 200ms ease;
+}
+
+.action-btn:hover {
+    background: #ffffff;
+    color: #000000;
+}
+
+.action-btn-secondary {
+    border-color: #888888;
+    color: #888888;
+}
+
+.action-btn-secondary:hover {
+    background: #888888;
+    color: #000000;
+}
+
+.dealer-line {
+    margin: 0 0 18px;
+    opacity: 0;
+    color: #cc3333;
+    font-style: italic;
+    transform: translateY(8px);
+    animation: lineIn 1000ms ease forwards;
+}

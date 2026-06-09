@@ -22,8 +22,7 @@ class Game {
         //CHOOSE ENEMY HERE!!
         //this.chooseEnemy = 2; //<--- CHOOSE ENEMY (1 = King, 2 = Queen)
         
-        // Automatically chooses the enemy (1 or 2)
-        this.chooseEnemy = Math.floor(Math.random() * 2) + 1;
+        this.chooseEnemy = parseInt(localStorage.getItem("pendingEnemyChoice") || "1");
         this.enemyName = this.chooseEnemy === 1 ? "Mad Monarch" : "Killer Queen";
 
         //enemy card
@@ -372,6 +371,7 @@ async function main() {
     game = new Game();
 
     await loadPlayerDeck(game);
+    await loadPlayerUpgrades(game);
     await loadDuelCheckpoint(game);
 
     drawScene(0);

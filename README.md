@@ -106,17 +106,17 @@ You should see `Connected to MySQL` in the terminal. Leave this running.
 
 ### 5. Open the game
 
-Open `FoolsDescent/client/frontend/menu.html` in your browser. You can do this by double-clicking the file or running one of these from the project root:
+Open **`http://localhost:3000/client/frontend/menu.html`** in your browser. Do not open the HTML file directly — it must be served by the Express server or fetch calls will be blocked by the browser's security model.
 
 ```bash
 # Brave
-brave-browser FoolsDescent/client/frontend/menu.html
+brave-browser http://localhost:3000/client/frontend/menu.html
 
 # Chrome
-google-chrome FoolsDescent/client/frontend/menu.html
+google-chrome http://localhost:3000/client/frontend/menu.html
 
 # Firefox
-firefox FoolsDescent/client/frontend/menu.html
+firefox http://localhost:3000/client/frontend/menu.html
 ```
 
 Create an account and log in — the game will take you through the rest.

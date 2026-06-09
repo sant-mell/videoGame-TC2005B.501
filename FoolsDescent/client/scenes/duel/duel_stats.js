@@ -34,7 +34,9 @@ async function finishDuel(game) {
     const won = game.enemyLives <= 0;
     localStorage.setItem("duelWon", won ? "true" : "false");
     if (won) {
-        game.coins += 100; // base reward per GDD
+        game.coins += game.kingOfPentaclesActive ? 200 : 100;
+        const prev = parseInt(localStorage.getItem("playerCoins") || "0");
+        localStorage.setItem("playerCoins", String(prev + game.coins));
     }
     if (!won) {
         await savePlayerDeckToDB([]); // lose all cards on death (GDD)
@@ -49,6 +51,10 @@ async function finishDuel(game) {
     await clearDuelCheckpoint();
     // give the player a moment to read the win/lose message, then go back to the map
     setTimeout(() => {
-        window.location.href = "../map/map.html";
+        if (won && game.enemyTier === "boss") {
+            window.location.href = "../map/victory.html";
+        } else {
+            window.location.href = "../map/map.html";
+        }
     }, 3500);
 }

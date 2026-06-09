@@ -210,7 +210,7 @@ class Fool {
 
 // each node on the map. can be visited, available or locked
 class Node {
-    constructor(id, x, y, state, frame, sheet, type, upgradeType = null) {
+    constructor(id, x, y, state, frame, sheet, type, upgradeType = null, chosenEnemy = null, chosenDifficulty = null) {
         this.id = id;
         this.x = x;
         this.y = y;
@@ -219,6 +219,8 @@ class Node {
         this.sheet = sheet; // castles or nodes spritesheet
         this.type = type; // NODE_REST=0, NODE_ENEMY=1, NODE_UPGRADE=2, NODE_BOSS=3
         this.upgradeType = upgradeType; // UPGRADE_BINDING=0, UPGRADE_LIFE=1, UPGRADE_CARD=2
+        this.chosenEnemy = chosenEnemy; // 1 or 2, fixed at node creation
+        this.chosenDifficulty = chosenDifficulty; // ENEMY_COMMON/RARE/EPIC, fixed at node creation
         this.sprite = null; // to assign sprite later
     }
 
@@ -283,27 +285,33 @@ class Game {
         upgradeTypes[r] = temp;
 
         // fill middle 6 nodes, 1 enemy and 1 upgrade per column
+        // enemy and difficulty are fixed at generation so re-entering a node always shows the same foe
         let pool = [];
         for (let i = 0; i < 3; i++) {
             let uType = upgradeTypes[i];
+            let fight = i + 1;
+            let diff = pickDifficulty(fight);
+            let chosenEnemy = randomRange(2, 1);
+            let enemyItem = { frame: NODE_FRAMES[0], sheet: "nodes", type: NODE_ENEMY, upgradeType: null, chosenEnemy, chosenDifficulty: diff };
+            let upgradeItem = { frame: UPGRADE_FRAMES[uType], sheet: "upgradeNodes", type: NODE_UPGRADE, upgradeType: uType, chosenEnemy: null, chosenDifficulty: null };
             if (Math.random() < 0.5) {
-                pool.push({ frame: NODE_FRAMES[0], sheet: "nodes", type: NODE_ENEMY, upgradeType: null });
-                pool.push({ frame: UPGRADE_FRAMES[uType], sheet: "upgradeNodes", type: NODE_UPGRADE, upgradeType: uType });
+                pool.push(enemyItem);
+                pool.push(upgradeItem);
             } else {
-                pool.push({ frame: UPGRADE_FRAMES[uType], sheet: "upgradeNodes", type: NODE_UPGRADE, upgradeType: uType });
-                pool.push({ frame: NODE_FRAMES[0], sheet: "nodes", type: NODE_ENEMY, upgradeType: null });
+                pool.push(upgradeItem);
+                pool.push(enemyItem);
             }
         }
 
         let n1 = pool[0], n2 = pool[1], n3 = pool[2], n4 = pool[3], n5 = pool[4], n6 = pool[5];
         this.nodes = [
             new Node(0, 120, 300, "visited", NODE_FRAMES[2], "nodes", NODE_REST),
-            new Node(1, 360, 180, "available", n1.frame, n1.sheet, n1.type, n1.upgradeType),
-            new Node(2, 360, 420, "available", n2.frame, n2.sheet, n2.type, n2.upgradeType),
-            new Node(3, 600, 180, "locked", n3.frame, n3.sheet, n3.type, n3.upgradeType),
-            new Node(4, 600, 420, "locked", n4.frame, n4.sheet, n4.type, n4.upgradeType),
-            new Node(5, 840, 180, "locked", n5.frame, n5.sheet, n5.type, n5.upgradeType),
-            new Node(6, 840, 420, "locked", n6.frame, n6.sheet, n6.type, n6.upgradeType),
+            new Node(1, 360, 180, "available", n1.frame, n1.sheet, n1.type, n1.upgradeType, n1.chosenEnemy, n1.chosenDifficulty),
+            new Node(2, 360, 420, "available", n2.frame, n2.sheet, n2.type, n2.upgradeType, n2.chosenEnemy, n2.chosenDifficulty),
+            new Node(3, 600, 180, "locked", n3.frame, n3.sheet, n3.type, n3.upgradeType, n3.chosenEnemy, n3.chosenDifficulty),
+            new Node(4, 600, 420, "locked", n4.frame, n4.sheet, n4.type, n4.upgradeType, n4.chosenEnemy, n4.chosenDifficulty),
+            new Node(5, 840, 180, "locked", n5.frame, n5.sheet, n5.type, n5.upgradeType, n5.chosenEnemy, n5.chosenDifficulty),
+            new Node(6, 840, 420, "locked", n6.frame, n6.sheet, n6.type, n6.upgradeType, n6.chosenEnemy, n6.chosenDifficulty),
             new Node(7, 1080, 300, "locked", BIG_CASTLE, "castle", NODE_BOSS),
         ];
 
@@ -410,6 +418,11 @@ class Game {
         this.cardPickerOpen = false;
         this.cardCellRects = [];
         this.cardBackRect = null;
+        this.bindingPickerOpen = false;
+        this.bindingDeck = [];
+        this.bindingCellRects = [];
+        this.bindingBackRect = null;
+        this.testMode = false;
 
         this.upgradeNames = ["Card Binding", "Life Extension", "Extra Card"];
     }
@@ -454,7 +467,9 @@ class Game {
                 state: node.state,
                 sheet: node.sheet,
                 type: node.type,
-                upgradeType: node.upgradeType
+                upgradeType: node.upgradeType,
+                chosenEnemy: node.chosenEnemy,
+                chosenDifficulty: node.chosenDifficulty
             })),
             edges: this.edges
         };
@@ -475,7 +490,9 @@ class Game {
                 frame = BIG_CASTLE;
             }
 
-            return new Node(node.id, node.x, node.y, node.state, frame, node.sheet, node.type, node.upgradeType);
+            return new Node(node.id, node.x, node.y, node.state, frame, node.sheet, node.type, node.upgradeType,
+                node.chosenEnemy !== undefined ? node.chosenEnemy : null,
+                node.chosenDifficulty !== undefined ? node.chosenDifficulty : null);
         });
         this.fool.x = data.fool.x;
         this.fool.y = data.fool.y;
@@ -500,15 +517,20 @@ class Game {
                     // a fight node is consumed only if it is won, so don't mark it
                     // visited or save here: just remember which node is being fought
                     localStorage.setItem("pendingFight", n.id);
-                    let fight;
-                    if (n.id === 1 || n.id === 2) {
-                        fight = 1;
-                    } else if (n.id === 3 || n.id === 4) {
-                        fight = 2;
-                    } else {
-                        fight = 3;
+                    localStorage.setItem("pendingEnemyChoice", String(n.chosenEnemy || 1));
+                    let diff = n.chosenDifficulty;
+                    if (diff === null) {
+                        // fallback for saves created before chosenDifficulty was added
+                        let fight;
+                        if (n.id === 1 || n.id === 2) {
+                            fight = 1;
+                        } else if (n.id === 3 || n.id === 4) {
+                            fight = 2;
+                        } else {
+                            fight = 3;
+                        }
+                        diff = pickDifficulty(fight);
                     }
-                    let diff = pickDifficulty(fight);
                     if (diff === ENEMY_COMMON) {
                         window.location.href = "../duel/duel_easy.html";
                     } else if (diff === ENEMY_RARE) {
@@ -559,10 +581,23 @@ class Game {
         this.drawEdges(ctx);
         for (let n of this.nodes) n.draw(ctx);
         this.fool.draw(ctx);
+        ctx.fillStyle = "gold";
+        ctx.font = "24px MedievalSharp";
+        ctx.textAlign = "left";
+        ctx.fillText("Coins: $" + (localStorage.getItem("playerCoins") || "0"), 20, 35);
+        if (this.testMode) {
+            ctx.fillStyle = "red";
+            ctx.font = "16px MedievalSharp";
+            ctx.textAlign = "right";
+            ctx.fillText("TEST MODE", canvasWidth - 10, 30);
+            ctx.textAlign = "left";
+        }
         if (this.upgradeOpen) {
             this.drawUpgradePanel(ctx);
         } else if (this.cardPickerOpen) {
             this.drawCardPicker(ctx);
+        } else if (this.bindingPickerOpen) {
+            this.drawBindingPicker(ctx);
         }
     }
 
@@ -594,6 +629,9 @@ class Game {
         // y key toggles the bounding boxes
         window.addEventListener('keydown', event => {
             if (event.key == 'y') showBBox = !showBBox;
+            if (event.key === '`') {
+                this.testMode = !this.testMode;
+            }
         });
         // click on an available node to send the fool there
         window.addEventListener("click", (event) => {
@@ -608,6 +646,26 @@ class Game {
             }
             if (this.cardPickerOpen) {
                 this.checkCardPickerClick(mouseX, mouseY);
+                return;
+            }
+            if (this.bindingPickerOpen) {
+                this.checkBindingPickerClick(mouseX, mouseY);
+                return;
+            }
+            if (this.testMode) {
+                let hit = false;
+                for (let n of this.nodes) {
+                    let dx = mouseX - n.x;
+                    let dy = mouseY - n.y;
+                    if (Math.sqrt(dx * dx + dy * dy) <= 40) {
+                        this.fool.setTarget(n.x, n.y);
+                        hit = true;
+                        break;
+                    }
+                }
+                if (!hit) {
+                    this.fool.setTarget(mouseX, mouseY);
+                }
                 return;
             }
             for (let n of this.nodes) {

@@ -192,7 +192,7 @@ Game.prototype.draw = function(ctx) {
             ctx.fillStyle = "gold";
             ctx.font = "24px MedievalSharp";
             ctx.textAlign = "left";
-            ctx.fillText("Coins: $" + this.coins, 140, 55);
+            ctx.fillText("Coins: $" + (parseInt(localStorage.getItem("playerCoins") || "0") + this.coins), 140, 55);
 
             ctx.textAlign = "center";
             this.drawPowerSymbols(ctx);
