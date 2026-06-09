@@ -245,7 +245,7 @@ class Game {
         this.allCards = this.buildAllCards();
         
         //simulation for remaining personal cards from last duels
-        this.personalPlayerCardIndices = [3, 4, 8, 10];
+        //this.personalPlayerCardIndices = [3, 4, 8, 10];
         // Choose the player card pool; 2 random cards are dealt from it.
         //this.characterCards = this.chooseStartingCards([5]); //([0, 1, 2, 3, 4, 5])
 
