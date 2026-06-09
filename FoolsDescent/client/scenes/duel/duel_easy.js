@@ -49,6 +49,7 @@ class Game {
         this.isEnemyShowing = true;
         this.isShowingDefeatedEnemy = false;
         this.strengthMessage = false;
+        this.noMoonCardsMessage = false;
         this.turnBlockedMessage = false;
         this.justiceMessageUntil = 0;
         this.playerHandBlocked = false;
@@ -259,11 +260,10 @@ class Game {
 
         // Enemy character cards (easy enemy: Magician, Chariot, Star, Strength)
         this.enemyCharacterCards = this.chooseEnemyCards([
-            //0, // Magician
-            //1,
+            0, // Magician
+            1,
             3,
-            4,
-            8
+            4
         ]);
 
         this.maindeck = {

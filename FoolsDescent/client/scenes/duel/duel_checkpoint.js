@@ -196,7 +196,7 @@ async function loadPlayerDeck(game) {
         console.error(e);
     }
 
-    const dealCount = 2;
+    const dealCount = 0;// NO DAR CARTAS AL PRINCIPIO, PARA AGREGAR DIFICULTAD NO MOVER!!!!
     const pool = game.difficultyCardPoolIndices.slice().sort(() => Math.random() - 0.5);
     const dealt = pool.slice(0, dealCount)
         .filter(i => game.allCards[i])

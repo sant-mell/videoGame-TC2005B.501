@@ -94,12 +94,6 @@ Game.prototype.draw = function(ctx) {
                 355
             );
         }
-        if (this.magicianMessage) {
-            ctx.fillStyle = "white";
-            ctx.font = "40px MedievalSharp";
-            ctx.textAlign = "center";
-            ctx.fillText("No card has been played before, unable to repeat action. Play another card.", canvasWidth / 2, canvasHeight / 2 - 50);
-        }
         if (this.starMessage) {
             ctx.fillStyle = "white";
             ctx.font = "40px MedievalSharp";
@@ -116,6 +110,16 @@ Game.prototype.draw = function(ctx) {
                 "Strength power activated",
                 canvasWidth / 2,
                 canvasHeight / 2 - 100
+            );
+        }
+        if (this.noMoonCardsMessage) {
+            ctx.fillStyle = "white";
+            ctx.font = "36px MedievalSharp";
+            ctx.textAlign = "center";
+            ctx.fillText(
+                "No more Moon cards left in the Great Deck.",
+                canvasWidth / 2,
+                canvasHeight / 2 - 50
             );
         }
         if (this.maxLivesMessage) {
@@ -196,6 +200,12 @@ Game.prototype.draw = function(ctx) {
 
             ctx.textAlign = "center";
             this.drawPowerSymbols(ctx);
+        }
+        if (this.magicianMessage) {
+            ctx.fillStyle = "white";
+            ctx.font = "40px MedievalSharp";
+            ctx.textAlign = "center";
+            ctx.fillText("No card has been played before, unable to repeat action. Play another card.", canvasWidth / 2, canvasHeight / 2 - 50);
         }
         if (this.showStartButton) {
             this.drawCustomHitbox(ctx, this.startButton);
