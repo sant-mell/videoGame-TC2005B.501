@@ -1,3 +1,12 @@
+Game.prototype.shuffleDeck = function(deck) {
+    for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = deck[i];
+        deck[i] = deck[j];
+        deck[j] = tmp;
+    }
+};
+
 Game.prototype.buildAllCards = function() {
         return [
             {
@@ -155,7 +164,7 @@ Game.prototype.buildAllCards = function() {
                 sprite: { src: "../../../assets/images/Rare Cards.png", rect: new Rect(660, 10, 210, 400) },
                 infoText: "Shuffling the Great Deck...",
                 description: "Shuffles the Great Deck",
-                action: () => { this.greatDeck.sort(() => Math.random() - 0.5); }
+                action: () => { this.shuffleDeck(this.greatDeck); }
             },
             {
                 //10
@@ -173,12 +182,19 @@ Game.prototype.buildAllCards = function() {
                 name: "The Lovers",
                 sprite: { src: "../../../assets/images/Legendary Cards.png", rect: new Rect(20, 10, 210, 400) },
                 infoText: "Removing one Moon from the Great Deck...",
-                description: "Removes one Moon card from the Great Deck",
-                action: () => {
-                    const idx = this.greatDeck.indexOf("moon");
-                    if (idx !== -1) this.greatDeck.splice(idx, 1);
-                }
-            },
+	                description: "Removes one Moon card from the Great Deck",
+	                action: () => {
+	                    const idx = this.greatDeck.indexOf("moon");
+	                    if (idx !== -1) {
+                            this.greatDeck.splice(idx, 1);
+                        } else {
+                            this.noMoonCardsMessage = true;
+                            setTimeout(() => {
+                                this.noMoonCardsMessage = false;
+                            }, 2000);
+                        }
+	                }
+	            },
             {
                 //12
                 name: "The Hanged Man",
@@ -218,8 +234,8 @@ Game.prototype.buildAllCards = function() {
                     }
             
                     this.greatDeck.push("moon");
-            
-                    this.greatDeck.sort(() => Math.random() - 0.5);
+
+                    this.shuffleDeck(this.greatDeck);
                     this.candleBurnPlayed = false;
                     this.updatePlayerCandles();
                     this.updateEnemyCandles();
@@ -232,6 +248,8 @@ Game.prototype.buildAllCards = function() {
                 description: "Any card effect is possible, but which one will it be?",
                 infoText: "Surprise!",
                 action: () => {
+                    if (this.foolIsExecuting) return;
+                    this.foolIsExecuting = true;
                     let foolCards;
 
                     if (this.currentTurn === "enemy") {
@@ -267,6 +285,7 @@ Game.prototype.buildAllCards = function() {
                     );
 
                     randomCard.action();
+                    this.foolIsExecuting = false;
                 }
             },
         ];
@@ -465,7 +484,7 @@ Game.prototype.buildGreatDeck = function(awardPlayerCard = false) {
     this.greatDeck = [];
     for (let i = 0; i < sunCount; i++) this.greatDeck.push("sun");
     for (let i = 0; i < moonCount; i++) this.greatDeck.push("moon");
-    this.greatDeck.sort(() => Math.random() - 0.5);
+    this.shuffleDeck(this.greatDeck);
 
     this.sunCount = sunCount;
     this.moonCount = moonCount;
@@ -488,6 +507,7 @@ Game.prototype.buildGreatDeck = function(awardPlayerCard = false) {
             this.playerInputLocked = false;
         }
         if (awardPlayerCard) {
+            this.currentTurn = "player";
             this.startPendingRewardCard();
         }
     }, 5000);

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Victory | The Fool's Descent</title>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="introduction.css">
+    <link rel="stylesheet" href="victory.css">
+</head>
+<body>
+    <main class="intro-scene">
+        <button id="startButton" class="start-button" type="button">PRESS TO CONTINUE</button>
+        <section class="story-panel" aria-live="polite">
+            <div id="storyText" class="story-text"></div>
+            <canvas id="foolCanvas" class="fool-canvas" width="192" height="256"></canvas>
+        </section>
+        <div id="actionButtons" class="action-buttons">
+            <button id="descentButton" class="action-btn" type="button">DESCEND AGAIN</button>
+            <button id="menuButton" class="action-btn action-btn-secondary" type="button">MAIN MENU</button>
+        </div>
+    </main>
+    <script src="victory.js"></script>
+</body>
+</html>

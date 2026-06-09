@@ -48,6 +48,7 @@ class Game {
         this.isEnemyShowing = true;
         this.isShowingDefeatedEnemy = false;
         this.strengthMessage = false;
+        this.noMoonCardsMessage = false;
         this.turnBlockedMessage = false;
         this.justiceMessageUntil = 0;
         this.playerHandBlocked = false;
@@ -379,7 +380,9 @@ async function main() {
     game = new Game();
 
     await loadPlayerDeck(game);
+    await loadPlayerUpgrades(game);
     await loadDuelCheckpoint(game);
+    await saveDuelCheckpoint(game);
 
     drawScene(0);
 }

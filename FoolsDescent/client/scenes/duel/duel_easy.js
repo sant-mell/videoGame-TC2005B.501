@@ -27,8 +27,7 @@ class Game {
         //CHOOSE ENEMY HERE!!
         //this.chooseEnemy = 1; //<--- CHOOSE ENEMY (1 = Drunk, 2 = Peasant)
         
-        // Automatically chooses the enemy (1 or 2)
-        this.chooseEnemy = Math.floor(Math.random() * 2) + 1;
+        this.chooseEnemy = parseInt(localStorage.getItem("pendingEnemyChoice") || "1");
         this.enemyName = this.chooseEnemy === 1 ? "Drunk" : "Peasant";
 
         //enemy card
@@ -50,6 +49,7 @@ class Game {
         this.isEnemyShowing = true;
         this.isShowingDefeatedEnemy = false;
         this.strengthMessage = false;
+        this.noMoonCardsMessage = false;
         this.turnBlockedMessage = false;
         this.justiceMessageUntil = 0;
         this.playerHandBlocked = false;
@@ -247,10 +247,10 @@ class Game {
         //simulation for remaining personal cards from last duels
         //this.personalPlayerCardIndices = [3, 4, 8, 10];
         // Choose the player card pool; 2 random cards are dealt from it.
-        //this.characterCards = this.chooseStartingCards([5]); //([0, 1, 2, 3, 4, 5])
+        //this.characterCards = this.chooseStartingCards([5]); //([0, 1, 2, 3, 4, 5])//
 
         // they get added to the players deck
-        let cards = [0, 1, 2, 3, 4, 5]; // Common only
+        let cards = [0, 1, 2, 3, 4, 5]; // Common cards only
 
         // Random order
         cards.sort(() => Math.random() - 0.5);
@@ -260,11 +260,10 @@ class Game {
 
         // Enemy character cards (easy enemy: Magician, Chariot, Star, Strength)
         this.enemyCharacterCards = this.chooseEnemyCards([
-            //0, // Magician
-            //1,
+            0, // Magician
+            1,
             3,
-            4,
-            8
+            4
         ]);
 
         this.maindeck = {
@@ -371,7 +370,9 @@ async function main() {
     game = new Game();
 
     await loadPlayerDeck(game);
+    await loadPlayerUpgrades(game);
     await loadDuelCheckpoint(game);
+    await saveDuelCheckpoint(game);
 
     drawScene(0);
 }

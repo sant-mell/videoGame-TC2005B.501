@@ -33,7 +33,12 @@ Game.prototype.drawUpgradePanel = function(ctx) {
     ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    let px = 350, py = 150, pw = 500, ph = 260;
+    const costs = [100, 150, 50];
+    const cost = costs[this.currentUpgradeType];
+    const playerCoins = parseInt(localStorage.getItem("playerCoins") || "0");
+    const canAfford = playerCoins >= cost;
+
+    let px = 350, py = 130, pw = 500, ph = 310;
     ctx.fillStyle = "#1a0a2e";
     ctx.strokeStyle = "#c0a060";
     ctx.lineWidth = 3;
@@ -43,19 +48,32 @@ Game.prototype.drawUpgradePanel = function(ctx) {
     ctx.textAlign = "center";
     ctx.font = "bold 26px Arial";
     ctx.fillStyle = "#f0d080";
-    ctx.fillText(this.upgradeNames[this.currentUpgradeType], px + pw / 2, py + 60);
+    ctx.fillText(this.upgradeNames[this.currentUpgradeType], px + pw / 2, py + 55);
 
-    let acceptX = px + 50, acceptY = py + 175;
-    ctx.fillStyle = "#4a7a40";
+    ctx.font = "18px Arial";
+    ctx.fillStyle = "#cccccc";
+    ctx.fillText("Cost: " + cost + " coins", px + pw / 2, py + 105);
+
+    ctx.fillStyle = canAfford ? "#80cc60" : "#cc6060";
+    ctx.fillText("Your coins: " + playerCoins, px + pw / 2, py + 140);
+
+    if (!canAfford) {
+        ctx.font = "bold 16px Arial";
+        ctx.fillStyle = "#ff6060";
+        ctx.fillText("Not enough coins!", px + pw / 2, py + 175);
+    }
+
+    let acceptX = px + 50, acceptY = py + 225;
+    ctx.fillStyle = canAfford ? "#4a7a40" : "#2a3a28";
     ctx.fillRect(acceptX, acceptY, 165, 40);
-    ctx.strokeStyle = "#80cc60";
+    ctx.strokeStyle = canAfford ? "#80cc60" : "#4a6040";
     ctx.lineWidth = 1.5;
     ctx.strokeRect(acceptX, acceptY, 165, 40);
     ctx.font = "15px Arial";
-    ctx.fillStyle = "#ffffff";
-    ctx.fillText("Accept", acceptX + 82, acceptY + 26);
+    ctx.fillStyle = canAfford ? "#ffffff" : "#778866";
+    ctx.fillText("Accept & Pay", acceptX + 82, acceptY + 26);
 
-    let exitX = px + 285, exitY = py + 175;
+    let exitX = px + 285, exitY = py + 225;
     ctx.fillStyle = "#5a2020";
     ctx.fillRect(exitX, exitY, 165, 40);
     ctx.strokeStyle = "#cc6060";
@@ -85,6 +103,20 @@ Game.prototype.checkUpgradeClick = function(mouseX, mouseY) {
 Game.prototype.acceptUpgrade = async function() {
     const userId = localStorage.getItem("userId");
     if (!userId) { this.upgradeOpen = false; return; }
+
+    const costs = [100, 150, 50];
+    const playerCoins = parseInt(localStorage.getItem("playerCoins") || "0");
+    if (playerCoins < costs[this.currentUpgradeType]) return;
+
+    // sync localStorage coins to DB so sp_buy_upgrade sees the correct balance
+    try {
+        await fetch("http://localhost:3000/debug/set-coins", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: Number(userId), amount: playerCoins })
+        });
+    } catch (e) {}
+
     try {
         const res = await fetch("http://localhost:3000/player-upgrade", {
             method: "POST",
@@ -94,12 +126,9 @@ Game.prototype.acceptUpgrade = async function() {
         const data = await res.json();
         if (!data.success) {
             this.upgradeOpen = false;
-            return; // not enough coins or server error
+            return;
         }
-        // keep local coins in sync
-        const prev = parseInt(localStorage.getItem("playerCoins") || "0");
-        const costs = [300, 400, 100]; // Card Binding, Life Extension, Extra Card
-        localStorage.setItem("playerCoins", Math.max(0, prev - costs[this.currentUpgradeType]));
+        localStorage.setItem("playerCoins", Math.max(0, playerCoins - costs[this.currentUpgradeType]));
     } catch (e) {
         this.upgradeOpen = false;
         return;
@@ -107,6 +136,8 @@ Game.prototype.acceptUpgrade = async function() {
     this.upgradeOpen = false;
     if (this.currentUpgradeType === UPGRADE_CARD) {
         this.cardPickerOpen = true;
+    } else if (this.currentUpgradeType === UPGRADE_BINDING) {
+        await this.openBindingPicker();
     }
 };
 
@@ -196,4 +227,127 @@ Game.prototype.pickCard = function(cardIndex) {
     let cards = localStorage.getItem("extraCards");
     localStorage.setItem("extraCards", cards ? cards + "," + cardIndex : "" + cardIndex);
     this.cardPickerOpen = false;
+};
+
+Game.prototype.openBindingPicker = async function() {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+    try {
+        const res = await fetch(`http://localhost:3000/player-deck/${userId}`);
+        const data = await res.json();
+        this.bindingDeck = (data.success && data.cards.length > 0) ? data.cards : [];
+    } catch (e) {
+        this.bindingDeck = [];
+    }
+    this.bindingPickerOpen = true;
+};
+
+Game.prototype.drawBindingPicker = function(ctx) {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    ctx.textAlign = "center";
+    ctx.font = "bold 28px Arial";
+    ctx.fillStyle = "#f0d080";
+    ctx.fillText("Choose a Card to Bind", canvasWidth / 2, 55);
+
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#aaaaaa";
+    ctx.fillText("Bound cards return to your hand next duel even if used.", canvasWidth / 2, 85);
+
+    if (this.bindingDeck.length === 0) {
+        ctx.font = "20px Arial";
+        ctx.fillStyle = "#cc6060";
+        ctx.fillText("You have no cards to bind.", canvasWidth / 2, canvasHeight / 2);
+    } else {
+        let cellW = 208, cellH = 90, gapX = 13, gapY = 10;
+        let startX = 54, startY = 110;
+        this.bindingCellRects = [];
+
+        for (let i = 0; i < this.bindingDeck.length; i++) {
+            const cardIdx = this.bindingDeck[i];
+            const card = ALL_CARDS[cardIdx];
+            if (!card) continue;
+            let col = i % 5;
+            let row = Math.floor(i / 5);
+            let cx = startX + col * (cellW + gapX);
+            let cy = startY + row * (cellH + gapY);
+
+            ctx.fillStyle = "#1a0a2e";
+            ctx.strokeStyle = "#c0a060";
+            ctx.lineWidth = 1.5;
+            ctx.fillRect(cx, cy, cellW, cellH);
+            ctx.strokeRect(cx, cy, cellW, cellH);
+
+            ctx.textAlign = "left";
+            ctx.font = "bold 14px Arial";
+            ctx.fillStyle = "#f0d080";
+            ctx.fillText(card.name, cx + 10, cy + 24);
+
+            ctx.font = "12px Arial";
+            ctx.fillStyle = "#cccccc";
+            let words = card.desc.split(" ");
+            let line = "";
+            let lineY = cy + 46;
+            for (let w = 0; w < words.length; w++) {
+                let test = line === "" ? words[w] : line + " " + words[w];
+                if (ctx.measureText(test).width > cellW - 20) {
+                    ctx.fillText(line, cx + 10, lineY);
+                    lineY += 15;
+                    line = words[w];
+                } else {
+                    line = test;
+                }
+            }
+            ctx.fillText(line, cx + 10, lineY);
+
+            this.bindingCellRects.push({ x: cx, y: cy, w: cellW, h: cellH, cardIndex: cardIdx });
+        }
+    }
+
+    let backY = 520;
+    let backX = canvasWidth / 2 - 80;
+    ctx.fillStyle = "#5a2020";
+    ctx.fillRect(backX, backY, 160, 36);
+    ctx.strokeStyle = "#cc6060";
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(backX, backY, 160, 36);
+    ctx.textAlign = "center";
+    ctx.font = "15px Arial";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("Back", canvasWidth / 2, backY + 24);
+    this.bindingBackRect = { x: backX, y: backY, w: 160, h: 36 };
+
+    ctx.textAlign = "left";
+    ctx.lineWidth = 1;
+};
+
+Game.prototype.checkBindingPickerClick = function(mouseX, mouseY) {
+    let b = this.bindingBackRect;
+    if (b && mouseX >= b.x && mouseX <= b.x + b.w && mouseY >= b.y && mouseY <= b.y + b.h) {
+        this.bindingPickerOpen = false;
+        return;
+    }
+    if (!this.bindingCellRects) return;
+    for (let cell of this.bindingCellRects) {
+        if (mouseX >= cell.x && mouseX <= cell.x + cell.w && mouseY >= cell.y && mouseY <= cell.y + cell.h) {
+            this.bindCard(cell.cardIndex);
+            return;
+        }
+    }
+};
+
+Game.prototype.bindCard = async function(cardIndex) {
+    const userId = localStorage.getItem("userId");
+    if (!userId) { this.bindingPickerOpen = false; return; }
+    try {
+        await fetch("http://localhost:3000/bind-card", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: Number(userId), cardIndex })
+        });
+    } catch (e) {
+        console.error(e);
+    }
+    this.bindingPickerOpen = false;
 };

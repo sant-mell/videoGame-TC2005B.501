@@ -210,7 +210,7 @@ class Fool {
 
 // each node on the map. can be visited, available or locked
 class Node {
-    constructor(id, x, y, state, frame, sheet, type, upgradeType = null) {
+    constructor(id, x, y, state, frame, sheet, type, upgradeType = null, chosenEnemy = null, chosenDifficulty = null) {
         this.id = id;
         this.x = x;
         this.y = y;
@@ -219,6 +219,8 @@ class Node {
         this.sheet = sheet; // castles or nodes spritesheet
         this.type = type; // NODE_REST=0, NODE_ENEMY=1, NODE_UPGRADE=2, NODE_BOSS=3
         this.upgradeType = upgradeType; // UPGRADE_BINDING=0, UPGRADE_LIFE=1, UPGRADE_CARD=2
+        this.chosenEnemy = chosenEnemy; // 1 or 2, fixed at node creation
+        this.chosenDifficulty = chosenDifficulty; // ENEMY_COMMON/RARE/EPIC, fixed at node creation
         this.sprite = null; // to assign sprite later
     }
 
@@ -282,29 +284,64 @@ class Game {
         upgradeTypes[1] = upgradeTypes[r];
         upgradeTypes[r] = temp;
 
-        // fill middle 6 nodes, 1 enemy and 1 upgrade per column
+        // track (diff, variant) pairs so no enemy repeats in the same run
+        const usedEnemies = new Set();
+        function pickUniqueEnemy(diff) {
+            if (!usedEnemies.has(diff + "_1")) {
+                usedEnemies.add(diff + "_1");
+                return 1;
+            }
+            if (!usedEnemies.has(diff + "_2")) {
+                usedEnemies.add(diff + "_2");
+                return 2;
+            }
+            return randomRange(2, 1);
+        }
+
+        // fill 4 columns of 2 nodes each: 1 enemy + 1 upgrade per column
+        // col 4 gets a random upgrade type (may repeat an earlier column)
         let pool = [];
         for (let i = 0; i < 3; i++) {
             let uType = upgradeTypes[i];
+            let fight = i + 1;
+            let diff = pickDifficulty(fight);
+            let chosenEnemy = pickUniqueEnemy(diff);
+            let enemyItem = { frame: NODE_FRAMES[0], sheet: "nodes", type: NODE_ENEMY, upgradeType: null, chosenEnemy, chosenDifficulty: diff };
+            let upgradeItem = { frame: UPGRADE_FRAMES[uType], sheet: "upgradeNodes", type: NODE_UPGRADE, upgradeType: uType, chosenEnemy: null, chosenDifficulty: null };
             if (Math.random() < 0.5) {
-                pool.push({ frame: NODE_FRAMES[0], sheet: "nodes", type: NODE_ENEMY, upgradeType: null });
-                pool.push({ frame: UPGRADE_FRAMES[uType], sheet: "upgradeNodes", type: NODE_UPGRADE, upgradeType: uType });
+                pool.push(enemyItem);
+                pool.push(upgradeItem);
             } else {
-                pool.push({ frame: UPGRADE_FRAMES[uType], sheet: "upgradeNodes", type: NODE_UPGRADE, upgradeType: uType });
-                pool.push({ frame: NODE_FRAMES[0], sheet: "nodes", type: NODE_ENEMY, upgradeType: null });
+                pool.push(upgradeItem);
+                pool.push(enemyItem);
             }
         }
+        // col 4: random upgrade type, fight difficulty same as col 3
+        let col4uType = [UPGRADE_BINDING, UPGRADE_LIFE, UPGRADE_CARD][randomRange(3)];
+        let col4diff = pickDifficulty(3);
+        let col4enemy = pickUniqueEnemy(col4diff);
+        let col4enemyItem = { frame: NODE_FRAMES[0], sheet: "nodes", type: NODE_ENEMY, upgradeType: null, chosenEnemy: col4enemy, chosenDifficulty: col4diff };
+        let col4upgradeItem = { frame: UPGRADE_FRAMES[col4uType], sheet: "upgradeNodes", type: NODE_UPGRADE, upgradeType: col4uType, chosenEnemy: null, chosenDifficulty: null };
+        if (Math.random() < 0.5) {
+            pool.push(col4enemyItem);
+            pool.push(col4upgradeItem);
+        } else {
+            pool.push(col4upgradeItem);
+            pool.push(col4enemyItem);
+        }
 
-        let n1 = pool[0], n2 = pool[1], n3 = pool[2], n4 = pool[3], n5 = pool[4], n6 = pool[5];
+        let n1 = pool[0], n2 = pool[1], n3 = pool[2], n4 = pool[3], n5 = pool[4], n6 = pool[5], n7 = pool[6], n8 = pool[7];
         this.nodes = [
             new Node(0, 120, 300, "visited", NODE_FRAMES[2], "nodes", NODE_REST),
-            new Node(1, 360, 180, "available", n1.frame, n1.sheet, n1.type, n1.upgradeType),
-            new Node(2, 360, 420, "available", n2.frame, n2.sheet, n2.type, n2.upgradeType),
-            new Node(3, 600, 180, "locked", n3.frame, n3.sheet, n3.type, n3.upgradeType),
-            new Node(4, 600, 420, "locked", n4.frame, n4.sheet, n4.type, n4.upgradeType),
-            new Node(5, 840, 180, "locked", n5.frame, n5.sheet, n5.type, n5.upgradeType),
-            new Node(6, 840, 420, "locked", n6.frame, n6.sheet, n6.type, n6.upgradeType),
-            new Node(7, 1080, 300, "locked", BIG_CASTLE, "castle", NODE_BOSS),
+            new Node(1, 312, 180, "available", n1.frame, n1.sheet, n1.type, n1.upgradeType, n1.chosenEnemy, n1.chosenDifficulty),
+            new Node(2, 312, 420, "available", n2.frame, n2.sheet, n2.type, n2.upgradeType, n2.chosenEnemy, n2.chosenDifficulty),
+            new Node(3, 504, 180, "locked", n3.frame, n3.sheet, n3.type, n3.upgradeType, n3.chosenEnemy, n3.chosenDifficulty),
+            new Node(4, 504, 420, "locked", n4.frame, n4.sheet, n4.type, n4.upgradeType, n4.chosenEnemy, n4.chosenDifficulty),
+            new Node(5, 696, 180, "locked", n5.frame, n5.sheet, n5.type, n5.upgradeType, n5.chosenEnemy, n5.chosenDifficulty),
+            new Node(6, 696, 420, "locked", n6.frame, n6.sheet, n6.type, n6.upgradeType, n6.chosenEnemy, n6.chosenDifficulty),
+            new Node(7, 888, 180, "locked", n7.frame, n7.sheet, n7.type, n7.upgradeType, n7.chosenEnemy, n7.chosenDifficulty),
+            new Node(8, 888, 420, "locked", n8.frame, n8.sheet, n8.type, n8.upgradeType, n8.chosenEnemy, n8.chosenDifficulty),
+            new Node(9, 1080, 300, "locked", BIG_CASTLE, "castle", NODE_BOSS),
         ];
 
         this.edges = [];
@@ -335,11 +372,9 @@ class Game {
             if (Math.random() < 0.5) { to = 3; } else { to = 4; }
             let duplicate = false;
             for (let i = 0; i < this.edges.length; i++) {
-                if (this.edges[i][0] === from) {
-                    if (this.edges[i][1] === to) {
-                        duplicate = true;
-                        break;
-                    }
+                if (this.edges[i][0] === from && this.edges[i][1] === to) {
+                    duplicate = true;
+                    break;
                 }
             }
             if (!duplicate) {
@@ -377,11 +412,9 @@ class Game {
             if (Math.random() < 0.5) { to = 5; } else { to = 6; }
             let alreadyIn = false;
             for (let i = 0; i < this.edges.length; i++) {
-                if (this.edges[i][0] === from) {
-                    if (this.edges[i][1] === to) {
-                        alreadyIn = true;
-                        break;
-                    }
+                if (this.edges[i][0] === from && this.edges[i][1] === to) {
+                    alreadyIn = true;
+                    break;
                 }
             }
             if (!alreadyIn) {
@@ -395,8 +428,48 @@ class Game {
             }
         }
 
-        this.edges.push([5, 7]);
-        this.edges.push([6, 7]);
+        // col3 to col4
+        let col4top = 7;
+        let col4bot = 8;
+        if (this.nodes[5].type === NODE_UPGRADE) {
+            if (this.nodes[7].type === NODE_UPGRADE) {
+                col4top = 8;
+                col4bot = 7;
+            }
+        }
+        if (this.nodes[6].type === NODE_UPGRADE) {
+            if (this.nodes[8].type === NODE_UPGRADE) {
+                col4top = 8;
+                col4bot = 7;
+            }
+        }
+        this.edges.push([5, col4top]);
+        this.edges.push([6, col4bot]);
+        if (Math.random() < 0.5) {
+            let from;
+            let to;
+            if (Math.random() < 0.5) { from = 5; } else { from = 6; }
+            if (Math.random() < 0.5) { to = 7; } else { to = 8; }
+            let alreadyIn = false;
+            for (let i = 0; i < this.edges.length; i++) {
+                if (this.edges[i][0] === from && this.edges[i][1] === to) {
+                    alreadyIn = true;
+                    break;
+                }
+            }
+            if (!alreadyIn) {
+                if (this.nodes[from].type === NODE_UPGRADE) {
+                    if (this.nodes[to].type !== NODE_UPGRADE) {
+                        this.edges.push([from, to]);
+                    }
+                } else {
+                    this.edges.push([from, to]);
+                }
+            }
+        }
+
+        this.edges.push([7, 9]);
+        this.edges.push([8, 9]);
 
         this.currentId = 0;
         this.fool = new Fool(120, 300);
@@ -410,6 +483,12 @@ class Game {
         this.cardPickerOpen = false;
         this.cardCellRects = [];
         this.cardBackRect = null;
+        this.bindingPickerOpen = false;
+        this.bindingDeck = [];
+        this.bindingCellRects = [];
+        this.bindingBackRect = null;
+        this.testMode = false;
+        this.isArriving = false;
 
         this.upgradeNames = ["Card Binding", "Life Extension", "Extra Card"];
     }
@@ -454,7 +533,9 @@ class Game {
                 state: node.state,
                 sheet: node.sheet,
                 type: node.type,
-                upgradeType: node.upgradeType
+                upgradeType: node.upgradeType,
+                chosenEnemy: node.chosenEnemy,
+                chosenDifficulty: node.chosenDifficulty
             })),
             edges: this.edges
         };
@@ -475,7 +556,9 @@ class Game {
                 frame = BIG_CASTLE;
             }
 
-            return new Node(node.id, node.x, node.y, node.state, frame, node.sheet, node.type, node.upgradeType);
+            return new Node(node.id, node.x, node.y, node.state, frame, node.sheet, node.type, node.upgradeType,
+                node.chosenEnemy !== undefined ? node.chosenEnemy : null,
+                node.chosenDifficulty !== undefined ? node.chosenDifficulty : null);
         });
         this.fool.x = data.fool.x;
         this.fool.y = data.fool.y;
@@ -494,21 +577,36 @@ class Game {
 
     // called when the fool reaches a node, marks it visited and updates what's available
     async arrive() {
+        if (this.isArriving) return;
+        this.isArriving = true;
         for (let n of this.nodes) {
             if (n.x === this.fool.tx && n.y === this.fool.ty) {
+                if (n.state === "visited") {
+                    // moving back to an already-visited node: just reposition, no side-effects
+                    this.currentId = n.id;
+                    this.updateAvailable();
+                    break;
+                }
                 if (n.type === NODE_ENEMY) {
                     // a fight node is consumed only if it is won, so don't mark it
                     // visited or save here: just remember which node is being fought
                     localStorage.setItem("pendingFight", n.id);
-                    let fight;
-                    if (n.id === 1 || n.id === 2) {
-                        fight = 1;
-                    } else if (n.id === 3 || n.id === 4) {
-                        fight = 2;
-                    } else {
-                        fight = 3;
+                    localStorage.setItem("pendingEnemyChoice", String(n.chosenEnemy || 1));
+                    let diff = n.chosenDifficulty;
+                    if (diff === null) {
+                        // fallback for saves created before chosenDifficulty was added
+                        let fight;
+                        if (n.id === 1 || n.id === 2) {
+                            fight = 1;
+                        } else if (n.id === 3 || n.id === 4) {
+                            fight = 2;
+                        } else if (n.id === 5 || n.id === 6) {
+                            fight = 3;
+                        } else {
+                            fight = 4;
+                        }
+                        diff = pickDifficulty(fight);
                     }
-                    let diff = pickDifficulty(fight);
                     if (diff === ENEMY_COMMON) {
                         window.location.href = "../duel/duel_easy.html";
                     } else if (diff === ENEMY_RARE) {
@@ -533,6 +631,7 @@ class Game {
                 break;
             }
         }
+        this.isArriving = false;
     }
 
     // locks everything then unlocks only the nodes connected to where the fool is now
@@ -559,10 +658,23 @@ class Game {
         this.drawEdges(ctx);
         for (let n of this.nodes) n.draw(ctx);
         this.fool.draw(ctx);
+        ctx.fillStyle = "gold";
+        ctx.font = "24px MedievalSharp";
+        ctx.textAlign = "left";
+        ctx.fillText("Coins: $" + parseInt(localStorage.getItem("playerCoins") || "0"), 20, 35);
+        if (this.testMode) {
+            ctx.fillStyle = "red";
+            ctx.font = "16px MedievalSharp";
+            ctx.textAlign = "right";
+            ctx.fillText("TEST MODE", canvasWidth - 10, 30);
+            ctx.textAlign = "left";
+        }
         if (this.upgradeOpen) {
             this.drawUpgradePanel(ctx);
         } else if (this.cardPickerOpen) {
             this.drawCardPicker(ctx);
+        } else if (this.bindingPickerOpen) {
+            this.drawBindingPicker(ctx);
         }
     }
 
@@ -592,8 +704,24 @@ class Game {
 
     createEventListeners() {
         // y key toggles the bounding boxes
-        window.addEventListener('keydown', event => {
+        window.addEventListener('keydown', async event => {
             if (event.key == 'y') showBBox = !showBBox;
+            if (event.key === '`') {
+                this.testMode = !this.testMode;
+            }
+            if (event.key === 'c' && this.testMode) {
+                localStorage.setItem("playerCoins", "1000");
+                const userId = localStorage.getItem("userId");
+                if (userId) {
+                    try {
+                        await fetch("http://localhost:3000/debug/set-coins", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ userId: Number(userId), amount: 1000 })
+                        });
+                    } catch (e) {}
+                }
+            }
         });
         // click on an available node to send the fool there
         window.addEventListener("click", (event) => {
@@ -610,6 +738,26 @@ class Game {
                 this.checkCardPickerClick(mouseX, mouseY);
                 return;
             }
+            if (this.bindingPickerOpen) {
+                this.checkBindingPickerClick(mouseX, mouseY);
+                return;
+            }
+            if (this.testMode) {
+                let hit = false;
+                for (let n of this.nodes) {
+                    let dx = mouseX - n.x;
+                    let dy = mouseY - n.y;
+                    if (Math.sqrt(dx * dx + dy * dy) <= 40) {
+                        this.fool.setTarget(n.x, n.y);
+                        hit = true;
+                        break;
+                    }
+                }
+                if (!hit) {
+                    this.fool.setTarget(mouseX, mouseY);
+                }
+                return;
+            }
             for (let n of this.nodes) {
                 this.checkNodeClick(n, mouseX, mouseY);
             }
@@ -620,7 +768,13 @@ class Game {
         if (this.fool.moving) return;
         let dx = mouseX - n.x;
         let dy = mouseY - n.y;
-        if (Math.sqrt(dx * dx + dy * dy) <= 40 && n.state === "available") {
+        if (Math.sqrt(dx * dx + dy * dy) > 40) return;
+        const isAvailable = n.state === "available";
+        const isVisitedNeighbor = n.state === "visited" && this.edges.some(e =>
+            (e[0] === this.currentId && e[1] === n.id) ||
+            (e[1] === this.currentId && e[0] === n.id)
+        );
+        if (isAvailable || isVisitedNeighbor) {
             console.log("node clicked: " + n.id);
             this.fool.setTarget(n.x, n.y);
         }
@@ -652,6 +806,7 @@ async function applyPendingFight(game) {
         return;
     }
     const nodeId = parseInt(pending, 10);
+    if (isNaN(nodeId)) return;
     const node = game.nodes.find(n => n.id === nodeId);
     if (!node) {
         return;
@@ -680,7 +835,10 @@ async function main() {
             loaded = loadMapLocally(game);
         }
         if (!loaded) {
-            await saveNewDescent(game);
+            alert("No saved descent found. Starting a new one.");
+            localStorage.setItem("continueRun", "false");
+            window.location.href = "../../frontend/menu.html";
+            return;
         } else {
             // resolve the result of a duel the player just came back from
             await applyPendingFight(game);
@@ -691,11 +849,13 @@ async function main() {
         localStorage.removeItem("pendingFight");
         localStorage.removeItem("duelWon");
         localStorage.removeItem("extraCards");
+        localStorage.removeItem("pendingEnemyChoice");
         localStorage.setItem("playerCoins", "0");
         const saved = await saveNewDescent(game);
         if (saved) {
             localStorage.setItem("continueRun", "true");
-            await loadGame(game); // sync real coins from DB since new descent preserves them
+            await clearDuelCheckpointFromMap();
+            await loadGame(game);
         }
     }
     drawScene(0);

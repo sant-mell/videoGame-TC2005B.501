@@ -1,7 +1,7 @@
 Game.prototype.enemyTurn = function() {
 
         if (this.gameOver) return;
-        if (this.showIntroText) {
+        if (this.showIntroText || this.pendingRewardCard || this.isRewardCardSliding) {
             setTimeout(() => {
                 if (this.gameOver) return;
                 this.enemyTurn();
@@ -12,6 +12,8 @@ Game.prototype.enemyTurn = function() {
     
         if (this.enemyTurnBlocked) {
             this.enemyTurnBlocked = false;
+            this.enemyHandBlocked = false;
+            this.playerStrengthActive = false;
             this.showPlayerCards = true;
             this.showEnemyCards = false;
             this.currentTurn = "player";
@@ -207,8 +209,9 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
     this.showFinalImage = true;
 
-    // Probability: 80% they attack you, 20% they choose themselves
-    const enemyTargetsSelf = Math.random() < 0.20;
+    // Probability: 80% they attack you, 20% they choose themselves.
+    // Hard enemy cheat: never willingly eats a hidden Moon.
+    const enemyTargetsSelf = Math.random() < 0.20 && this.currentGreatCard !== "moon";
 
     setTimeout(() => {
         if (this.gameOver) return;
@@ -263,6 +266,8 @@ Game.prototype.resolveEnemyDeckDraw = function() {
             this.playPlayerCandleBlowSound();
             return;
         }
+
+        this.playerStrengthActive = false;
 
         if (!this.gameOver) saveDuelCheckpoint(this);
         if (this.gameOver) return;

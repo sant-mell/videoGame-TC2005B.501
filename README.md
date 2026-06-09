@@ -63,6 +63,11 @@ The Fool's Descent is a roguelike card game where you navigate a map, fight enem
 
 ## How to Run the Game
 
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) v18 or later
+- MySQL 8.x (MySQL Workbench or any MySQL client to run the SQL files)
+
 ### 1. Clone the repository
 
 ```bash
@@ -70,32 +75,51 @@ git clone https://github.com/sant-mell/videoGame-TC2005B.501.git
 cd videoGame-TC2005B.501
 ```
 
-### 2. Start the server
+### 2. Set up the database
+
+Open MySQL Workbench (or any MySQL client) connected to `localhost` as `root` and run the two SQL files in order:
+
+```
+FoolsDescent/database/schema.sql   ← creates the database, tables, views, triggers
+FoolsDescent/database/data.sql     ← seeds cards, enemies, and upgrades
+```
+
+The schema file drops and recreates the `fools_descent` database, so running it on a fresh install is safe.
+
+The server connects with `user: root` and `password: 1234`. If your MySQL root password is different, edit those two lines at the top of `FoolsDescent/backend/server.js` before continuing.
+
+### 3. Install backend dependencies
+
+```bash
+cd FoolsDescent/backend
+npm install
+cd ../..
+```
+
+### 4. Start the server
 
 ```bash
 node FoolsDescent/backend/server.js
 ```
 
-### 3. Open the main menu
+You should see `Connected to MySQL` in the terminal. Leave this running.
+
+### 5. Open the game
+
+Open **`http://localhost:3000/client/frontend/menu.html`** in your browser. Do not open the HTML file directly — it must be served by the Express server or fetch calls will be blocked by the browser's security model.
 
 ```bash
 # Brave
-brave-browser FoolsDescent/client/frontend/menu.html
+brave-browser http://localhost:3000/client/frontend/menu.html
 
 # Chrome
-google-chrome FoolsDescent/client/frontend/menu.html
+google-chrome http://localhost:3000/client/frontend/menu.html
 
 # Firefox
-firefox FoolsDescent/client/frontend/menu.html
+firefox http://localhost:3000/client/frontend/menu.html
 ```
 
-Log in or create an account and play from there.
-
----
-
-## Starting Scene
-
-Run `server.js` locally first, then open `FoolsDescent/client/frontend/menu.html`. Log in and the game will take you through the rest.
+Create an account and log in — the game will take you through the rest.
 
 ---
 

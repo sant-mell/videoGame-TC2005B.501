@@ -27,8 +27,7 @@ class Game {
         //CHOOSE ENEMY HERE!!
         //this.chooseEnemy = 2; //<--- CHOOSE ENEMY (1 = Jester, 2 = Knight)
         
-        // Automatically chooses the enemy (1 or 2)
-        this.chooseEnemy = Math.floor(Math.random() * 2) + 1;
+        this.chooseEnemy = parseInt(localStorage.getItem("pendingEnemyChoice") || "1");
         this.enemyName = this.chooseEnemy === 1 ? "Crazy Jester" : "Bounded Knight";
 
         //enemy card
@@ -50,6 +49,7 @@ class Game {
         this.isEnemyShowing = true;
         this.isShowingDefeatedEnemy = false;
         this.strengthMessage = false;
+        this.noMoonCardsMessage = false;
         this.turnBlockedMessage = false;
         this.justiceMessageUntil = 0;
         this.playerHandBlocked = false;
@@ -371,7 +371,9 @@ async function main() {
     game = new Game();
 
     await loadPlayerDeck(game);
+    await loadPlayerUpgrades(game);
     await loadDuelCheckpoint(game);
+    await saveDuelCheckpoint(game);
 
     drawScene(0);
 }
