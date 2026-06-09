@@ -272,7 +272,7 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
     this.showFinalImage = true;
 
-    // 60% chance enemy targets self
+    // 40% chance enemy targets self
     const enemyTargetsSelf = Math.random() < 0.40;
 
     setTimeout(() => {
