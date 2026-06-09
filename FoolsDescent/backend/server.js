@@ -532,29 +532,14 @@ app.post("/stats/current-run", async (req, res) => {
     if (!userId) { return res.json({ success: false }); }
 
     try {
-        const [runs] = await db.query(
-            `SELECT run_id, result FROM Current_Run
-             WHERE user_id = ? ORDER BY run_id DESC LIMIT 1`,
+        const [rows] = await db.query(
+            `SELECT * FROM v_current_run_stats
+             WHERE user_id = ?
+             ORDER BY run_id DESC LIMIT 1`,
             [userId]
         );
-        if (runs.length === 0) {
-            return res.json({ success: false });
-        }
-        const runId = runs[0].run_id;
-        const [rows] = await db.query(
-            `SELECT
-                 COALESCE(SUM(CASE WHEN defeated_successfully = 1 THEN 1 ELSE 0 END), 0) AS enemies_defeated,
-                 COALESCE(SUM(CASE WHEN defeated_successfully = 0 THEN 1 ELSE 0 END), 0) AS deaths,
-                 COALESCE(SUM(coins_gained), 0)  AS coins_earned,
-                 COALESCE(SUM(cards_played), 0)  AS cards_played,
-                 COALESCE(SUM(duration_sec), 0)  AS total_play_time
-             FROM Run_Enemy_Encounters
-             WHERE run_id = ?`,
-            [runId]
-        );
-        const stats = rows[0];
-        stats.victories = runs[0].result === 'victory' ? 1 : 0;
-        res.json({ success: true, stats });
+        if (rows.length === 0) return res.json({ success: false });
+        res.json({ success: true, stats: rows[0] });
     } catch (err) {
         console.log(err);
         res.json({ success: false });
@@ -584,6 +569,84 @@ app.get("/stats/leaderboard/coins", async (req, res) => {
         res.json({ success: false });
     }
 
+});
+
+app.get("/stats/enemy-winrate", async (req, res) => {
+    try {
+        const [rows] = await db.query(`SELECT * FROM v_enemy_winrate ORDER BY win_rate_pct DESC`);
+        res.json({ success: true, data: rows });
+    } catch (err) {
+        console.log(err);
+        res.json({ success: false });
+    }
+});
+
+app.get("/stats/difficulty-winrate", async (req, res) => {
+    try {
+        const [rows] = await db.query(`SELECT * FROM v_difficulty_winrate ORDER BY win_rate_pct DESC`);
+        res.json({ success: true, data: rows });
+    } catch (err) {
+        console.log(err);
+        res.json({ success: false });
+    }
+});
+
+app.get("/stats/card-popularity", async (req, res) => {
+    try {
+        const [rows] = await db.query(`SELECT * FROM v_card_popularity ORDER BY owners DESC`);
+        res.json({ success: true, data: rows });
+    } catch (err) {
+        console.log(err);
+        res.json({ success: false });
+    }
+});
+
+app.get("/stats/upgrade-popularity", async (req, res) => {
+    try {
+        const [rows] = await db.query(`SELECT * FROM v_upgrade_popularity ORDER BY times_bought DESC`);
+        res.json({ success: true, data: rows });
+    } catch (err) {
+        console.log(err);
+        res.json({ success: false });
+    }
+});
+
+// deck detail using view (name, rarity, copies)
+app.post("/stats/my-deck", async (req, res) => {
+    const userId = req.body.userId;
+    if (!userId) return res.json({ success: false });
+    try {
+        const [rows] = await db.query(
+            `SELECT card_name, rarity, card_num, is_bound
+             FROM v_player_deck_detail
+             WHERE username = (SELECT username FROM Player WHERE user_id = ?)
+             ORDER BY FIELD(rarity,'Legendary','Rare','Common'), card_name ASC`,
+            [userId]
+        );
+        res.json({ success: true, data: rows });
+    } catch (err) {
+        console.log(err);
+        res.json({ success: false });
+    }
+});
+
+// upgrades this player has purchased
+app.post("/stats/my-upgrades", async (req, res) => {
+    const userId = req.body.userId;
+    if (!userId) return res.json({ success: false });
+    try {
+        const [rows] = await db.query(
+            `SELECT upgrade_name, cost, date_acquired
+             FROM v_player_upgrades
+             WHERE username = (SELECT username FROM Player WHERE user_id = ?)
+             ORDER BY date_acquired DESC`,
+            [userId]
+        );
+        res.json({ success: true, data: rows });
+    } catch (err) {
+        console.log(err);
+        res.json({ success: false });
+    }
 });
 
 app.listen(3000, () => {
