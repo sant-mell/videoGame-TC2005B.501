@@ -1,7 +1,7 @@
 Game.prototype.enemyTurn = function() {
 
         if (this.gameOver) return;
-        if (this.showIntroText) {
+        if (this.showIntroText || this.pendingRewardCard || this.isRewardCardSliding) {
             setTimeout(() => {
                 if (this.gameOver) return;
                 this.enemyTurn();
@@ -12,6 +12,7 @@ Game.prototype.enemyTurn = function() {
     
         if (this.enemyTurnBlocked) {
             this.enemyTurnBlocked = false;
+            this.enemyHandBlocked = false;
             this.showPlayerCards = true;
             this.showEnemyCards = false;
             this.currentTurn = "player";

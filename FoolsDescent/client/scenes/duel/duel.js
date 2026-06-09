@@ -22,8 +22,7 @@ class Game {
         //CHOOSE ENEMY HERE!!
         //this.chooseEnemy = 2; //<--- CHOOSE ENEMY (1 = King, 2 = Queen)
         
-        // Automatically chooses the enemy (1 or 2)
-        this.chooseEnemy = Math.floor(Math.random() * 2) + 1;
+        this.chooseEnemy = parseInt(localStorage.getItem("pendingEnemyChoice") || "1");
         this.enemyName = this.chooseEnemy === 1 ? "Mad Monarch" : "Killer Queen";
 
         //enemy card
@@ -245,7 +244,7 @@ class Game {
 
         // Manually choose starting cards by index (pass amount to deal all of them)
         // this.characterCards = this.chooseStartingCards([0, 6, 14, 1, 13], 5);
-        this.personalPlayerCardIndices = [7, 8];
+        this.personalPlayerCardIndices = [];
         //this.characterCards = this.chooseStartingCards([11, 12, 14]);
 
          // Gives two random cards at the start of the duel, they get added to the players deck
@@ -372,7 +371,9 @@ async function main() {
     game = new Game();
 
     await loadPlayerDeck(game);
+    await loadPlayerUpgrades(game);
     await loadDuelCheckpoint(game);
+    await saveDuelCheckpoint(game);
 
     drawScene(0);
 }

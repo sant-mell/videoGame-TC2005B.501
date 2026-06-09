@@ -12,7 +12,9 @@ function getDuelSnapshot(game) {
         sunCount: game.sunCount,
         moonCount: game.moonCount,
         playerCardIndices: game.characterCards.map(c => c.cardIndex),
+        playerCardVisible: game.characterCards.map(c => c.visible !== false),
         enemyCardIndices: game.enemyCharacterCards.map(c => c.cardIndex),
+        enemyCardVisible: game.enemyCharacterCards.map(c => c.visible !== false),
         personalPlayerCardIndices: Array.isArray(game.personalPlayerCardIndices)
             ? game.personalPlayerCardIndices.slice() : [],
         availablePlayerCardIndices: Array.isArray(game.availablePlayerCardIndices)
@@ -62,18 +64,25 @@ function restoreDuelSnapshot(game, snap) {
     game.playerTurnBlocked = snap.playerTurnBlocked;
     game.enemyHandBlocked = snap.enemyHandBlocked;
     game.playerHandBlocked = snap.playerHandBlocked;
-    game.personalPlayerCardIndices = snap.personalPlayerCardIndices.slice();
-    game.availablePlayerCardIndices = snap.availablePlayerCardIndices.slice();
-    game.difficultyCardPoolIndices = snap.difficultyCardPoolIndices.slice();
-    const playerCards = snap.playerCardIndices.map(i =>
-        game.buildCharacterCardEntry(game.allCards[i], i)
-    );
+    game.personalPlayerCardIndices = (snap.personalPlayerCardIndices || []).slice();
+    game.availablePlayerCardIndices = (snap.availablePlayerCardIndices || []).slice();
+    game.difficultyCardPoolIndices = (snap.difficultyCardPoolIndices || []).slice();
+    const playerCards = snap.playerCardIndices.map((cardIdx, pos) => {
+        const entry = game.buildCharacterCardEntry(game.allCards[cardIdx], cardIdx);
+        if (snap.playerCardVisible && snap.playerCardVisible[pos] === false) {
+            entry.visible = false;
+        }
+        return entry;
+    });
     game.repositionCardsArray(playerCards);
     game.characterCards = playerCards;
-    const enemyCards = snap.enemyCardIndices.map(i => {
-        const card = game.buildCharacterCardEntry(game.allCards[i], i);
+    const enemyCards = snap.enemyCardIndices.map((cardIdx, pos) => {
+        const card = game.buildCharacterCardEntry(game.allCards[cardIdx], cardIdx);
         card.object.size.x = 50;
         card.object.size.y = 90;
+        if (snap.enemyCardVisible && snap.enemyCardVisible[pos] === false) {
+            card.visible = false;
+        }
         return card;
     });
     game.enemyCharacterCards = enemyCards;
@@ -81,12 +90,11 @@ function restoreDuelSnapshot(game, snap) {
     game.showStartButton = false;
     game.hasDealerIntro = false;
     game.showDealerIntro = false;
-    game.currentTurn = "player";
     game.showPlayerCards = true;
     game.showEnemyCards = true;
     game.updatePlayerCandles();
     game.updateEnemyCandles();
-    // cards are rebuilt visible above, so offset is 0, but set it explicitly for safety
+    // offset already-played cards so duel_stats doesn't count them as played this session
     game.cardsPlayedOffset = game.characterCards.filter(c => c.visible === false).length;
 }
 
@@ -144,6 +152,24 @@ async function savePlayerDeckToDB(cardIndices) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId: Number(userId), cards: cardIndices })
         });
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+async function loadPlayerUpgrades(game) {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+    try {
+        const res = await fetch(`http://localhost:3000/player-upgrades/${userId}`);
+        const data = await res.json();
+        if (!data.success) return;
+        const lifeExtCount = data.upgrades.filter(u => u.upgrade_id === 2).length;
+        const bonus = Math.min(lifeExtCount, 6 - game.playerLives);
+        if (bonus > 0) {
+            game.playerLives = Math.min(6, game.playerLives + bonus);
+            game.updatePlayerCandles();
+        }
     } catch (e) {
         console.error(e);
     }

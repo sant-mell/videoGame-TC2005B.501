@@ -379,7 +379,9 @@ async function main() {
     game = new Game();
 
     await loadPlayerDeck(game);
+    await loadPlayerUpgrades(game);
     await loadDuelCheckpoint(game);
+    await saveDuelCheckpoint(game);
 
     drawScene(0);
 }

@@ -506,4 +506,239 @@ BEGIN
     SELECT * FROM v_personal_stats WHERE user_id = p_user_id;
 END$$
 
+-- new descent: reset map, clear unbound deck, close old run, open new run
+-- coins are preserved (ON DUPLICATE KEY UPDATE intentionally omits current_coins)
+CREATE PROCEDURE sp_new_descent(
+    IN p_user_id INT UNSIGNED,
+    IN p_map_data JSON
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+    START TRANSACTION;
+    INSERT INTO Game_saveState (user_id, current_coins, map_data)
+    VALUES (p_user_id, 0, p_map_data)
+    ON DUPLICATE KEY UPDATE
+        current_map_position = 0,
+        map_data = VALUES(map_data),
+        saved_time = CURRENT_TIMESTAMP;
+    DELETE FROM Player_Deck WHERE user_id = p_user_id AND is_bound = FALSE;
+    UPDATE Current_Run
+       SET result = 'defeat', end_time = CURRENT_TIMESTAMP
+     WHERE user_id = p_user_id AND result = 'ongoing';
+    INSERT INTO Current_Run (user_id, result) VALUES (p_user_id, 'ongoing');
+    COMMIT;
+END$$
+
+-- upsert map position only (coins change through sp_duel_result)
+CREATE PROCEDURE sp_save_progress(
+    IN p_user_id INT UNSIGNED,
+    IN p_map_position INT,
+    IN p_map_data JSON
+)
+BEGIN
+    INSERT INTO Game_saveState (user_id, current_map_position, map_data)
+    VALUES (p_user_id, p_map_position, p_map_data)
+    ON DUPLICATE KEY UPDATE
+        current_map_position = VALUES(current_map_position),
+        map_data = VALUES(map_data),
+        saved_time = CURRENT_TIMESTAMP;
+END$$
+
+-- return the player's save row
+CREATE PROCEDURE sp_load_game(
+    IN p_user_id INT UNSIGNED
+)
+BEGIN
+    SELECT current_coins, current_map_position, map_data
+    FROM Game_saveState
+    WHERE user_id = p_user_id;
+END$$
+
+-- delete the player's save slot
+CREATE PROCEDURE sp_delete_save(
+    IN p_user_id INT UNSIGNED
+)
+BEGIN
+    DELETE FROM Game_saveState WHERE user_id = p_user_id;
+END$$
+
+-- full duel result: log encounter, update coins, close run on boss defeat or player loss
+CREATE PROCEDURE sp_duel_result(
+    IN p_user_id INT UNSIGNED,
+    IN p_won BOOLEAN,
+    IN p_enemy_name VARCHAR(255),
+    IN p_enemy_tier VARCHAR(50),
+    IN p_coins_gained INT,
+    IN p_king_active BOOLEAN,
+    IN p_cards_played INT,
+    IN p_duration_sec INT,
+    IN p_great_deck TEXT
+)
+BEGIN
+    DECLARE v_run_id INT UNSIGNED;
+    DECLARE v_enemy_id INT UNSIGNED;
+    DECLARE v_encounter_id INT UNSIGNED;
+    DECLARE v_deck_id INT UNSIGNED;
+    DECLARE v_save_coins INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+    START TRANSACTION;
+    SELECT run_id INTO v_run_id
+    FROM Current_Run
+    WHERE user_id = p_user_id AND result = 'ongoing'
+    ORDER BY run_id DESC LIMIT 1;
+    IF v_run_id IS NULL THEN
+        INSERT INTO Current_Run (user_id, result) VALUES (p_user_id, 'ongoing');
+        SET v_run_id = LAST_INSERT_ID();
+    END IF;
+    SELECT enemy_id INTO v_enemy_id FROM Enemy WHERE enemy_name = p_enemy_name;
+    IF v_enemy_id IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Unknown enemy';
+    END IF;
+    INSERT INTO Run_Enemy_Encounters
+        (run_id, enemy_id, defeated_successfully, coins_gained, cards_played, duration_sec)
+    VALUES (v_run_id, v_enemy_id, p_won, p_coins_gained, p_cards_played, p_duration_sec);
+    SET v_encounter_id = LAST_INSERT_ID();
+    IF p_great_deck IS NOT NULL AND p_great_deck != '' THEN
+        INSERT INTO Great_Deck (encounter_id, deckCards) VALUES (v_encounter_id, p_great_deck);
+        SET v_deck_id = LAST_INSERT_ID();
+        UPDATE Run_Enemy_Encounters SET greatDeck_id = v_deck_id WHERE encounter_id = v_encounter_id;
+    END IF;
+    IF p_won THEN
+        UPDATE Game_saveState
+           SET current_coins = current_coins + p_coins_gained, duel_data = NULL
+         WHERE user_id = p_user_id;
+        IF LOWER(p_enemy_tier) = 'boss' THEN
+            SELECT current_coins INTO v_save_coins FROM Game_saveState WHERE user_id = p_user_id;
+            UPDATE Current_Run
+               SET result = 'victory', end_time = CURRENT_TIMESTAMP, coins_kept = IFNULL(v_save_coins, 0)
+             WHERE run_id = v_run_id;
+        END IF;
+    ELSE
+        IF p_king_active THEN
+            UPDATE Game_saveState SET duel_data = NULL, current_coins = 0 WHERE user_id = p_user_id;
+        ELSE
+            UPDATE Game_saveState SET duel_data = NULL, current_coins = FLOOR(current_coins / 2) WHERE user_id = p_user_id;
+        END IF;
+        SELECT current_coins INTO v_save_coins FROM Game_saveState WHERE user_id = p_user_id;
+        UPDATE Current_Run
+           SET result = 'defeat', end_time = CURRENT_TIMESTAMP, coins_kept = IFNULL(v_save_coins, 0)
+         WHERE run_id = v_run_id;
+    END IF;
+    COMMIT;
+END$$
+
+-- save or update the mid-duel checkpoint
+CREATE PROCEDURE sp_set_duel_checkpoint(
+    IN p_user_id INT UNSIGNED,
+    IN p_duel_data JSON
+)
+BEGIN
+    UPDATE Game_saveState
+       SET duel_data = p_duel_data, saved_time = CURRENT_TIMESTAMP
+     WHERE user_id = p_user_id;
+END$$
+
+-- return the mid-duel checkpoint for a player
+CREATE PROCEDURE sp_get_duel_checkpoint(
+    IN p_user_id INT UNSIGNED
+)
+BEGIN
+    SELECT duel_data FROM Game_saveState WHERE user_id = p_user_id;
+END$$
+
+-- clear the mid-duel checkpoint
+CREATE PROCEDURE sp_clear_duel_checkpoint(
+    IN p_user_id INT UNSIGNED
+)
+BEGIN
+    UPDATE Game_saveState SET duel_data = NULL WHERE user_id = p_user_id;
+END$$
+
+-- return the player's deck (card_id 1-based, card_num = copies)
+CREATE PROCEDURE sp_get_player_deck(
+    IN p_user_id INT UNSIGNED
+)
+BEGIN
+    SELECT card_id, card_num FROM Player_Deck WHERE user_id = p_user_id;
+END$$
+
+-- replace the player's non-bound deck; cards is a JSON array of 0-based indices
+CREATE PROCEDURE sp_save_deck(
+    IN p_user_id INT UNSIGNED,
+    IN p_cards JSON
+)
+BEGIN
+    DELETE FROM Player_Deck WHERE user_id = p_user_id AND is_bound = FALSE;
+    IF p_cards IS NOT NULL AND JSON_LENGTH(p_cards) > 0 THEN
+        INSERT INTO Player_Deck (user_id, card_id, card_num)
+        SELECT p_user_id, jt.card_idx + 1, COUNT(*) AS card_num
+        FROM JSON_TABLE(p_cards, '$[*]' COLUMNS (card_idx INT PATH '$')) AS jt
+        WHERE (jt.card_idx + 1) NOT IN (
+            SELECT card_id FROM Player_Deck WHERE user_id = p_user_id AND is_bound = TRUE
+        )
+        GROUP BY jt.card_idx;
+    END IF;
+END$$
+
+-- mark one card as bound
+CREATE PROCEDURE sp_bind_card(
+    IN p_user_id INT UNSIGNED,
+    IN p_card_index INT
+)
+BEGIN
+    UPDATE Player_Deck SET is_bound = TRUE
+    WHERE user_id = p_user_id AND card_id = p_card_index + 1;
+END$$
+
+-- buy an upgrade: validate coins, deduct, insert row
+CREATE PROCEDURE sp_buy_upgrade(
+    IN p_user_id INT UNSIGNED,
+    IN p_upgrade_id INT UNSIGNED
+)
+BEGIN
+    DECLARE v_cost INT;
+    DECLARE v_save_id INT UNSIGNED;
+    DECLARE v_coins INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+    START TRANSACTION;
+    SELECT cost INTO v_cost FROM Upgrades WHERE upgrade_id = p_upgrade_id;
+    IF v_cost IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Unknown upgrade';
+    END IF;
+    SELECT gameSave_id, current_coins INTO v_save_id, v_coins
+    FROM Game_saveState WHERE user_id = p_user_id;
+    IF v_save_id IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No save found';
+    END IF;
+    IF v_coins < v_cost THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Not enough coins';
+    END IF;
+    UPDATE Game_saveState SET current_coins = current_coins - v_cost WHERE user_id = p_user_id;
+    INSERT INTO PlayerUpgrade (gameSave_id, upgrade_id) VALUES (v_save_id, p_upgrade_id);
+    COMMIT;
+END$$
+
+-- return upgrade rows for the player's current save
+CREATE PROCEDURE sp_get_player_upgrades(
+    IN p_user_id INT UNSIGNED
+)
+BEGIN
+    SELECT pu.upgrade_id
+    FROM PlayerUpgrade pu
+    JOIN Game_saveState g ON pu.gameSave_id = g.gameSave_id
+    WHERE g.user_id = p_user_id;
+END$$
+
 DELIMITER ;
