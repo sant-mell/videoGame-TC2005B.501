@@ -516,6 +516,12 @@ class Game {
         this.isArriving = true;
         for (let n of this.nodes) {
             if (n.x === this.fool.tx && n.y === this.fool.ty) {
+                if (n.state === "visited") {
+                    // moving back to an already-visited node: just reposition, no side-effects
+                    this.currentId = n.id;
+                    this.updateAvailable();
+                    break;
+                }
                 if (n.type === NODE_ENEMY) {
                     // a fight node is consumed only if it is won, so don't mark it
                     // visited or save here: just remember which node is being fought
@@ -695,7 +701,13 @@ class Game {
         if (this.fool.moving) return;
         let dx = mouseX - n.x;
         let dy = mouseY - n.y;
-        if (Math.sqrt(dx * dx + dy * dy) <= 40 && n.state === "available") {
+        if (Math.sqrt(dx * dx + dy * dy) > 40) return;
+        const isAvailable = n.state === "available";
+        const isVisitedNeighbor = n.state === "visited" && this.edges.some(e =>
+            (e[0] === this.currentId && e[1] === n.id) ||
+            (e[1] === this.currentId && e[0] === n.id)
+        );
+        if (isAvailable || isVisitedNeighbor) {
             console.log("node clicked: " + n.id);
             this.fool.setTarget(n.x, n.y);
         }
