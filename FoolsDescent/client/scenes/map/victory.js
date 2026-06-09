@@ -85,12 +85,20 @@ async function resetForNewDescent() {
                 body: JSON.stringify({ userId: Number(userId) })
             });
         } catch (e) {}
+        try {
+            await fetch("http://localhost:3000/clear-duel-checkpoint", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId: Number(userId) })
+            });
+        } catch (e) {}
     }
     localStorage.removeItem("pendingFight");
     localStorage.removeItem("duelWon");
     localStorage.removeItem("extraCards");
     localStorage.removeItem("pendingEnemyChoice");
     localStorage.setItem("continueRun", "false");
+    localStorage.setItem("playerCoins", "0");
 }
 
 descentButton.addEventListener("click", async () => {

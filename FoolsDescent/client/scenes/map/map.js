@@ -588,7 +588,7 @@ class Game {
         ctx.fillStyle = "gold";
         ctx.font = "24px MedievalSharp";
         ctx.textAlign = "left";
-        ctx.fillText("Coins: $" + (localStorage.getItem("playerCoins") || "0"), 20, 35);
+        ctx.fillText("Coins: $" + parseInt(localStorage.getItem("playerCoins") || "0"), 20, 35);
         if (this.testMode) {
             ctx.fillStyle = "red";
             ctx.font = "16px MedievalSharp";
@@ -631,10 +631,23 @@ class Game {
 
     createEventListeners() {
         // y key toggles the bounding boxes
-        window.addEventListener('keydown', event => {
+        window.addEventListener('keydown', async event => {
             if (event.key == 'y') showBBox = !showBBox;
             if (event.key === '`') {
                 this.testMode = !this.testMode;
+            }
+            if (event.key === 'c' && this.testMode) {
+                localStorage.setItem("playerCoins", "1000");
+                const userId = localStorage.getItem("userId");
+                if (userId) {
+                    try {
+                        await fetch("http://localhost:3000/debug/set-coins", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ userId: Number(userId), amount: 1000 })
+                        });
+                    } catch (e) {}
+                }
             }
         });
         // click on an available node to send the fool there
@@ -757,11 +770,13 @@ async function main() {
         localStorage.removeItem("pendingFight");
         localStorage.removeItem("duelWon");
         localStorage.removeItem("extraCards");
+        localStorage.removeItem("pendingEnemyChoice");
         localStorage.setItem("playerCoins", "0");
         const saved = await saveNewDescent(game);
         if (saved) {
             localStorage.setItem("continueRun", "true");
-            await loadGame(game); // sync real coins from DB since new descent preserves them
+            await clearDuelCheckpointFromMap();
+            await loadGame(game);
         }
     }
     drawScene(0);
