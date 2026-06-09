@@ -1,104 +1,288 @@
-body{
+@keyframes titlePulse {
+    0%, 100% { text-shadow: 0 0 10px rgba(255, 215, 120, 0.7),
+                             0 0 30px rgba(255, 215, 120, 0.25); }
+    50%       { text-shadow: 0 0 22px rgba(255, 215, 120, 1),
+                             0 0 55px rgba(255, 215, 120, 0.4); }
+}
+
+@keyframes buttonGlow {
+    0%, 100% { box-shadow: 0 0 12px rgba(255, 215, 120, 0.15),
+                           inset 0 0 15px rgba(255, 215, 120, 0.04); }
+    50%       { box-shadow: 0 0 24px rgba(255, 215, 120, 0.32),
+                           inset 0 0 20px rgba(255, 215, 120, 0.09); }
+}
+
+@keyframes symbolDrift {
+    0%, 100% { transform: translateY(0)     rotate(0deg); opacity: 0.07; }
+    50%       { transform: translateY(-18px) rotate(8deg); opacity: 0.12; }
+}
+
+@keyframes orbPulse {
+    0%, 100% { opacity: 0.5; }
+    50%       { opacity: 0.85; }
+}
+
+@keyframes inputFocus {
+    from { box-shadow: 0 0 0px rgba(255, 215, 120, 0); }
+    to   { box-shadow: 0 0 18px rgba(255, 215, 120, 0.3),
+                       inset 0 0 10px rgba(255, 215, 120, 0.05); }
+}
+
+body {
     margin: 0;
     padding: 0;
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+
     background-color: #120b2e;
-    background-image: radial-gradient(circle at top, #3b1d73, #120b2e 70%);
-    font-family: Arial, sans-serif;
+    background-image: radial-gradient(circle at top, #4c258d 0%, #120b2e 70%);
+
+    font-family: Georgia, "Times New Roman", serif;
 }
 
-.register-container{
+body::before {
+    content: "☽";
+    position: fixed;
+    top: 7%;
+    left: 5%;
+    font-size: 150px;
+    color: rgba(255, 215, 120, 0.08);
+    font-weight: bold;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+    animation: symbolDrift 8s ease-in-out infinite;
+}
+
+body::after {
+    content: "☼";
+    position: fixed;
+    bottom: 8%;
+    right: 7%;
+    font-size: 130px;
+    color: rgba(255, 215, 120, 0.08);
+    font-weight: bold;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+    animation: symbolDrift 9s ease-in-out infinite reverse;
+}
+
+.register-container {
+    position: relative;
+    z-index: 1;
+
     width: 850px;
-    height: 650px;
-    padding-top: 25px;
-    padding-bottom: 25px;
+    padding: 35px 60px;
+    box-sizing: border-box;
+
     border: 8px solid #3a2a1d;
-    border-radius: 15px;
-    background-color: rgba(20, 15, 45, 0.92);
-    box-shadow: 0px 0px 20px black;
+    border-radius: 18px;
+
+    background:
+        radial-gradient(ellipse at 50% 30%, rgba(80, 40, 140, 0.35), transparent 65%),
+        linear-gradient(180deg, rgba(28, 18, 58, 0.98), rgba(10, 6, 28, 0.98));
+
+    box-shadow:
+        0 0 0 1px rgba(255, 215, 120, 0.06),
+        0 0 30px rgba(0, 0, 0, 0.85),
+        0 0 60px rgba(87, 44, 165, 0.35);
+
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
 }
 
-.title{
-    color: #e0b36d;
-    font-size: 45px;
-    margin: 0 0 25px 0;
-    border: 4px solid #5a4128;
-    padding: 15px 40px;
-    background-color: #2a223b;
-    border-radius: 10px;
-    letter-spacing: 3px;
+.register-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.18) 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 0;
 }
 
-.register-form{
+.register-container::after {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 300px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.08), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: orbPulse 7s ease-in-out infinite;
+}
+
+.title {
+    position: relative;
+    z-index: 2;
+
+    color: #f0c77d;
+    font-size: 38px;
+    letter-spacing: 6px;
+
+    margin: 0 0 22px 0;
+    padding: 15px 50px;
+
+    background: linear-gradient(180deg, #35274f, #241b38);
+    border: 4px solid #7a5a2f;
+    border-radius: 12px;
+
+    text-shadow: 0 0 10px rgba(255, 215, 120, 0.7);
+    box-shadow:
+        0 0 20px rgba(255, 215, 120, 0.22),
+        inset 0 0 20px rgba(255, 215, 120, 0.07);
+
+    animation: titlePulse 4s ease-in-out infinite;
+}
+
+.title::before {
+    content: "☽";
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #d4b06a;
+    font-size: 1.2rem;
+}
+
+.title::after {
+    content: "☼";
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #d4b06a;
+    font-size: 1.2rem;
+}
+
+.register-form {
+    position: relative;
+    z-index: 2;
+
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
 }
 
 input,
-select{
-    width: 380px;
-    height: 55px;
-    padding-left: 15px;
-    font-size: 18px;
-    border: 4px solid #5a4128;
-    border-radius: 10px;
-    background-color: #38435a;
-    color: white;
-    box-sizing: border-box;
-}
-
-select{
-    cursor: pointer;
-}
-
-input::placeholder{
-    color: #d6d6d6;
-}
-
-button{
+select {
     width: 390px;
-    height: 70px;
-    margin-top: 5px;
-    font-size: 24px;
-    font-weight: bold;
-    color: #e6c07b;
-    background-color: #38435a;
-    border: 5px solid #5a4128;
-    border-radius: 12px;
+    height: 52px;
+    padding: 0 15px;
+    box-sizing: border-box;
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 17px;
+    color: #f0e8d0;
+
+    background: linear-gradient(180deg, rgba(45, 35, 70, 0.95), rgba(30, 22, 55, 0.95));
+    border: 3px solid #5a4128;
+    border-radius: 10px;
+
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+input::placeholder {
+    color: rgba(214, 186, 118, 0.5);
+    font-style: italic;
+    letter-spacing: 1px;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
     cursor: pointer;
+    background-image:
+        linear-gradient(180deg, rgba(45, 35, 70, 0.95), rgba(30, 22, 55, 0.95)),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23d4b06a' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat, no-repeat;
+    background-position: 0 0, right 15px center;
+    padding-right: 40px;
 }
 
-button:hover{
-    background-color: #4a5670;
+select option {
+    background-color: #1e1637;
+    color: #f0e8d0;
 }
 
-a{
+select option:disabled {
+    color: rgba(214, 186, 118, 0.5);
+    font-style: italic;
+}
+
+input:focus,
+select:focus {
+    border-color: #c9952a;
+    animation: inputFocus 0.3s forwards;
+}
+
+button {
+    position: relative;
+    width: 390px;
+    height: 65px;
+    margin-top: 2px;
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: #e6c07b;
+
+    background: linear-gradient(180deg, #465372, #38435a);
+    border: 5px solid #6b4d25;
+    border-radius: 14px;
+    cursor: pointer;
+
+    transition: transform 0.25s, background 0.25s, box-shadow 0.25s, color 0.25s;
+    animation: buttonGlow 3.5s ease-in-out infinite;
+}
+
+button::before {
+    content: "✦";
+    position: absolute;
+    top: 6px;
+    right: 12px;
+    font-size: 10px;
+    color: rgba(255, 215, 120, 0.35);
+    pointer-events: none;
+    letter-spacing: 0;
+}
+
+button:hover {
+    transform: translateY(-4px) scale(1.02);
+    background: linear-gradient(180deg, #566887, #45536f);
+    box-shadow:
+        0 0 28px rgba(255, 215, 120, 0.38),
+        inset 0 0 15px rgba(255, 215, 120, 0.10);
+    color: #fff1b8;
+    animation: none;
+}
+
+button:active {
+    transform: translateY(0) scale(0.99);
+}
+
+a {
     text-decoration: none;
 }
 
-.back-button{
-    width: 250px;
-    height: 65px;
-    margin-top: 15px;
-    font-size: 24px;
-    font-weight: bold;
-    color: #e6c07b;
-    background-color: #38435a;
-    border: 5px solid #5a4128;
-    border-radius: 12px;
-    cursor: pointer;
-}
-
-.back-button:hover{
-    background-color: #4a5670;
+.back-button {
+    width: 260px;
+    height: 58px;
+    font-size: 20px;
+    margin-top: 2px;
 }
