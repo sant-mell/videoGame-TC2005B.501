@@ -95,7 +95,7 @@ Game.prototype.update = function(deltaTime) {
                         this.isCardSliding = false;
 
                         setTimeout(() => {
-
+                            if (this.gameOver) return;
                             this.showFinalImage = false;
 
                             this.finalImage.position.x = canvasWidth / 2;
@@ -109,9 +109,9 @@ Game.prototype.update = function(deltaTime) {
                 if (this.slideDirection === "down") {
 
                     this.finalImage.position.y += this.slideSpeed * dt;
-                
+
                     if (this.finalImage.position.y >= this.downtargetY) {
-                
+
                         this.finalImage.position.y = this.downtargetY;
                         this.isCardSliding = false;
                         this.candleBurnPlayed = false;
@@ -120,15 +120,16 @@ Game.prototype.update = function(deltaTime) {
                         } else {
                             this.updatePlayerCandles();
                         }
-                
+
                         setTimeout(() => {
+                            if (this.gameOver) return;
                             this.showFinalImage = false;
                             this.finalImage.position.x = canvasWidth / 2;
                             this.finalImage.position.y = canvasHeight / 2;
                         }, 300);
                     }
                 }
-                
+
             }
             // SUN CARD
             if (this.currentGreatCard === "sun") {
@@ -145,7 +146,7 @@ Game.prototype.update = function(deltaTime) {
                         this.isCardSliding = false;
 
                         setTimeout(() => {
-
+                            if (this.gameOver) return;
                             this.showFinalImage = false;
 
                             this.sunImage.position.x = canvasWidth / 2;
@@ -167,7 +168,7 @@ Game.prototype.update = function(deltaTime) {
                         this.isCardSliding = false;
 
                         setTimeout(() => {
-
+                            if (this.gameOver) return;
                             this.showFinalImage = false;
 
                             this.sunImage.position.x = canvasWidth / 2;
