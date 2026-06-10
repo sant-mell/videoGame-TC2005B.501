@@ -79,88 +79,88 @@ INSERT INTO Player (full_name, username, password, age, gender) VALUES
 ('Maia Castillo', 'maia_castillo40', 'pass1040', 25, 'Other');
 
 INSERT INTO Current_Run (user_id, start_time, end_time, result, coins_kept) VALUES
-(39, '2026-05-19 14:00:00', '2026-05-19 15:30:00', 'victory', 563),
-(6, '2026-05-16 22:00:00', '2026-05-16 23:30:00', 'victory', 532),
-(4, '2026-05-23 09:00:00', '2026-05-23 10:30:00', 'defeat', 4734),
-(29, '2026-05-23 12:00:00', '2026-05-23 13:30:00', 'victory', 2842),
-(2, '2026-05-12 05:00:00', '2026-05-12 06:30:00', 'victory', 959),
-(32, '2026-05-07 09:00:00', NULL, 'ongoing', 1059),
-(16, '2026-05-13 15:00:00', '2026-05-13 16:30:00', 'victory', 660),
-(11, '2026-05-13 17:00:00', '2026-05-13 18:30:00', 'victory', 2276),
-(9, '2026-05-28 17:00:00', '2026-05-28 18:30:00', 'victory', 2280),
-(27, '2026-05-22 12:00:00', '2026-05-22 13:30:00', 'victory', 1890),
-(10, '2026-05-06 04:00:00', NULL, 'ongoing', 1900),
-(15, '2026-05-16 18:00:00', NULL, 'ongoing', 1493),
-(17, '2026-05-01 04:00:00', '2026-05-01 05:30:00', 'victory', 3432),
-(35, '2026-05-20 18:00:00', '2026-05-20 19:30:00', 'victory', 2610),
-(9, '2026-05-28 16:00:00', '2026-05-28 17:30:00', 'defeat', 442),
-(30, '2026-05-26 17:00:00', '2026-05-26 18:30:00', 'defeat', 3214),
-(26, '2026-05-13 03:00:00', '2026-05-13 04:30:00', 'victory', 3944),
-(26, '2026-05-07 02:00:00', NULL, 'ongoing', 1710),
-(29, '2026-05-04 10:00:00', NULL, 'ongoing', 4921),
-(4, '2026-05-01 18:00:00', NULL, 'ongoing', 1239),
-(35, '2026-05-12 19:00:00', NULL, 'ongoing', 208),
-(5, '2026-05-20 12:00:00', NULL, 'ongoing', 1216),
-(17, '2026-05-20 11:00:00', '2026-05-20 12:30:00', 'victory', 3884),
-(8, '2026-05-28 15:00:00', NULL, 'ongoing', 3817),
-(31, '2026-05-10 02:00:00', '2026-05-10 03:30:00', 'victory', 1180),
-(7, '2026-05-11 08:00:00', '2026-05-11 09:30:00', 'defeat', 3920),
-(11, '2026-05-01 06:00:00', '2026-05-01 07:30:00', 'defeat', 4327),
-(24, '2026-05-23 17:00:00', NULL, 'ongoing', 221),
-(34, '2026-05-21 02:00:00', '2026-05-21 03:30:00', 'victory', 2139),
-(34, '2026-05-06 11:00:00', '2026-05-06 12:30:00', 'victory', 1825),
-(35, '2026-05-25 16:00:00', '2026-05-25 17:30:00', 'defeat', 2700),
-(15, '2026-05-26 06:00:00', '2026-05-26 07:30:00', 'defeat', 1961),
-(26, '2026-05-26 07:00:00', '2026-05-26 08:30:00', 'defeat', 1637),
+(39, '2026-05-19 14:00:00', '2026-05-19 15:30:00', 'victory', 420),
+(6, '2026-05-16 22:00:00', '2026-05-16 23:30:00', 'victory', 380),
+(4, '2026-05-23 09:00:00', '2026-05-23 10:30:00', 'defeat', 210),
+(29, '2026-05-23 12:00:00', '2026-05-23 13:30:00', 'victory', 420),
+(2, '2026-05-12 05:00:00', '2026-05-12 06:30:00', 'victory', 310),
+(32, '2026-05-07 09:00:00', NULL, 'ongoing', 180),
+(16, '2026-05-13 15:00:00', '2026-05-13 16:30:00', 'victory', 290),
+(11, '2026-05-13 17:00:00', '2026-05-13 18:30:00', 'victory', 380),
+(9, '2026-05-28 17:00:00', '2026-05-28 18:30:00', 'victory', 510),
+(27, '2026-05-22 12:00:00', '2026-05-22 13:30:00', 'victory', 450),
+(10, '2026-05-06 04:00:00', NULL, 'ongoing', 120),
+(15, '2026-05-16 18:00:00', NULL, 'ongoing', 95),
+(17, '2026-05-01 04:00:00', '2026-05-01 05:30:00', 'victory', 620),
+(35, '2026-05-20 18:00:00', '2026-05-20 19:30:00', 'victory', 340),
+(9, '2026-05-28 16:00:00', '2026-05-28 17:30:00', 'defeat', 130),
+(30, '2026-05-26 17:00:00', '2026-05-26 18:30:00', 'defeat', 160),
+(26, '2026-05-13 03:00:00', '2026-05-13 04:30:00', 'victory', 720),
+(26, '2026-05-07 02:00:00', NULL, 'ongoing', 200),
+(29, '2026-05-04 10:00:00', NULL, 'ongoing', 310),
+(4, '2026-05-01 18:00:00', NULL, 'ongoing', 150),
+(35, '2026-05-12 19:00:00', NULL, 'ongoing', 80),
+(5, '2026-05-20 12:00:00', NULL, 'ongoing', 140),
+(17, '2026-05-20 11:00:00', '2026-05-20 12:30:00', 'victory', 580),
+(8, '2026-05-28 15:00:00', NULL, 'ongoing', 230),
+(31, '2026-05-10 02:00:00', '2026-05-10 03:30:00', 'victory', 260),
+(7, '2026-05-11 08:00:00', '2026-05-11 09:30:00', 'defeat', 180),
+(11, '2026-05-01 06:00:00', '2026-05-01 07:30:00', 'defeat', 210),
+(24, '2026-05-23 17:00:00', NULL, 'ongoing', 70),
+(34, '2026-05-21 02:00:00', '2026-05-21 03:30:00', 'victory', 390),
+(34, '2026-05-06 11:00:00', '2026-05-06 12:30:00', 'victory', 320),
+(35, '2026-05-25 16:00:00', '2026-05-25 17:30:00', 'defeat', 140),
+(15, '2026-05-26 06:00:00', '2026-05-26 07:30:00', 'defeat', 100),
+(26, '2026-05-26 07:00:00', '2026-05-26 08:30:00', 'defeat', 120),
 (34, '2026-05-12 00:00:00', '2026-05-12 01:30:00', 'victory', 228),
-(18, '2026-05-09 06:00:00', '2026-05-09 07:30:00', 'victory', 4957),
-(23, '2026-05-26 11:00:00', '2026-05-26 12:30:00', 'victory', 2987),
-(6, '2026-05-04 07:00:00', NULL, 'ongoing', 3850),
-(13, '2026-05-07 15:00:00', '2026-05-07 16:30:00', 'victory', 4999),
-(1, '2026-05-21 11:00:00', '2026-05-21 12:30:00', 'victory', 694),
-(8, '2026-05-26 22:00:00', '2026-05-26 23:30:00', 'victory', 1632);
+(18, '2026-05-09 06:00:00', '2026-05-09 07:30:00', 'victory', 680),
+(23, '2026-05-26 11:00:00', '2026-05-26 12:30:00', 'victory', 440),
+(6, '2026-05-04 07:00:00', NULL, 'ongoing', 270),
+(13, '2026-05-07 15:00:00', '2026-05-07 16:30:00', 'victory', 750),
+(1, '2026-05-21 11:00:00', '2026-05-21 12:30:00', 'victory', 490),
+(8, '2026-05-26 22:00:00', '2026-05-26 23:30:00', 'victory', 380);
 
 INSERT INTO Game_saveState (user_id, current_coins, current_map_position, current_enemy_id) VALUES
-(1, 3916, 1, NULL),
-(2, 710, 6, NULL),
-(3, 3794, 3, 6),
-(4, 5937, 1, 2),
-(5, 225, 1, NULL),
-(6, 5372, 1, NULL),
-(7, 5384, 2, 2),
-(8, 175, 0, 7),
-(9, 4313, 5, NULL),
-(10, 1595, 6, 7),
-(11, 229, 2, NULL),
-(12, 4105, 1, NULL),
-(13, 2124, 4, 4),
-(14, 498, 5, NULL),
-(15, 5426, 4, NULL),
-(16, 4109, 1, 5),
-(17, 4288, 4, NULL),
-(18, 1500, 4, 1),
-(19, 1411, 1, 4),
-(20, 4558, 0, NULL),
-(21, 869, 4, 1),
-(22, 1567, 2, 1),
-(23, 4159, 3, 5),
-(24, 519, 3, 3),
-(25, 5674, 2, NULL),
-(26, 4159, 1, NULL),
-(27, 4583, 1, NULL),
-(28, 1123, 3, NULL),
-(29, 3621, 2, 1),
-(30, 3508, 0, NULL),
-(31, 1002, 6, NULL),
-(32, 1171, 2, NULL),
-(33, 1798, 5, NULL),
-(34, 3991, 1, 6),
-(35, 1322, 5, NULL),
-(36, 2778, 3, NULL),
-(37, 2609, 0, NULL),
-(38, 159, 2, NULL),
-(39, 3608, 5, NULL),
-(40, 2715, 4, NULL);
+(1, 320, 1, NULL),
+(2, 180, 6, NULL),
+(3, 90, 3, 6),
+(4, 450, 1, 2),
+(5, 60, 1, NULL),
+(6, 580, 1, NULL),
+(7, 240, 2, 2),
+(8, 30, 0, 7),
+(9, 710, 5, NULL),
+(10, 200, 6, 7),
+(11, 140, 2, NULL),
+(12, 490, 1, NULL),
+(13, 380, 4, 4),
+(14, 80, 5, NULL),
+(15, 670, 4, NULL),
+(16, 320, 1, 5),
+(17, 510, 4, NULL),
+(18, 150, 4, 1),
+(19, 95, 1, 4),
+(20, 620, 0, NULL),
+(21, 170, 4, 1),
+(22, 45, 2, 1),
+(23, 510, 3, 5),
+(24, 65, 3, 3),
+(25, 730, 2, NULL),
+(26, 380, 1, NULL),
+(27, 590, 1, NULL),
+(28, 120, 3, NULL),
+(29, 440, 2, 1),
+(30, 270, 0, NULL),
+(31, 100, 6, NULL),
+(32, 210, 2, NULL),
+(33, 350, 5, NULL),
+(34, 280, 1, 6),
+(35, 190, 5, NULL),
+(36, 460, 3, NULL),
+(37, 310, 0, NULL),
+(38, 65, 2, NULL),
+(39, 240, 5, NULL),
+(40, 180, 4, NULL);
 
 INSERT INTO Player_Deck (user_id, card_id, card_num, is_bound) VALUES
 (33, 3, 1, TRUE),
@@ -248,50 +248,50 @@ INSERT INTO PlayerUpgrade (gameSave_id, upgrade_id, date_acquired) VALUES
 
 INSERT INTO Run_Enemy_Encounters (run_id, enemy_id, defeated_successfully, coins_gained, cards_played, duration_sec) VALUES
 (14, 6, TRUE, 50, 11, 450),
-(29, 5, TRUE, 659, 4, 527),
-(4, 5, TRUE, 174, 7, 454),
-(22, 3, FALSE, 261, 11, 296),
-(26, 6, TRUE, 308, 7, 600),
-(26, 1, TRUE, 658, 2, 106),
-(14, 5, FALSE, 563, 3, 493),
-(22, 7, FALSE, 437, 2, 590),
-(13, 2, TRUE, 178, 5, 599),
-(6, 3, TRUE, 377, 4, 236),
-(2, 6, FALSE, 392, 6, 566),
-(14, 4, FALSE, 346, 12, 93),
-(32, 3, FALSE, 128, 10, 545),
-(34, 6, TRUE, 94, 4, 284),
-(25, 4, FALSE, 442, 4, 52),
-(9, 1, FALSE, 726, 12, 514),
-(38, 4, TRUE, 74, 6, 570),
-(30, 4, TRUE, 111, 3, 188),
-(10, 5, TRUE, 739, 11, 498),
-(6, 5, TRUE, 1, 12, 158),
-(15, 5, TRUE, 660, 11, 341),
-(9, 6, FALSE, 540, 10, 477),
-(8, 1, TRUE, 307, 8, 226),
-(25, 3, TRUE, 615, 0, 40),
-(35, 3, FALSE, 285, 5, 278),
-(31, 5, TRUE, 560, 3, 59),
-(27, 6, FALSE, 56, 0, 228),
-(32, 6, FALSE, 83, 4, 263),
-(28, 3, TRUE, 504, 0, 376),
-(27, 3, FALSE, 202, 0, 329),
-(33, 1, TRUE, 507, 3, 349),
-(13, 2, FALSE, 226, 4, 332),
-(7, 5, FALSE, 624, 2, 258),
-(32, 4, TRUE, 609, 2, 432),
-(4, 2, TRUE, 610, 2, 455),
-(4, 6, TRUE, 188, 6, 490),
-(21, 6, TRUE, 81, 2, 367),
-(13, 2, FALSE, 32, 4, 417),
-(24, 3, FALSE, 173, 1, 32),
-(6, 3, TRUE, 359, 6, 156),
-(36, 7, TRUE, 389, 5, 346),
-(28, 1, TRUE, 722, 7, 230),
-(24, 5, FALSE, 197, 5, 402),
-(31, 1, FALSE, 253, 12, 444),
-(3, 4, TRUE, 475, 1, 93);
+(29, 5, TRUE, 180, 4, 527),
+(4, 5, TRUE, 120, 7, 454),
+(22, 3, FALSE, 140, 11, 296),
+(26, 6, TRUE, 160, 7, 600),
+(26, 1, TRUE, 200, 2, 106),
+(14, 5, FALSE, 150, 3, 493),
+(22, 7, FALSE, 170, 2, 590),
+(13, 2, TRUE, 110, 5, 599),
+(6, 3, TRUE, 150, 4, 236),
+(2, 6, FALSE, 160, 6, 566),
+(14, 4, FALSE, 140, 12, 93),
+(32, 3, FALSE, 80, 10, 545),
+(34, 6, TRUE, 70, 4, 284),
+(25, 4, FALSE, 160, 4, 52),
+(9, 1, FALSE, 200, 12, 514),
+(38, 4, TRUE, 60, 6, 570),
+(30, 4, TRUE, 80, 3, 188),
+(10, 5, TRUE, 210, 11, 498),
+(6, 5, TRUE, 30, 12, 158),
+(15, 5, TRUE, 190, 11, 341),
+(9, 6, FALSE, 160, 10, 477),
+(8, 1, TRUE, 130, 8, 226),
+(25, 3, TRUE, 180, 0, 40),
+(35, 3, FALSE, 120, 5, 278),
+(31, 5, TRUE, 170, 3, 59),
+(27, 6, FALSE, 50, 0, 228),
+(32, 6, FALSE, 65, 4, 263),
+(28, 3, TRUE, 150, 0, 376),
+(27, 3, FALSE, 110, 0, 329),
+(33, 1, TRUE, 160, 3, 349),
+(13, 2, FALSE, 100, 4, 332),
+(7, 5, FALSE, 190, 2, 258),
+(32, 4, TRUE, 180, 2, 432),
+(4, 2, TRUE, 180, 2, 455),
+(4, 6, TRUE, 100, 6, 490),
+(21, 6, TRUE, 65, 2, 367),
+(13, 2, FALSE, 35, 4, 417),
+(24, 3, FALSE, 90, 1, 32),
+(6, 3, TRUE, 140, 6, 156),
+(36, 7, TRUE, 150, 5, 346),
+(28, 1, TRUE, 200, 7, 230),
+(24, 5, FALSE, 100, 5, 402),
+(31, 1, FALSE, 110, 12, 444),
+(3, 4, TRUE, 150, 1, 93);
 
 INSERT INTO Great_Deck (encounter_id, deckCards) VALUES
 (1, 'sun,sun,moon,moon,moon,moon,sun,moon'),
@@ -345,45 +345,45 @@ JOIN Great_Deck g ON g.encounter_id = r.encounter_id
 SET r.greatDeck_id = g.greatDeck_id;
 
 -- overwrite trigger-accumulated values with the intended seeded totals
-UPDATE Player_stats SET total_play_time=45540, deaths=8, enemies_defeated=18, victories=6, coins_earned=1399, cards_played=259 WHERE user_id=1;
-UPDATE Player_stats SET total_play_time=1597, deaths=5, enemies_defeated=16, victories=7, coins_earned=3322, cards_played=81 WHERE user_id=2;
-UPDATE Player_stats SET total_play_time=49499, deaths=10, enemies_defeated=12, victories=6, coins_earned=5383, cards_played=307 WHERE user_id=3;
-UPDATE Player_stats SET total_play_time=16274, deaths=12, enemies_defeated=58, victories=54, coins_earned=10333, cards_played=354 WHERE user_id=4;
-UPDATE Player_stats SET total_play_time=44196, deaths=15, enemies_defeated=30, victories=26, coins_earned=8693, cards_played=357 WHERE user_id=5;
-UPDATE Player_stats SET total_play_time=1018, deaths=0, enemies_defeated=27, victories=23, coins_earned=3831, cards_played=292 WHERE user_id=6;
-UPDATE Player_stats SET total_play_time=20768, deaths=6, enemies_defeated=25, victories=19, coins_earned=9590, cards_played=39 WHERE user_id=7;
-UPDATE Player_stats SET total_play_time=37641, deaths=5, enemies_defeated=9, victories=0, coins_earned=440, cards_played=57 WHERE user_id=8;
-UPDATE Player_stats SET total_play_time=7591, deaths=5, enemies_defeated=22, victories=4, coins_earned=11480, cards_played=14 WHERE user_id=9;
-UPDATE Player_stats SET total_play_time=2623, deaths=1, enemies_defeated=8, victories=0, coins_earned=11419, cards_played=34 WHERE user_id=10;
-UPDATE Player_stats SET total_play_time=48885, deaths=1, enemies_defeated=4, victories=4, coins_earned=5954, cards_played=102 WHERE user_id=11;
-UPDATE Player_stats SET total_play_time=35589, deaths=2, enemies_defeated=56, victories=55, coins_earned=11653, cards_played=196 WHERE user_id=12;
-UPDATE Player_stats SET total_play_time=7619, deaths=7, enemies_defeated=13, victories=3, coins_earned=1834, cards_played=17 WHERE user_id=13;
-UPDATE Player_stats SET total_play_time=2856, deaths=2, enemies_defeated=52, victories=48, coins_earned=10347, cards_played=323 WHERE user_id=14;
-UPDATE Player_stats SET total_play_time=19432, deaths=15, enemies_defeated=6, victories=1, coins_earned=1603, cards_played=387 WHERE user_id=15;
-UPDATE Player_stats SET total_play_time=42957, deaths=6, enemies_defeated=18, victories=10, coins_earned=5513, cards_played=216 WHERE user_id=16;
-UPDATE Player_stats SET total_play_time=17715, deaths=0, enemies_defeated=22, victories=8, coins_earned=4630, cards_played=24 WHERE user_id=17;
-UPDATE Player_stats SET total_play_time=47508, deaths=11, enemies_defeated=58, victories=20, coins_earned=9863, cards_played=257 WHERE user_id=18;
-UPDATE Player_stats SET total_play_time=31800, deaths=9, enemies_defeated=39, victories=1, coins_earned=6765, cards_played=15 WHERE user_id=19;
-UPDATE Player_stats SET total_play_time=29203, deaths=3, enemies_defeated=22, victories=15, coins_earned=11545, cards_played=24 WHERE user_id=20;
-UPDATE Player_stats SET total_play_time=35850, deaths=6, enemies_defeated=45, victories=5, coins_earned=9413, cards_played=147 WHERE user_id=21;
-UPDATE Player_stats SET total_play_time=11765, deaths=13, enemies_defeated=0, victories=0, coins_earned=4724, cards_played=390 WHERE user_id=22;
-UPDATE Player_stats SET total_play_time=49785, deaths=1, enemies_defeated=0, victories=1, coins_earned=8041, cards_played=48 WHERE user_id=23;
-UPDATE Player_stats SET total_play_time=32809, deaths=5, enemies_defeated=31, victories=22, coins_earned=8440, cards_played=133 WHERE user_id=24;
-UPDATE Player_stats SET total_play_time=38480, deaths=5, enemies_defeated=18, victories=6, coins_earned=11460, cards_played=118 WHERE user_id=25;
-UPDATE Player_stats SET total_play_time=33257, deaths=5, enemies_defeated=7, victories=1, coins_earned=8032, cards_played=356 WHERE user_id=26;
-UPDATE Player_stats SET total_play_time=37382, deaths=3, enemies_defeated=40, victories=20, coins_earned=5826, cards_played=48 WHERE user_id=27;
-UPDATE Player_stats SET total_play_time=26897, deaths=12, enemies_defeated=57, victories=56, coins_earned=1411, cards_played=216 WHERE user_id=28;
-UPDATE Player_stats SET total_play_time=42927, deaths=0, enemies_defeated=23, victories=6, coins_earned=4966, cards_played=134 WHERE user_id=29;
-UPDATE Player_stats SET total_play_time=28653, deaths=5, enemies_defeated=24, victories=20, coins_earned=3826, cards_played=235 WHERE user_id=30;
-UPDATE Player_stats SET total_play_time=8915, deaths=1, enemies_defeated=22, victories=18, coins_earned=5352, cards_played=267 WHERE user_id=31;
-UPDATE Player_stats SET total_play_time=10779, deaths=14, enemies_defeated=42, victories=35, coins_earned=5297, cards_played=86 WHERE user_id=32;
-UPDATE Player_stats SET total_play_time=30953, deaths=14, enemies_defeated=44, victories=16, coins_earned=9489, cards_played=118 WHERE user_id=33;
-UPDATE Player_stats SET total_play_time=8861, deaths=10, enemies_defeated=29, victories=20, coins_earned=11412, cards_played=121 WHERE user_id=34;
-UPDATE Player_stats SET total_play_time=33872, deaths=6, enemies_defeated=17, victories=9, coins_earned=11520, cards_played=316 WHERE user_id=35;
-UPDATE Player_stats SET total_play_time=10731, deaths=4, enemies_defeated=15, victories=10, coins_earned=9877, cards_played=267 WHERE user_id=36;
-UPDATE Player_stats SET total_play_time=23447, deaths=5, enemies_defeated=15, victories=10, coins_earned=3101, cards_played=132 WHERE user_id=37;
-UPDATE Player_stats SET total_play_time=48358, deaths=3, enemies_defeated=10, victories=10, coins_earned=1665, cards_played=100 WHERE user_id=38;
-UPDATE Player_stats SET total_play_time=25781, deaths=4, enemies_defeated=9, victories=4, coins_earned=4872, cards_played=222 WHERE user_id=39;
-UPDATE Player_stats SET total_play_time=18545, deaths=6, enemies_defeated=6, victories=5, coins_earned=1750, cards_played=143 WHERE user_id=40;
+UPDATE Player_stats SET total_play_time=1820, deaths=4, enemies_defeated=9, victories=2, coins_earned=480, cards_played=42 WHERE user_id=1;
+UPDATE Player_stats SET total_play_time=2100, deaths=3, enemies_defeated=7, victories=1, coins_earned=320, cards_played=35 WHERE user_id=2;
+UPDATE Player_stats SET total_play_time=950, deaths=2, enemies_defeated=2, victories=0, coins_earned=90, cards_played=18 WHERE user_id=3;
+UPDATE Player_stats SET total_play_time=2600, deaths=7, enemies_defeated=20, victories=4, coins_earned=1100, cards_played=120 WHERE user_id=4;
+UPDATE Player_stats SET total_play_time=1650, deaths=5, enemies_defeated=14, victories=3, coins_earned=760, cards_played=88 WHERE user_id=5;
+UPDATE Player_stats SET total_play_time=2400, deaths=4, enemies_defeated=9, victories=2, coins_earned=530, cards_played=56 WHERE user_id=6;
+UPDATE Player_stats SET total_play_time=1100, deaths=2, enemies_defeated=5, victories=1, coins_earned=290, cards_played=24 WHERE user_id=7;
+UPDATE Player_stats SET total_play_time=2800, deaths=3, enemies_defeated=3, victories=0, coins_earned=110, cards_played=31 WHERE user_id=8;
+UPDATE Player_stats SET total_play_time=1450, deaths=6, enemies_defeated=16, victories=3, coins_earned=840, cards_played=72 WHERE user_id=9;
+UPDATE Player_stats SET total_play_time=900, deaths=1, enemies_defeated=1, victories=0, coins_earned=60, cards_played=12 WHERE user_id=10;
+UPDATE Player_stats SET total_play_time=3100, deaths=6, enemies_defeated=18, victories=4, coins_earned=1250, cards_played=95 WHERE user_id=11;
+UPDATE Player_stats SET total_play_time=1750, deaths=8, enemies_defeated=25, victories=5, coins_earned=1380, cards_played=140 WHERE user_id=12;
+UPDATE Player_stats SET total_play_time=2200, deaths=3, enemies_defeated=6, victories=1, coins_earned=340, cards_played=38 WHERE user_id=13;
+UPDATE Player_stats SET total_play_time=800, deaths=9, enemies_defeated=33, victories=6, coins_earned=1450, cards_played=165 WHERE user_id=14;
+UPDATE Player_stats SET total_play_time=1600, deaths=4, enemies_defeated=4, victories=0, coins_earned=150, cards_played=25 WHERE user_id=15;
+UPDATE Player_stats SET total_play_time=2900, deaths=5, enemies_defeated=9, victories=2, coins_earned=620, cards_played=78 WHERE user_id=16;
+UPDATE Player_stats SET total_play_time=1300, deaths=2, enemies_defeated=6, victories=1, coins_earned=310, cards_played=30 WHERE user_id=17;
+UPDATE Player_stats SET total_play_time=2600, deaths=7, enemies_defeated=16, victories=3, coins_earned=920, cards_played=108 WHERE user_id=18;
+UPDATE Player_stats SET total_play_time=1950, deaths=3, enemies_defeated=3, victories=0, coins_earned=130, cards_played=22 WHERE user_id=19;
+UPDATE Player_stats SET total_play_time=1400, deaths=4, enemies_defeated=8, victories=2, coins_earned=540, cards_played=64 WHERE user_id=20;
+UPDATE Player_stats SET total_play_time=3290, deaths=3, enemies_defeated=6, victories=1, coins_earned=270, cards_played=45 WHERE user_id=21;
+UPDATE Player_stats SET total_play_time=700, deaths=2, enemies_defeated=2, victories=0, coins_earned=70, cards_played=19 WHERE user_id=22;
+UPDATE Player_stats SET total_play_time=2050, deaths=2, enemies_defeated=5, victories=1, coins_earned=380, cards_played=41 WHERE user_id=23;
+UPDATE Player_stats SET total_play_time=1700, deaths=5, enemies_defeated=14, victories=3, coins_earned=870, cards_played=95 WHERE user_id=24;
+UPDATE Player_stats SET total_play_time=2300, deaths=4, enemies_defeated=9, victories=2, coins_earned=590, cards_played=67 WHERE user_id=25;
+UPDATE Player_stats SET total_play_time=1500, deaths=2, enemies_defeated=5, victories=1, coins_earned=280, cards_played=32 WHERE user_id=26;
+UPDATE Player_stats SET total_play_time=3000, deaths=6, enemies_defeated=18, victories=4, coins_earned=1080, cards_played=115 WHERE user_id=27;
+UPDATE Player_stats SET total_play_time=1250, deaths=7, enemies_defeated=27, victories=5, coins_earned=1300, cards_played=148 WHERE user_id=28;
+UPDATE Player_stats SET total_play_time=2700, deaths=4, enemies_defeated=10, victories=2, coins_earned=580, cards_played=70 WHERE user_id=29;
+UPDATE Player_stats SET total_play_time=1850, deaths=5, enemies_defeated=14, victories=3, coins_earned=790, cards_played=89 WHERE user_id=30;
+UPDATE Player_stats SET total_play_time=800, deaths=2, enemies_defeated=5, victories=1, coins_earned=290, cards_played=28 WHERE user_id=31;
+UPDATE Player_stats SET total_play_time=2150, deaths=6, enemies_defeated=19, victories=4, coins_earned=1150, cards_played=122 WHERE user_id=32;
+UPDATE Player_stats SET total_play_time=1600, deaths=5, enemies_defeated=9, victories=2, coins_earned=530, cards_played=62 WHERE user_id=33;
+UPDATE Player_stats SET total_play_time=900, deaths=6, enemies_defeated=15, victories=3, coins_earned=870, cards_played=88 WHERE user_id=34;
+UPDATE Player_stats SET total_play_time=2500, deaths=4, enemies_defeated=6, victories=1, coins_earned=310, cards_played=45 WHERE user_id=35;
+UPDATE Player_stats SET total_play_time=1350, deaths=3, enemies_defeated=8, victories=2, coins_earned=490, cards_played=54 WHERE user_id=36;
+UPDATE Player_stats SET total_play_time=1700, deaths=3, enemies_defeated=5, victories=1, coins_earned=350, cards_played=40 WHERE user_id=37;
+UPDATE Player_stats SET total_play_time=2800, deaths=4, enemies_defeated=9, victories=2, coins_earned=620, cards_played=72 WHERE user_id=38;
+UPDATE Player_stats SET total_play_time=1100, deaths=2, enemies_defeated=2, victories=0, coins_earned=100, cards_played=16 WHERE user_id=39;
+UPDATE Player_stats SET total_play_time=2350, deaths=3, enemies_defeated=5, victories=1, coins_earned=280, cards_played=38 WHERE user_id=40;
 
 CALL sp_refresh_global_stats();

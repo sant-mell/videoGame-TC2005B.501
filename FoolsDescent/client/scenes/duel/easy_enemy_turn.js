@@ -367,9 +367,9 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
             // Sun = enemy gets another turn
             if (this.currentGreatCard === "sun") {
-
+                this.enemyHasExtraTurn = true;
+                this.enemyTurnFn = () => this.easy_enemy_turn();
                 this.easy_enemy_turn();
-
                 return;
             }
 

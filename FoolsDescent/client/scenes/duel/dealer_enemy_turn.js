@@ -322,6 +322,8 @@ Game.prototype.resolveEnemyDeckDraw = function() {
         if (enemyTargetsSelf) {
 
             if (this.currentGreatCard === "sun") {
+                this.enemyHasExtraTurn = true;
+                this.enemyTurnFn = () => this.dealer_enemy_turn();
                 this.dealer_enemy_turn();
                 return;
             }

@@ -108,6 +108,19 @@ Game.prototype.acceptUpgrade = async function() {
     const playerCoins = parseInt(localStorage.getItem("playerCoins") || "0");
     if (playerCoins < costs[this.currentUpgradeType]) return;
 
+    if (this.currentUpgradeType === UPGRADE_BINDING) {
+        try {
+            const deckRes = await fetch(`http://localhost:3000/player-deck/${userId}`);
+            const deckData = await deckRes.json();
+            if (!deckData.success || deckData.cards.length === 0) {
+                this.upgradeOpen = false;
+                this.bindingDeck = [];
+                this.bindingPickerOpen = true;
+                return;
+            }
+        } catch (e) { return; }
+    }
+
     // sync localStorage coins to DB so sp_buy_upgrade sees the correct balance
     try {
         await fetch("http://localhost:3000/debug/set-coins", {

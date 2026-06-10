@@ -330,7 +330,7 @@ app.post("/reset-deck", async (req, res) => {
     if (!userId) { return res.json({ success: false }); }
 
     try {
-        await db.query("DELETE FROM Player_Deck WHERE user_id = ?", [userId]);
+        await db.query("DELETE FROM Player_Deck WHERE user_id = ? AND is_bound = FALSE", [userId]);
         res.json({ success: true });
     } catch (err) {
         console.log(err);

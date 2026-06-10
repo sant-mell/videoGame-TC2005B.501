@@ -121,7 +121,7 @@ async function fillLeaderboards() {
         if (!wrap || !rows?.length) return;
         wrap.innerHTML = rows.map((r, i) => {
             const isMe = me && r.username === me;
-            const rank = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`;
+            const rank = `#${i + 1}`;
             return `<div class="lb-row${isMe ? " lb-me" : ""}">
                 <span class="lb-rank">${rank}</span>
                 <span class="lb-name">${r.username}</span>
@@ -181,7 +181,7 @@ async function fillCurrentRun(userId) {
         const isOngoing = s.result === "ongoing";
 
         const resultColor = isVictory ? C.teal : isOngoing ? C.gold : C.coral;
-        const resultLabel = isVictory ? "⚔️ Victory" : isOngoing ? "🔄 Ongoing" : "💀 Defeat";
+        const resultLabel = isVictory ? "Victory" : isOngoing ? "Ongoing" : "Defeat";
 
         wrap.innerHTML = `
             <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:1rem;">
@@ -292,7 +292,7 @@ async function fillPersonalUpgrades(userId) {
         wrap.innerHTML = json.data.map(u => `
             <div class="upgrade-row">
                 <span class="upgrade-name">${u.upgrade_name}</span>
-                <span class="upgrade-cost">🪙 ${fmtNum(u.cost)}</span>
+                <span class="upgrade-cost">${fmtNum(u.cost)} coins</span>
             </div>`).join("");
     } catch (e) { console.error(e); }
 }

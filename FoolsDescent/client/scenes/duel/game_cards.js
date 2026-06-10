@@ -413,6 +413,17 @@ Game.prototype.handleEmptyEnemyDeckDraw = function() {
         return true;
     }
 
+    if (this.enemyHasExtraTurn) {
+        this.enemyHasExtraTurn = false;
+        this.showCenterImage = false;
+        this.showFinalImage = false;
+        this.isCenterCardAnimating = false;
+        this.isCardSliding = false;
+        this.buildGreatDeck(false);
+        if (this.enemyTurnFn) this.enemyTurnFn();
+        return true;
+    }
+
     this.showCenterImage = false;
     this.showFinalImage = false;
     this.isCenterCardAnimating = false;
