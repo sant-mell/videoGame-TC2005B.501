@@ -3,9 +3,10 @@ Game.prototype.createEventListeners = function() {
         window.addEventListener("click", (event) => {
 
             const rect = ctx.canvas.getBoundingClientRect();
-
-            const mouseX = event.clientX - rect.left;
-            const mouseY = event.clientY - rect.top;
+            const scaleX = ctx.canvas.width / rect.width;
+            const scaleY = ctx.canvas.height / rect.height;
+            const mouseX = (event.clientX - rect.left) * scaleX;
+            const mouseY = (event.clientY - rect.top) * scaleY;
 
             this.checkStartButton(mouseX, mouseY);
 
@@ -50,9 +51,10 @@ Game.prototype.createEventListeners = function() {
         window.addEventListener("mousemove", (event) => {
 
             const rect = ctx.canvas.getBoundingClientRect();
-        
-            const mouseX = event.clientX - rect.left;
-            const mouseY = event.clientY - rect.top;
+            const scaleX = ctx.canvas.width / rect.width;
+            const scaleY = ctx.canvas.height / rect.height;
+            const mouseX = (event.clientX - rect.left) * scaleX;
+            const mouseY = (event.clientY - rect.top) * scaleY;
         
             this.checkCardHover(mouseX, mouseY);
         });

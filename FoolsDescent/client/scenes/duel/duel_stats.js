@@ -35,14 +35,21 @@ async function finishDuel(game) {
     localStorage.setItem("duelWon", won ? "true" : "false");
     if (won) {
         const playerOwnsKing = game.kingOfPentaclesActive && game.kingOfPentaclesOwner === "player";
-        game.coins += playerOwnsKing ? 200 : 100;
+        const baseReward = game.enemyTier === "boss" ? 300 : 100;
+        game.coins += playerOwnsKing ? baseReward * 2 : baseReward;
+        if (game.pageOfPentaclesActive) {
+            game.coins += 50;
+            game.pageOfPentaclesActive = false;
+        }
         const prev = parseInt(localStorage.getItem("playerCoins") || "0");
         localStorage.setItem("playerCoins", String(prev + game.coins));
     }
     if (!won) {
         await savePlayerDeckToDB([]); // lose all cards on death (GDD)
+    } else if (game.enemyTier === "boss") {
+        const allCards = game.characterCards.map(c => c.cardIndex);
+        await savePlayerDeckToDB(allCards);
     } else {
-        // save cards still in hand so they carry into the next duel
         const remaining = game.characterCards
             .filter(c => c.visible !== false)
             .map(c => c.cardIndex);
