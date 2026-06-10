@@ -489,10 +489,12 @@ body {
 .enemy-node  { border-color: rgba(255, 80, 80, 0.3); }
 .upgrade-node { border-color: rgba(255, 215, 120, 0.3); }
 .rest-node   { border-color: rgba(98, 179, 255, 0.3); }
+.boss-node   { border-color: rgba(152, 51, 174, 0.3); }
 
 .enemy-node:hover  { box-shadow: 0 0 20px rgba(255, 80, 80, 0.2); }
 .upgrade-node:hover { box-shadow: 0 0 20px rgba(255, 215, 120, 0.2); }
 .rest-node:hover   { box-shadow: 0 0 20px rgba(98, 179, 255, 0.2); }
+.boss-node:hover   { box-shadow: 0 0 20px rgba(211, 116, 255, 0.2); }
 
 .node-icon {
     font-size: 2rem;
