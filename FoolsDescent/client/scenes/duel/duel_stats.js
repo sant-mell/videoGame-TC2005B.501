@@ -36,6 +36,10 @@ async function finishDuel(game) {
     if (won) {
         const playerOwnsKing = game.kingOfPentaclesActive && game.kingOfPentaclesOwner === "player";
         game.coins += playerOwnsKing ? 200 : 100;
+        if (game.pageOfPentaclesActive) {
+            game.coins += 50;
+            game.pageOfPentaclesActive = false;
+        }
         const prev = parseInt(localStorage.getItem("playerCoins") || "0");
         localStorage.setItem("playerCoins", String(prev + game.coins));
     }

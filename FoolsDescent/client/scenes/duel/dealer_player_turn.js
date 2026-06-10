@@ -71,15 +71,6 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
 
             this.sunMessageOwner = "player";
 
-            if (this.pageOfPentaclesActive) {
-
-                this.coins += this.kingOfPentaclesActive ? 100 : 50;
-
-                this.pageOfPentaclesActive = false;
-                this.kingOfPentaclesActive = false;
-                this.kingOfPentaclesOwner = "";
-            }
-
             setTimeout(() => {
 
                 if (this.gameOver) return;
