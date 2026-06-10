@@ -582,9 +582,12 @@ class Game {
         for (let n of this.nodes) {
             if (n.x === this.fool.tx && n.y === this.fool.ty) {
                 if (n.state === "visited") {
-                    // moving back to an already-visited node: just reposition, no side-effects
                     this.currentId = n.id;
                     this.updateAvailable();
+                    if (n.type === NODE_UPGRADE) {
+                        this.currentUpgradeType = n.upgradeType;
+                        this.upgradeOpen = true;
+                    }
                     break;
                 }
                 if (n.type === NODE_ENEMY) {
@@ -728,8 +731,10 @@ class Game {
             //if (this.mapMusic.paused) this.mapMusic.play();
             if (this.startSound.paused) this.startSound.play();
             const rect = ctx.canvas.getBoundingClientRect();
-            const mouseX = event.clientX - rect.left;
-            const mouseY = event.clientY - rect.top;
+            const scaleX = ctx.canvas.width / rect.width;
+            const scaleY = ctx.canvas.height / rect.height;
+            const mouseX = (event.clientX - rect.left) * scaleX;
+            const mouseY = (event.clientY - rect.top) * scaleY;
             if (this.upgradeOpen) {
                 this.checkUpgradeClick(mouseX, mouseY);
                 return;
