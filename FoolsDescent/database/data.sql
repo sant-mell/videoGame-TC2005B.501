@@ -3,7 +3,7 @@
 -- transactional tables have ~30-50 dummy rows
 
 USE fools_descent;
-
+--- Dummy data was adapted with the help of Claude Code to be more game fitting
 INSERT INTO Cards (card_name, rarity, description, image) VALUES
 ('The Magician', 'common', 'Repeats the effect of your last played card', 'cards/the_magician.png'),
 ('The Chariot', 'common', 'Throws away the top card of the Great Deck', 'cards/the_chariot.png'),

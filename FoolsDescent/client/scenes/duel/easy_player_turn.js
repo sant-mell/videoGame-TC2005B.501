@@ -1,3 +1,4 @@
+// draws up to two cards from the Great Deck and shows the choice overlay
 Game.prototype.activateTwoPentacles = function() {
 
         if (this.greatDeck.length === 0) {
@@ -15,6 +16,7 @@ Game.prototype.activateTwoPentacles = function() {
 
 };
 
+// applies the chosen card's effect and discards the other, then triggers the next turn
 Game.prototype.resolveTwoPentacles = function(chosenIndex) {
 
         this.currentGreatCard = this.twoPentaclesCards[chosenIndex];
@@ -121,6 +123,7 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
 
 };
 
+// plays a character card if the player clicks on it during their turn
 Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
         if (this.currentTurn !== "player") {
             return;
@@ -200,6 +203,7 @@ Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
 
 };
 
+// starts the center card animation when the player clicks the Great Deck
 Game.prototype.checkMainDeckClick = function(mouseX, mouseY) {
         if (this.currentTurn !== "player") {
             return;
@@ -246,6 +250,7 @@ Game.prototype.checkMainDeckClick = function(mouseX, mouseY) {
 
 };
 
+// routes a click to the left or right card in the Two of Pentacles choice overlay
 Game.prototype.checkTwoPentaclesClick = function(mouseX, mouseY) {
 
         if (!this.showTwoPentaclesChoice) {
@@ -292,6 +297,7 @@ Game.prototype.checkTwoPentaclesClick = function(mouseX, mouseY) {
 
 };
 
+// handles clicking the "you" or enemy target buttons after the center card is shown
 Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         if (this.currentTurn !== "player") {
             return;

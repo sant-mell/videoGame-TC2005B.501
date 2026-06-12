@@ -1,3 +1,4 @@
+// Developed with assistance from Claude Code (Anthropic)
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
@@ -31,6 +32,7 @@ pool.getConnection((err, connection) => {
     connection.release();
 });
 
+// creates a new player account via sp_register_player
 app.post("/register", async (req, res) => {
 
     const fullName = req.body.fullName;
@@ -53,6 +55,7 @@ app.post("/register", async (req, res) => {
 
 });
 
+// validates credentials directly against the Player table and returns the userId on success
 app.post("/login", async (req, res) => {
 
     const username = req.body.username;
@@ -81,6 +84,7 @@ app.post("/login", async (req, res) => {
 
 });
 
+// inserts a fresh run record and stores the initial map JSON via sp_new_descent
 app.post("/new-descent", async (req, res) => {
 
     const userId = req.body.userId;
@@ -97,6 +101,7 @@ app.post("/new-descent", async (req, res) => {
 
 });
 
+// updates current map position and map JSON; called every time the fool arrives at a node
 app.post("/save-progress", async (req, res) => {
 
     const userId = req.body.userId;
@@ -114,6 +119,7 @@ app.post("/save-progress", async (req, res) => {
 
 });
 
+// returns coins, node position, and full map JSON for an existing run
 app.post("/load-game", async (req, res) => {
 
     const userId = req.body.userId;
@@ -140,6 +146,7 @@ app.post("/load-game", async (req, res) => {
 
 });
 
+// removes the player's current run from the DB entirely
 app.post("/delete-save", async (req, res) => {
 
     const userId = req.body.userId;
@@ -154,6 +161,7 @@ app.post("/delete-save", async (req, res) => {
 
 });
 
+// records the duel outcome, stats, and coin change via sp_duel_result
 app.post("/duel-result", async (req, res) => {
 
     const userId = req.body.userId;
@@ -182,6 +190,7 @@ app.post("/duel-result", async (req, res) => {
 
 });
 
+// returns aggregated stats for one player via sp_player_report
 app.post("/stats/personal", async (req, res) => {
 
     const userId = req.body.userId;
@@ -202,6 +211,7 @@ app.post("/stats/personal", async (req, res) => {
 
 });
 
+// reads aggregate totals across all players from the v_global_stats view
 app.get("/stats/global", async (req, res) => {
 
     const sql = `SELECT * FROM v_global_stats`;
@@ -219,6 +229,7 @@ app.get("/stats/global", async (req, res) => {
 
 });
 
+// saves a mid-duel snapshot so it can be restored if the player refreshes
 app.post("/duel-checkpoint", async (req, res) => {
 
     const userId = req.body.userId;
@@ -235,6 +246,7 @@ app.post("/duel-checkpoint", async (req, res) => {
 
 });
 
+// retrieves a saved mid-duel snapshot; client uses this to resume after a page reload
 app.get("/duel-checkpoint/:userId", async (req, res) => {
 
     const userId = req.params.userId;
@@ -254,6 +266,7 @@ app.get("/duel-checkpoint/:userId", async (req, res) => {
 
 });
 
+// wipes the checkpoint so a finished or abandoned duel cannot be resumed
 app.post("/clear-duel-checkpoint", async (req, res) => {
 
     const userId = req.body.userId;
@@ -291,6 +304,7 @@ app.get("/player-deck/:userId", async (req, res) => {
 
 });
 
+// deducts coins and records the purchase via sp_buy_upgrade; returns "not enough coins" if the proc rejects
 app.post("/player-upgrade", async (req, res) => {
 
     const { userId, upgradeId } = req.body;
@@ -309,6 +323,7 @@ app.post("/player-upgrade", async (req, res) => {
 
 });
 
+// returns all upgrades the player has purchased, used to apply bonuses at duel start
 app.get("/player-upgrades/:userId", async (req, res) => {
 
     const userId = req.params.userId;
@@ -324,6 +339,7 @@ app.get("/player-upgrades/:userId", async (req, res) => {
 
 });
 
+// clears unbound cards only; bound cards survive death and are kept for the next descent
 app.post("/reset-deck", async (req, res) => {
 
     const userId = req.body.userId;
@@ -339,6 +355,7 @@ app.post("/reset-deck", async (req, res) => {
 
 });
 
+// cardIndex is 0-based from the client; sp_bind_card converts it to the 1-based card_id
 app.post("/bind-card", async (req, res) => {
 
     const { userId, cardIndex } = req.body;
@@ -354,6 +371,7 @@ app.post("/bind-card", async (req, res) => {
 
 });
 
+// overwrites the player's saved deck; passing null or an empty array clears it (used on death)
 app.post("/player-deck", async (req, res) => {
 
     const { userId, cards } = req.body;
@@ -370,6 +388,7 @@ app.post("/player-deck", async (req, res) => {
 
 });
 
+// returns stats for the most recent run from v_current_run_stats
 app.post("/stats/current-run", async (req, res) => {
 
     const userId = req.body.userId;
@@ -391,6 +410,7 @@ app.post("/stats/current-run", async (req, res) => {
 
 });
 
+// returns all players ranked by total wins
 app.get("/stats/leaderboard/victories", async (req, res) => {
 
     try {
@@ -403,6 +423,7 @@ app.get("/stats/leaderboard/victories", async (req, res) => {
 
 });
 
+// returns all players ranked by total coins earned
 app.get("/stats/leaderboard/coins", async (req, res) => {
 
     try {
@@ -415,6 +436,7 @@ app.get("/stats/leaderboard/coins", async (req, res) => {
 
 });
 
+// win rate per enemy name, sorted highest to lowest
 app.get("/stats/enemy-winrate", async (req, res) => {
     try {
         const [rows] = await db.query(`SELECT * FROM v_enemy_winrate ORDER BY win_rate_pct DESC`);
@@ -425,6 +447,7 @@ app.get("/stats/enemy-winrate", async (req, res) => {
     }
 });
 
+// win rate per difficulty tier (common, rare, epic, boss)
 app.get("/stats/difficulty-winrate", async (req, res) => {
     try {
         const [rows] = await db.query(`SELECT * FROM v_difficulty_winrate ORDER BY win_rate_pct DESC`);
@@ -435,6 +458,7 @@ app.get("/stats/difficulty-winrate", async (req, res) => {
     }
 });
 
+// how many players own each card, sorted by most owned
 app.get("/stats/card-popularity", async (req, res) => {
     try {
         const [rows] = await db.query(`SELECT * FROM v_card_popularity ORDER BY owners DESC`);
@@ -445,6 +469,7 @@ app.get("/stats/card-popularity", async (req, res) => {
     }
 });
 
+// how many times each upgrade type has been bought, sorted by most purchased
 app.get("/stats/upgrade-popularity", async (req, res) => {
     try {
         const [rows] = await db.query(`SELECT * FROM v_upgrade_popularity ORDER BY times_bought DESC`);
@@ -493,6 +518,7 @@ app.post("/stats/my-upgrades", async (req, res) => {
     }
 });
 
+// syncs localStorage coins to the DB before sp_buy_upgrade runs; kept as a named route so it works without a save record
 app.post("/debug/set-coins", async (req, res) => {
     const { userId, amount } = req.body;
     if (!userId || amount === undefined) return res.json({ success: false });

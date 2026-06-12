@@ -1,7 +1,9 @@
+// updates the player candle sprite to match the current playerLives count (1-6)
+// candle spritesheet columns: full=0, half=1, low=2, out=3
 Game.prototype.updatePlayerCandles = function() {
         if (this.playerLives > 6){
             this.maxLivesMessage = true;
-            this.playerLives = 6;
+            this.playerLives = 6; // hard cap per GDD (two candles = 6 lives max)
             setTimeout(() => {
                 this.maxLivesMessage = false;
             }, 2000);
@@ -78,6 +80,7 @@ Game.prototype.updatePlayerCandles = function() {
     
 };
 
+// plays the candle-blow sound once and delays the defeat text until the sound finishes
 Game.prototype.playPlayerCandleBlowSound = function() {
         if (this.candleBlowPlayed) {
             return;
@@ -95,6 +98,8 @@ Game.prototype.playPlayerCandleBlowSound = function() {
         this.candleblow.play().catch(() => {});
 };
 
+// applies a moon card damage to the player after the slide animation finishes
+// deferred so the candle update happens at the correct visual moment
 Game.prototype.resolvePendingEnemyMoonHitPlayer = function() {
         if (!this.pendingEnemyMoonHitPlayer) {
             return;
@@ -124,6 +129,7 @@ Game.prototype.resolvePendingEnemyMoonHitPlayer = function() {
         }
 };
 
+// plays the last-life warning sound and pauses the background music while it plays
 Game.prototype.playPlayerLastLifeSound = function(force = false) {
         if (!this.lastLifeSound) {
             return;
@@ -165,6 +171,7 @@ Game.prototype.playPlayerLastLifeSound = function(force = false) {
         this.lastLifeSoundPlayed = true;
 };
 
+// mirrors updatePlayerCandles but for the enemy side
 Game.prototype.updateEnemyCandles = function() {
     if (this.enemyLives > 6){
         this.maxLivesMessage = true;
@@ -234,10 +241,11 @@ Game.prototype.updateEnemyCandles = function() {
     
 };
 
+// evenly spreads visible player cards along the bottom of the canvas
 Game.prototype.repositionCards = function() {
         const y = canvasHeight - 108;
         const spacing = 100;
-        const visible = []; 
+        const visible = [];
         for (let c of this.characterCards) {
             if (c.visible !== false) visible.push(c.object);
         }
@@ -248,9 +256,9 @@ Game.prototype.repositionCards = function() {
             visible[i].position.x = startX + i * spacing;
             visible[i].position.y = y;
         }
-    
 };
 
+// same as repositionCards but works on an arbitrary cards array instead of this.characterCards
 Game.prototype.repositionCardsArray = function(cards) {
         const y = canvasHeight - 108;
         const spacing = 100;
@@ -265,6 +273,7 @@ Game.prototype.repositionCardsArray = function(cards) {
     
 };
 
+// spreads visible enemy cards in a tighter cluster above the table
 Game.prototype.repositionEnemyCards = function() {
 
         const y = 330;

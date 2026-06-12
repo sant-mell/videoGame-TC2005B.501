@@ -45,6 +45,7 @@ class Game {
         this.enemyTier = "boss";
         this.showStartButton = true;
         this.sunMessage = false;
+        this.sunMessageOwner = "";
         this.isEnemyShowing = true;
         this.isShowingDefeatedEnemy = false;
         this.strengthMessage = false;
@@ -340,7 +341,7 @@ class Game {
         "../../../assets/images/Sun and Moon.png",
         new Rect(50, 20, 220, 410)
         );
-        //sun IMAGE//
+        // sun card image (right side of the Sun and Moon spritesheet)
         this.sunImage = new AnimatedObject(
 
             new Vector(canvasWidth / 2, canvasHeight / 2),
@@ -379,9 +380,11 @@ async function main() {
 
     game = new Game();
 
+    // load order matters: deck and upgrades before checkpoint so the checkpoint can override them
     await loadPlayerDeck(game);
     await loadPlayerUpgrades(game);
     await loadDuelCheckpoint(game);
+    await applyExtraCards(game);
     await saveDuelCheckpoint(game);
 
     drawScene(0);

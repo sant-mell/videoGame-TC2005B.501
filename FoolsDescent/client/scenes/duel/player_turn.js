@@ -1,20 +1,20 @@
+// draws up to two cards from the top of the Great Deck and shows the choice UI
 Game.prototype.activateTwoPentacles = function() {
-
         if (this.greatDeck.length === 0) {
             return;
         }
-    
+
         this.twoPentaclesCards = [this.greatDeck.shift()];
 
         if (this.greatDeck.length > 0) {
             this.twoPentaclesCards.push(this.greatDeck.shift());
         }
-    
+
         this.showTwoPentaclesChoice = true;
         this.showPlayerCards = false;
-    
 };
 
+// applies the chosen card and discards the other; chosenIndex is 0 (left) or 1 (right)
 Game.prototype.resolveTwoPentacles = function(chosenIndex) {
     
         this.currentGreatCard = this.twoPentaclesCards[chosenIndex];
@@ -121,6 +121,7 @@ Game.prototype.resolveTwoPentacles = function(chosenIndex) {
     
 };
 
+// plays a character card when the player clicks it; guards all conditions before acting
 Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
         if (this.currentTurn !== "player") {
             return;
@@ -201,6 +202,7 @@ Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
     
 };
 
+// draws from the Great Deck when the player clicks the deck area
 Game.prototype.checkMainDeckClick = function(mouseX, mouseY) {
         if (this.currentTurn !== "player") {
             return;
@@ -247,6 +249,7 @@ Game.prototype.checkMainDeckClick = function(mouseX, mouseY) {
     
 };
 
+// routes a click to the left or right card in the Two of Pentacles choice overlay
 Game.prototype.checkTwoPentaclesClick = function(mouseX, mouseY) {
 
         if (!this.showTwoPentaclesChoice) {
@@ -293,6 +296,7 @@ Game.prototype.checkTwoPentaclesClick = function(mouseX, mouseY) {
     
 };
 
+// handles clicks on the "You" and enemy target buttons shown after the deck card is revealed
 Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
         if (this.currentTurn !== "player") {
             return;
@@ -432,6 +436,7 @@ Game.prototype.checkChoiceButtons = function(mouseX, mouseY) {
                     this.justiceMessageUntil = performance.now() + 3000;
                 
                     this.enemyJusticeActive = false;
+                    this.candleBurnPlayed = false;
                     this.updatePlayerCandles();
                 }
             }

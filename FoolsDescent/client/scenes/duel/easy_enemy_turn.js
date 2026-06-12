@@ -1,3 +1,4 @@
+// drives the enemy's turn for common-tier duels; plays a character card every other turn
 Game.prototype.easy_enemy_turn = function() {
 
     if (this.gameOver) return;
@@ -255,6 +256,7 @@ Game.prototype.easy_enemy_turn = function() {
     }, 500);
 };
 
+// draws from the Great Deck for the enemy; common-tier AI targets self 40% of the time
 Game.prototype.resolveEnemyDeckDraw = function() {
 
     if (this.gameOver) return;

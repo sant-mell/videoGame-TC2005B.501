@@ -1,9 +1,12 @@
 "use strict";
 
+// Developed with assistance from Claude Code (Anthropic)
+
 const UPGRADE_BINDING = 0;
 const UPGRADE_LIFE = 1;
 const UPGRADE_CARD = 2;
 
+// spritesheet crops for each upgrade icon displayed on the map node
 const UPGRADE_FRAMES = [
     { sx: 43, sy: 0, sw: 418, sh: 552, dw: 78, dh: 78 }, // Card Binding
     { sx: 474, sy: 0, sw: 438, sh: 552, dw: 78, dh: 78 }, // Life Extension
@@ -29,6 +32,7 @@ const ALL_CARDS = [
     { name: "The Devil", desc: "Gain 2 lives, but a Moon is added to the Great Deck." },
 ];
 
+// renders the upgrade purchase overlay and stores the accept/exit button rects for hit-testing
 Game.prototype.drawUpgradePanel = function(ctx) {
     ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
@@ -87,6 +91,7 @@ Game.prototype.drawUpgradePanel = function(ctx) {
     ctx.lineWidth = 1;
 };
 
+// routes a click to the exit or accept button
 Game.prototype.checkUpgradeClick = function(mouseX, mouseY) {
     if (!this.exitBtnRect) return;
     let e = this.exitBtnRect;
@@ -100,11 +105,12 @@ Game.prototype.checkUpgradeClick = function(mouseX, mouseY) {
     }
 };
 
+// validates coins, syncs them to the DB, calls sp_buy_upgrade, then opens the appropriate picker
 Game.prototype.acceptUpgrade = async function() {
     const userId = localStorage.getItem("userId");
     if (!userId) { this.upgradeOpen = false; return; }
 
-    const costs = [100, 150, 50];
+    const costs = [100, 150, 50]; // indexed by UPGRADE_BINDING, UPGRADE_LIFE, UPGRADE_CARD
     const playerCoins = parseInt(localStorage.getItem("playerCoins") || "0");
     if (playerCoins < costs[this.currentUpgradeType]) return;
 
@@ -118,6 +124,7 @@ Game.prototype.acceptUpgrade = async function() {
                 this.bindingPickerOpen = true;
                 return;
             }
+            this.bindingDeck = deckData.cards;
         } catch (e) { return; }
     }
 
@@ -134,7 +141,7 @@ Game.prototype.acceptUpgrade = async function() {
         const res = await fetch("http://localhost:3000/player-upgrade", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId: Number(userId), upgradeId: this.currentUpgradeType + 1 })
+            body: JSON.stringify({ userId: Number(userId), upgradeId: this.currentUpgradeType + 1 }) // upgrade IDs are 1-based in the DB
         });
         const data = await res.json();
         if (!data.success) {
@@ -154,6 +161,7 @@ Game.prototype.acceptUpgrade = async function() {
     }
 };
 
+// renders the card selection grid for the Extra Card upgrade
 Game.prototype.drawCardPicker = function(ctx) {
     ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
@@ -221,6 +229,7 @@ Game.prototype.drawCardPicker = function(ctx) {
     ctx.lineWidth = 1;
 };
 
+// routes card picker clicks to pickCard or back
 Game.prototype.checkCardPickerClick = function(mouseX, mouseY) {
     let b = this.cardBackRect;
     if (mouseX >= b.x && mouseX <= b.x + b.w && mouseY >= b.y && mouseY <= b.y + b.h) {
@@ -236,13 +245,19 @@ Game.prototype.checkCardPickerClick = function(mouseX, mouseY) {
     }
 };
 
+// appends the chosen card index to localStorage; the duel picks it up on load via applyExtraCards
 Game.prototype.pickCard = function(cardIndex) {
     let cards = localStorage.getItem("extraCards");
     localStorage.setItem("extraCards", cards ? cards + "," + cardIndex : "" + cardIndex);
     this.cardPickerOpen = false;
 };
 
+// fetches the player's current deck from the server then opens the binding picker
 Game.prototype.openBindingPicker = async function() {
+    if (this.bindingDeck && this.bindingDeck.length > 0) {
+        this.bindingPickerOpen = true;
+        return;
+    }
     const userId = localStorage.getItem("userId");
     if (!userId) return;
     try {
@@ -255,6 +270,7 @@ Game.prototype.openBindingPicker = async function() {
     this.bindingPickerOpen = true;
 };
 
+// renders the card binding grid; bound cards return to the player's hand after death
 Game.prototype.drawBindingPicker = function(ctx) {
     ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
@@ -335,6 +351,7 @@ Game.prototype.drawBindingPicker = function(ctx) {
     ctx.lineWidth = 1;
 };
 
+// routes binding picker clicks to bindCard or back
 Game.prototype.checkBindingPickerClick = function(mouseX, mouseY) {
     let b = this.bindingBackRect;
     if (b && mouseX >= b.x && mouseX <= b.x + b.w && mouseY >= b.y && mouseY <= b.y + b.h) {
@@ -350,6 +367,7 @@ Game.prototype.checkBindingPickerClick = function(mouseX, mouseY) {
     }
 };
 
+// marks the card as bound in the DB so it survives duel death
 Game.prototype.bindCard = async function(cardIndex) {
     const userId = localStorage.getItem("userId");
     if (!userId) { this.bindingPickerOpen = false; return; }

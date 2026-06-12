@@ -13,47 +13,49 @@ class Game {
         this.initObjects();
         this.createEventListeners();
     }
-    initObjects() {
 
+    initObjects() {
+        // starting lives for both sides
         this.enemyLives = 3;
         this.playerLives = 3;
         this.currentTurn = "player";
 
-        //CHOOSE ENEMY HERE!!
-        //this.chooseEnemy = 2; //<--- CHOOSE ENEMY (1 = King, 2 = Queen)
-        
+        // enemy choice is passed from the map via localStorage
         this.chooseEnemy = parseInt(localStorage.getItem("pendingEnemyChoice") || "1");
         this.enemyName = this.chooseEnemy === 1 ? "Mad Monarch" : "Killer Queen";
 
-        //enemy card
+        // the card the enemy is currently displaying at the center
         this.activeEnemyCard = null;
-        //card animation
+
+        // card slide animation state
         this.isCardSliding = false;
         this.slideDirection = "up";
         this.slideSpeed = 500; // pixels per second
         this.uptargetY = 120;
         this.downtargetY = canvasHeight - 120;
-        //card hover
+
         this.hoveredCard = null;
-        //booleans
+
+        // game state flags
         this.gameOver = false;
-        this.statsSent = false;
+        this.statsSent = false; // prevents finishDuel from firing more than once
         this.enemyTier = "epic";
         this.showStartButton = true;
         this.sunMessage = false;
+        this.sunMessageOwner = "";
         this.isEnemyShowing = true;
         this.isShowingDefeatedEnemy = false;
         this.strengthMessage = false;
         this.noMoonCardsMessage = false;
         this.turnBlockedMessage = false;
-        this.justiceMessageUntil = 0; //este era booleano
+        this.justiceMessageUntil = 0; // stores a timestamp instead of a boolean so the message has a timed expiry
         this.playerHandBlocked = false;
         this.playerHandBlockedMessage = false;
         this.maxLivesMessage = false;
         this.candleBurnPlayed = false;
         this.playerTurnMessage = false;
         this.usesPendingMagicianRepeat = true;
-        // card effect states
+        // card effect states - each flag belongs to a single card's persistent effect
         this.coins = 0;
         this.pageOfPentaclesActive = false;
         this.kingOfPentaclesActive = false;
@@ -65,24 +67,29 @@ class Game {
         this.enemyStrengthActive = false;
         this.playerJusticeActive = false;
         this.enemyJusticeActive = false;
-        this.lastPlayedAction = null;
+        this.lastPlayedAction = null; // needed so The Magician can repeat the previous effect
         this.lastPlayedName = "";
         this.showTwoPentaclesChoice = false;
         this.twoPentaclesCards = [];
         this.enemyTurnBlocked = false;
         this.playerTurnBlocked = false;
         this.enemyHandBlocked = false;
-        // discard animation
+
+        // discard animation (Chariot card slides drawn card off screen)
         this.isDiscardSliding = false;
         this.discardCardType = "";
         this.discardX = canvasWidth / 2;
         this.discardY = canvasHeight / 2;
+
+        // reward card slide (new card flies in from corner to player's hand)
         this.isRewardCardSliding = false;
         this.rewardCard = null;
         this.rewardCardTargetX = 0;
         this.rewardCardTargetY = 0;
         this.pendingRewardCard = false;
         this.playerInputLocked = false;
+
+        // center card animation (deck card zooms to center before reveal)
         this.isCenterCardAnimating = false;
         this.centerCardAnimationTime = 0;
         this.centerCardAnimationDuration = 400;
@@ -94,7 +101,8 @@ class Game {
         this.centerCardTargetY = 0;
         this.centerCardTargetW = 0;
         this.centerCardTargetH = 0;
-        //audio
+
+        // audio
         this.startSound = new Audio("../../../assets/audio/hardEnemies (1).mov");
         this.startSound.volume = 0.2;
         this.candleburn = new Audio("../../../assets/audio/candle_burning.mov");
@@ -108,15 +116,16 @@ class Game {
         this.cardSound.volume = 0.3;
 
         this.startButton = {
-        x: canvasWidth / 2 - 75,
-        y: canvasHeight / 2 - 40,
-        width: 150,
-        height: 80
+            x: canvasWidth / 2 - 75,
+            y: canvasHeight / 2 - 40,
+            width: 150,
+            height: 80
         };
 
         this.peekedCard = "";
         this.showPeekCard = false;
-        // BACKGROUND
+
+        // background fills the full canvas
         this.background = new AnimatedObject(
             new Vector(canvasWidth / 2, canvasHeight / 2),
             canvasWidth,
@@ -154,6 +163,7 @@ class Game {
                 break;
         }
 
+        // shows the slumped enemy sprite after they reach 0 lives
         this.defeatedEnemyImage = new AnimatedObject(
             new Vector(canvasWidth / 2, 205),
             270,
@@ -176,6 +186,7 @@ class Game {
                 break;
         }
 
+        // second candle sprite shown only when playerLives > 3
         this.extra_player_candles = new AnimatedObject(
 
             new Vector(canvasWidth - 390 , 420),
@@ -192,6 +203,7 @@ class Game {
             "../../../assets/images/Candles.png",
             new Rect(0, 0, 380, 500)
         );
+        // second candle sprite shown only when enemyLives > 3
         this.extra_enemy_candles = new AnimatedObject(
 
             new Vector(canvasWidth / 2 - 208 , 217),
@@ -237,33 +249,24 @@ class Game {
         this.currentGreatCard = "";
         this.buildGreatDeck();
 
-        // All card definitions in the pool
+        // all 16 card definitions live here; indices match game_cards.js buildAllCards order
         this.allCards = this.buildAllCards();
 
-        // Deal 3 random starting cards from the full pool
-        //this.characterCards = this.dealStartingCards(3);
-
-        // Manually choose starting cards by index (pass amount to deal all of them)
-        // this.characterCards = this.chooseStartingCards([0, 6, 14, 1, 13], 5);
+        // personalPlayerCardIndices holds cards carried over from a previous duel (via DB)
         this.personalPlayerCardIndices = [];
-        //this.characterCards = this.chooseStartingCards([11, 12, 14]);
 
-         // Gives two random cards at the start of the duel, they get added to the players deck
-        let cards = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]; // Common, rare and epic
-
-        // Random order
+        // build the starting pool with all card indices and shuffle for variety
+        let cards = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
         cards.sort(() => Math.random() - 0.5);
-
-        // Choose one
         this.characterCards = this.chooseStartingCards(cards.slice(0, 14));
 
-        // Enemy character cards
+        // enemy gets a fixed hand curated for the Mad Monarch's AI strategy
         this.enemyCharacterCards = this.chooseEnemyCards([
             11, // Lovers
             14, // Devil
             12, // Hanged Man
-            9, //Wheel of Fortune
-            7,  // Hermit
+            9, // Wheel of Fortune
+            7, // Hermit
             1,
             0
         ]);
@@ -331,7 +334,7 @@ class Game {
         "../../../assets/images/Sun and Moon.png",
         new Rect(50, 20, 220, 410)
         );
-        //sun IMAGE//
+        // sun card image (right side of the Sun and Moon spritesheet)
         this.sunImage = new AnimatedObject(
 
             new Vector(canvasWidth / 2, canvasHeight / 2),
@@ -355,45 +358,36 @@ class Game {
         this.showEnemyCards = false;
         this.showIntroText = false;
 
-        // OPTIONAL ACTORS ARRAY
         this.actors = [];
     }
 }
 
 async function main() {
-
     const canvas = document.getElementById('canvas');
-
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
-
     ctx = canvas.getContext('2d');
-
     game = new Game();
 
+    // load order matters: deck and upgrades before checkpoint so the checkpoint can override them
     await loadPlayerDeck(game);
     await loadPlayerUpgrades(game);
     await loadDuelCheckpoint(game);
+    await applyExtraCards(game);
     await saveDuelCheckpoint(game);
 
     drawScene(0);
 }
 
-
 function drawScene(newTime) {
-
     if (oldTime == undefined) {
         oldTime = newTime;
     }
 
     let deltaTime = newTime - oldTime;
-
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
     game.update(deltaTime);
     game.draw(ctx);
-
     oldTime = newTime;
-
     requestAnimationFrame(drawScene);
 }

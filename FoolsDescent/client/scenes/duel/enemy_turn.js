@@ -1,6 +1,9 @@
+// runs the full enemy turn: optionally plays a character card, then draws from the Great Deck
 Game.prototype.enemyTurn = function() {
 
         if (this.gameOver) return;
+
+        // wait for any in-progress reward slide before starting the enemy turn
         if (this.showIntroText || this.pendingRewardCard || this.isRewardCardSliding) {
             setTimeout(() => {
                 if (this.gameOver) return;
@@ -40,21 +43,21 @@ Game.prototype.enemyTurn = function() {
     
             let enemyCard;
 
-            // Uses The Devil if they have one live left
+            // prioritize The Devil when the enemy is about to die (gains 2 lives)
             if (this.enemyLives === 1) {
                 enemyCard = this.enemyCharacterCards.find(
                     card => card.name === "The Devil"
                 );
             }
 
-            // Uses The Hermit if the player has one live left
+            // prioritize The Hermit when the player is about to die (blocks their draw)
             if (!enemyCard && this.playerLives === 1) {
                 enemyCard = this.enemyCharacterCards.find(
                     card => card.name === "The Hermit"
                 );
             }
 
-            // It's random the rest of the time
+            // otherwise pick a random card from the available hand
             if (!enemyCard) {
                 
                 let availableCards = this.enemyCharacterCards;
@@ -192,6 +195,7 @@ Game.prototype.enemyTurn = function() {
     
 };
 
+// draws one card from the Great Deck as the enemy and resolves its effect
 Game.prototype.resolveEnemyDeckDraw = function() {
 
     if (this.gameOver) return;
@@ -202,6 +206,8 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
     this.pendingEnemyMoonHitPlayer = false;
     this.pendingPlayerDefeatAfterSlide = false;
+
+    // reset card images to center before sliding them
     this.finalImage.position.x = canvasWidth / 2;
     this.finalImage.position.y = canvasHeight / 2;
     this.sunImage.position.x = canvasWidth / 2;
@@ -209,8 +215,8 @@ Game.prototype.resolveEnemyDeckDraw = function() {
 
     this.showFinalImage = true;
 
-    // Probability: 80% they attack you, 20% they choose themselves.
-    // Hard enemy cheat: never willingly eats a hidden Moon.
+    // GDD epic odds: 80% chance to attack the player, 20% to target self
+    // enemy never picks self on a moon because it would waste the damage (cheat behavior per GDD)
     const enemyTargetsSelf = Math.random() < 0.20 && this.currentGreatCard !== "moon";
 
     setTimeout(() => {
