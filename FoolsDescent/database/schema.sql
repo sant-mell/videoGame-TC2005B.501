@@ -363,7 +363,7 @@ BEGIN
            total_cards_played = total_cards_played + (NEW.cards_played - OLD.cards_played),
            avg_playTime = (SELECT ROUND(IFNULL(AVG(total_play_time), 0), 2) FROM Player_stats),
            avg_deaths = (SELECT ROUND(IFNULL(AVG(deaths), 0), 2) FROM Player_stats),
-           avg_victories = (SELECT IFNULL(AVG(victories), 0) FROM Player_stats)
+           avg_victories = (SELECT ROUND(IFNULL(AVG(victories), 0), 2) FROM Player_stats)
      WHERE global_id = 1;
 END$$
 
@@ -421,7 +421,7 @@ BEGIN
            avg_playTime           = (SELECT ROUND(IFNULL(AVG(total_play_time), 0), 2) FROM Player_stats),
            avg_deaths             = (SELECT ROUND(IFNULL(AVG(deaths), 0), 2) FROM Player_stats),
            total_enemies_defeated = (SELECT IFNULL(SUM(enemies_defeated), 0) FROM Player_stats),
-           avg_victories          = (SELECT IFNULL(AVG(victories), 0) FROM Player_stats),
+           avg_victories          = (SELECT ROUND(IFNULL(AVG(victories), 0), 2) FROM Player_stats),
            total_coins            = (SELECT IFNULL(SUM(coins_earned), 0) FROM Player_stats),
            total_cards_played     = (SELECT IFNULL(SUM(cards_played), 0) FROM Player_stats)
      WHERE global_id = 1;
