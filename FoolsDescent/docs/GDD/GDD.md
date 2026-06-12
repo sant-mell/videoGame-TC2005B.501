@@ -121,6 +121,7 @@ The following content is owned by its creators. Use without written permission i
     7. [Cards](#cards)
     8. [Sound Design](#sound-design)
     9. [Level Design](#level-design)
+    10. [AI Generated Images](#ai-generated-images)
 10. [Schedule](#schedule)
 
 ---
@@ -269,7 +270,7 @@ Negative fortunes:
 - *The Magician:* Repeats the effect of the last card played during this combat.
 - *The Chariot:* Throws away the top card of the [Great Deck](#great-deck). 
 - *The Star:* When you reach 0 lives it revives you with a singular extra life.
-- *Page of Pentacles:* If you win this duel it gives you a coin bonus.
+- *Page of Pentacles:* If you win this duel it gives you a 50 coin bonus.
 - *Strength:* During the next draw you cannot lose a life.
 - *Two of Pentacles:* Draw two cards from the [Great Deck](#great-deck), choose one to use, the other is thrown away.
 
@@ -286,7 +287,7 @@ Negative fortunes:
 - *The Hermit:* Blocks enemy's turn.  
 - *Justice:* If you lose a life on the current turn or the following turn after playing this card, your opponent loses one too.
 - *Wheel of Fortune:* Shuffles the [Great Deck](#great-deck).
-- *King of Pentacles:* If you win this duel, the coin reward doubles.
+- *King of Pentacles:* If you win this duel, the coin reward doubles, but if you lose it also does.
 
 
 
@@ -493,11 +494,15 @@ The key screens will be carefully selected and designed in order to enhance the 
 ### Main Screen
 Buttons: 
 
-[New Descent]: Starts a completely fresh run. Coins reset to zero, the map is regenerated, and no resources carry over from the previous descent.
+[New Descent]: Starts a completely fresh run.
 
 [Continue Descent]: Will retrieve all data from the database: Runs, perks, cards saved, position within the node and enemies defeated.
 
-[Statistics]: Will display the statistics collected through the single plays and global plays. for more information, consult the statistics section.
+[Statistics]: Will display the statistics collected through the single plays and global plays. For more information, consult the statistics section.
+
+[Tutorial]: It takes you to another page that carefully explains how to play the game.
+
+[Logout]: Takes you back to the welcome page, so you can log in again, in case you want to change accounts or create a new one. 
 
 ![MainMenu](../../assets/images/Main%20Menu.png)
 
@@ -516,11 +521,11 @@ Graph map with nodes:
 
 ### Controls
 
-- Card slots for Character Cards: The player will be able to hover over them to see their info, and click on them to choose the card they are going to use.
+- **Card slots for Character Cards:** The player will be able to hover over them to see their info, and click on them to choose the card they are going to use.
 
-- Shared deck: Includes sun and moon cards. These will be facing down and the only thing the player will be able to do is click on them.
+- **Shared deck:** Includes sun and moon cards. These will be facing down and the only thing the player will be able to do is click on them.
 
-- Target screen: The player will be given a choice whether the current card selected applies to the enemy or themselves.
+- **Target screen:** The player will be given a choice whether the current card selected applies to the enemy or themselves.
 
   
 ## Mechanics
@@ -529,7 +534,7 @@ Graph map with nodes:
 
 
 ### Duel Mechanics
-Each player starts with 3 lives. When a participant reaches 0 lives, they lose the duel. At the start of each duel, the player receives a number of character cards determined by the enemy's difficulty tier (see [Duel](#duel)). Before play begins, the total number of Sun and Moon cards in the [Great Deck](#great-deck) is briefly shown to both players. The Great Deck is then shuffled and placed face-down on the table. On their turn, the player may first play a character card from their hand (this step is skipped if the hand is empty). They then draw the top card of the Great Deck and choose a target: either themselves or the enemy. The card's effect is revealed after a brief animation over the crystal ball. After the player's turn resolves, the enemy takes their turn following the same sequence. When the Great Deck runs out of cards, a new one is automatically built and shuffled, and play continues, until someone wins.
+Each player starts with 3 lives. When a participant reaches 0 lives, they lose the duel. Before the duel begins, the total number of Sun and Moon cards in the [Great Deck](#great-deck) is briefly shown to both players. The Great Deck is then shuffled and placed face-down on the table. On their turn, the player may first play a character card from their hand (this step is skipped if the hand is empty). They then draw the top card of the Great Deck and choose a target: either themselves or the enemy. The card's effect is revealed after a brief animation over the crystal ball. After the player's turn resolves, the enemy takes their turn following the same sequence. When the Great Deck runs out of cards, a new one is automatically built and shuffled, and play continues, until someone wins.
 
 Steps:
 
@@ -538,10 +543,10 @@ Steps:
 3. Optionally play a character card from your hand.
 4. Draw the top card of the Great Deck and choose a target (self or enemy).
 5. Apply the card's effect.
-6. Enemy's turn: they follow the same sequence.
+6. Enemy's turn: They follow the same sequence.
 7. Repeat until one duelist reaches 0 lives.
 
-### Prophecy Deck
+### Great Deck
 At the start of each duel (or when the deck is rebuilt after being emptied), the Great Deck is generated with a random number of Sun cards (between 1 and 4) and a random number of Moon cards (between 1 and 4). Both counts are shown to the player before the deck is shuffled. This means each round can have anywhere from 2 to 8 cards total, keeping the risk and probability calculations fresh each time.
 
 ### Effects
@@ -576,9 +581,6 @@ The user interface and experience design is focused on making it simple, intuiti
 - Upgrade Screen: A small window over the map will pop with the offer to upgrade in exchange of coins. The player will be able to click on the [Accept & Pay] button to accept the offer and pay the coins, or click on the [Exit Upgrade] button to reject the offer and close the window.
 - Statistics Screen: From the main menu, the player will access and view the statistics screen.
 ![Statistics Screen](../../assets/images/Statistics.png)
- - Duel Closure: When the player wins or loses the game, a window will pop up, showing the result of the game, providing a description of the results and giving a small text of the money earned to increase the dopamine of the game. The player will be able to click an [Return] button to return to the map for the next enemy.
-
-![Victory](../../assets/images/Victory.png)
 
 ---
 
@@ -588,6 +590,8 @@ The game will include a statistics system designed to track both individual play
 
 ### Personal Statistics
 
+Personal statistics focus on the performance and progression of an individual player across all of their runs. These include:
+
 - Total Play Time
 - Deaths
 - Enemies Defeated
@@ -595,9 +599,21 @@ The game will include a statistics system designed to track both individual play
 - Coins Earned
 - Cards Played
 
+In addition to lifetime statistics, players can also view:
+
+- Victory vs Death ratio
+- Summary of their most recent run
+- Current deck composition by card rarity
+- Cards currently owned
+- Purchased upgrades
+
+This information allows players to analyze their playstyle, monitor their progression, and evaluate the effectiveness of their deck building decisions.
+
 ![StatisticsMenu](../../assets/images/Statistics.png)
 
 ### Global Statistics
+
+Global statistics aggregate data from all registered players and provide insight into overall game trends. These include:
 
 - Total Number of Players
 - Average Play Time
@@ -607,25 +623,42 @@ The game will include a statistics system designed to track both individual play
 - Total Coins Earned
 - Total Cards Played
 
+The system also includes several community-wide analytics:
+
+- Global Victories vs Deaths comparison
+- Victory leaderboard
+- Coins earned leaderboard
+- Win rate by difficulty tier
+- Most popular cards
+- Most purchased upgrades
+
+These metrics help identify balance issues and reveal how the player base interacts with the game's systems.
+
 ## Data Collection
 
-The game will run on a web-based structure using HTML for layout, CSS for styling, and JavaScript for logic. The statistics will be collected in real time through JavaScript by tracking key gameplay events. Each time a relevant action occurs, such as starting or ending a run, winning or losing a duel, defeating an enemy, playing a card or gaining coins, JavaScript updates internal counters stored in variables or objects. For example, every time a player uses a card, a counter like cardsPlayed++ is updated instantly during gameplay. At the end of a session or at defined checkpoints, this data is sent to a backend using requests, allowing it to be stored in a SQL database. To support long term progression, the system will include a login feature, so the players can leave the game and return later without losing progress. 
+The game is going to be developed using HTML, CSS, JavaScript, Node.js, Express, and MySQL. Statistics are collected continuously during gameplay through JavaScript events that track important player actions such as defeating enemies, playing cards, earning coins, purchasing upgrades, completing encounters, winning runs, and dying.
 
-The database structure will include:
+Whenever a relevant event occurs, the corresponding values are updated and sent to the backend through API requests. The server processes this information and stores it in a MySQL database, ensuring that player progress persists between sessions.
 
-- **Users Table:** Stores login credentials and a unique player ID.
-- **Player Statistics Table:** Stores individual data such as play time, deaths, victories, coins, and cards used.
-- **Global Statistics Table:** Stores aggregated values across all players.
-- **Game State Table:** Stores the player’s current run, including:
-    - Current position on the map
-    - Current deck (cards owned and remaining)
+To support long term progression, players can create an account and log in. This allows statistics, decks, upgrades, and game progress to be preserved even after leaving the game.
 
-When data is received player statistics are updated using the player’s ID, the current game state is saved, so the player can resume later and global statistics are updated to reflect overall activity.
+The database structure includes:
+
+- **Users Table:** Stores player accounts and login credentials.
+- **Player Statistics Table:** Stores cumulative player data such as play time, victories, deaths, enemies defeated, coins earned, and cards played.
+- **Deck and Card Tables:** Store the cards owned by each player and their quantities.
+- **Upgrade Tables:** Store upgrades purchased by players.
+- **Run Tables:** Store information about completed and ongoing runs.
+- **Global Statistics Table:** Stores aggregated statistics generated from all players.
+- **Database Views** Generate specialized reports such as enemy win rates, card popularity, upgrade popularity, deck composition, difficulty statistics, and leaderboard rankings.
+
+When new gameplay data is received, the corresponding player records are updated and the aggregated statistics are recalculated to ensure that global metrics remain current.
 
 ### Main Menu Integration
 
-From the main menu, players will have access to both “Statistics” and a “Continue Descent” option. When selecting "Statistics" JavaScript requests data from the backend, the server retrieves the stored SQL data and the information is displayed using HTML. The interface will separate Personal and Global ones. When selecting "Continue Descent" the system loads the saved game state from the database and the player resumes exactly where they left off, including map position, deck, and resources.
+The Statistics screen can be accessed directly from the main menu. When selected, the client requests information from the backend through dedicated API endpoints. The server retrieves the necessary information from the database and returns it to the frontend, where it is displayed using HTML, CSS, JavaScript, and Chart.js visualizations.
 
+The interface separates personal and global statistics and presents the information through tables, leaderboards, doughnut charts, and bar charts. This allows players to quickly understand both their own performance and how it compares to the rest of the community.
 
 ---
 # Development
@@ -724,11 +757,9 @@ The main visual movements in the game are designed to reinforce its mystical and
 ![FoolsSprite](../../assets/images/Gemini_Generated_Image_9tjvd69tjvd69tjv.png)
 
 ## Animation
-The enemies will have three animation frames combined into a looping GIF to give them movement and personality during duels. These subtle animations help make each opponent feel more alive and reinforce their individual presence at the table. In addition, each enemy will have a final defeat frame, where they are shown resting their head on the table, visually representing their loss.
+In addition, each enemy will have a final defeat frame, where they are shown resting their head on the table, visually representing their loss.
 
 ![DefeatedEnemy](../../assets/images/DefeatedKing.png)
-
-The candle that represents the player’s lives will also be animated using three frames combined into a seamless looping GIF. Since the candle is both a gameplay mechanic and an important source of light on the dark table, its constant flame helps maintain the atmosphere of tension and uncertainty, especially during the second half of the game where the environment becomes darker and more oppressive.
 
 ## Colors
 At the beginning of the game, the visual palette uses warmer colors to represent hope, curiosity, and the sense of adventure that comes with starting a new descent. Easy and mid-difficulty enemies are designed with warmer tones and softer backgrounds, creating a feeling of familiarity and false security. During this first half of the game, the music also reflects this atmosphere by being more adventurous, mystical, and slightly optimistic.
@@ -832,6 +863,22 @@ This will guarantee that the game will gradually increase depending on the progr
 With these increasing probabilities, the risk increases gradually, prompting the player to prioritize focusing on improving for the next run or facing the boss directly if the player feels ready enough with their upgrades. And will be able to plan ahead their movements and wether they want to keep their cards for the next battle or use it now to manage risks.
 
 
+## AI Generated Images
+
+To get the art style we wanted for the game without taking too much time, we built our visual pipeline around Gemini as a collaborative tool. Instead of just letting an AI blindly generate random images, we used it as an iterative design partner to quickly prototype UI elements, environmental details, and animation frames while strictly maintaining our retro, pixel-art aesthetic.
+
+Our workflow with Gemini generally followed two approaches:
+
+- **Text-to-Image with Strict Technical Constraints:** We used highly specific prompts to control grid alignment, framing, and pixel density so the output was actually engine-ready.
+- **Sketch-to-Image Refinement:** To keep total creative control over the layouts, we uploaded our own hand-drawn sketches and placeholder graphics. Gemini used these images as a structural foundation, allowing us to lock down exact proportions and spatial requirements before rendering the final pixel art.
+
+### Prompt Examples
+Here are a few examples of how we structured our prompts for Gemini:
+
+- **Procedural Map Icons:** "A collection of retro pixel-art icons for a game map, displayed side-by-side in a single row. Each icon must be uniform in size, perfectly centered within its own space, and clearly separated with no overlapping elements so they can be easily cropped and sliced for procedural generation."
+- **Connecting Paths (Ropes):** "A pixel-art sheet containing only straight, clean vertical and horizontal rope segments. The lines must be perfectly straight and aligned to a grid without any extra decoration, intended to connect nodes on a procedural map."
+- **Animated Sprite Sheets:** "A horizontal pixel-art sprite sheet showcasing a candle burning on a wooden table. Each frame must be perfectly centered within a uniform square grid to prevent any clipping or shifting during the animation sequence."
+- **Tabletop Scene and Animated Asset:** "Using the attached sketch of the tabletop layout as a strict structural reference, render a final retro pixel-art version of this scene. Keep the exact camera perspective, angle, and tabletop dimensions from the drawing."
 
 ---
 

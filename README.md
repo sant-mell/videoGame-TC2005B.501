@@ -54,7 +54,6 @@ FoolsDescent/
 ├── database/
 │   ├── schema.sql                   # tables, views, triggers, stored procedures
 │   ├── data.sql                     # seed data
-│   └── gen_data.sql                 # larger generated seed dataset
 └── docs/
     ├── GDD/                         # Game Design Document
     └── Databases/                   # ER diagrams and DB documentation
@@ -117,13 +116,13 @@ Open **`http://localhost:3000/client/frontend/menu.html`** in your browser. Do n
 
 ```bash
 # Brave
-brave-browser http://localhost:3000/client/frontend/menu.html
+brave-browser http://localhost:3000/client/frontend/welcome.html
 
 # Chrome
-google-chrome http://localhost:3000/client/frontend/menu.html
+google-chrome http://localhost:3000/client/frontend/welcome.html
 
 # Firefox
-firefox http://localhost:3000/client/frontend/menu.html
+firefox http://localhost:3000/client/frontend/welcome.html
 ```
 
 Create an account and log in — the game will take you through the rest.
