@@ -1,5 +1,7 @@
 "use strict";
 
+// Developed with assistance from Claude Code (Anthropic)
+
 const storyLines = [
     "Not so long ago, there was only The Dealer and the Great Deck.",
     "Every life, love, death and heartbeat was shuffled into place.",
@@ -19,6 +21,7 @@ const bossSpeech = new Audio("../../../assets/audio/BossSpeech.mov");
 
 bossSpeech.volume = 0.8;
 
+// appends a paragraph to the story text area
 function addStoryLine(text) {
     const line = document.createElement("p");
     line.className = "story-line";
@@ -26,11 +29,12 @@ function addStoryLine(text) {
     storyText.appendChild(line);
 }
 
+// draws the Fool's front-facing idle frame (frame 6) on the canvas overlay
 function drawFool() {
     const ctx = foolCanvas.getContext("2d");
     const image = new Image();
     const cols = 3;
-    const frame = 6;
+    const frame = 6; // front-facing idle frame in the spritesheet
     const frameW = 256;
     const frameH = 341.25;
     const sx = frame % cols * frameW;
@@ -50,6 +54,7 @@ function showDoneButton() {
     doneButton.classList.add("visible");
 }
 
+// plays through the intro narration then shows the done button
 function startIntroduction() {
     startButton.classList.add("hidden");
     bossSpeech.currentTime = 0;

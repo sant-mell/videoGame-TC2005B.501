@@ -1,3 +1,4 @@
+// drives The Dealer's turn; plays The Fool first and targets The Hermit when player is at 1 life
 Game.prototype.dealer_enemy_turn = function() {
 
         if (this.gameOver) return;
@@ -238,6 +239,7 @@ Game.prototype.dealer_enemy_turn = function() {
     
 };
 
+// draws from the Great Deck for the enemy; boss-tier AI targets self only 10% of the time
 Game.prototype.resolveEnemyDeckDraw = function() {
 
     if (this.gameOver) return;

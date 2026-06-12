@@ -1,12 +1,18 @@
+// advances all per-frame game state: animations, card slides, and sound triggers
 Game.prototype.update = function(deltaTime) {
+    // only check for ties when no card is mid-slide to avoid acting on stale lives
     if (!this.isCardSliding && !this.isDiscardSliding && !this.isRewardCardSliding) {
         this.resolveNoResultTie();
     }
+
+    // clear any queued UI state so game-over is visually clean
     if (this.gameOver) {
         this.showIntroText = false;
         this.pendingRewardCard = false;
         this.playerInputLocked = false;
     }
+
+    // rebuild the Great Deck once it empties and all animations have settled
     if (
         this.greatDeck.length === 0 &&
         !this.gameOver &&
@@ -24,15 +30,20 @@ Game.prototype.update = function(deltaTime) {
     ) {
         this.buildGreatDeck(true);
     }
+
     this.startPendingRewardCard();
     this.saveRemainingPlayerCardsAfterWin();
+
+    // clear the server-side checkpoint exactly once so it isn't restored on refresh after a loss
     if (this.gameOver && !this.checkpointCleared) {
         this.checkpointCleared = true;
         clearDuelCheckpoint();
     }
-        let dt = deltaTime / 1000;
 
-        if (this.isCenterCardAnimating) {
+    let dt = deltaTime / 1000;
+
+    // center card zoom animation uses cubic ease-out so it feels snappy at first and smooth at end
+    if (this.isCenterCardAnimating) {
             this.centerCardAnimationTime += deltaTime;
 
             let t =
@@ -40,7 +51,7 @@ Game.prototype.update = function(deltaTime) {
                 this.centerCardAnimationDuration;
 
             t = Math.min(t, 1);
-            t = 1 - Math.pow(1 - t, 3);
+            t = 1 - Math.pow(1 - t, 3); // cubic ease-out
 
             this.centerImage.position.x =
                 this.centerCardStartX +

@@ -1,3 +1,4 @@
+// draws the entire duel scene each frame: background, characters, cards, HUD, overlays, game-over screen
 Game.prototype.draw = function(ctx) {
 
         // draw background
@@ -479,6 +480,7 @@ Game.prototype.draw = function(ctx) {
     
 };
 
+// draws the Dealer's pre-duel dialog box with a paginated "CONTINUE" button
 Game.prototype.drawDealerIntro = function(ctx) {
         const box = {
             x: 130,
@@ -517,6 +519,7 @@ Game.prototype.drawDealerIntro = function(ctx) {
         ctx.restore();
 };
 
+// word-wraps text into lines that fit within maxWidth and draws each line spaced by lineHeight
 Game.prototype.drawWrappedText = function(ctx, text, x, y, maxWidth, lineHeight) {
         const words = text.split(" ");
         let line = "";
@@ -536,6 +539,7 @@ Game.prototype.drawWrappedText = function(ctx, text, x, y, maxWidth, lineHeight)
         ctx.fillText(line, x, y);
 };
 
+// draws the active-power icons for both player and enemy near the candle areas
 Game.prototype.drawPowerSymbols = function(ctx) {
         if (!this.symbolsImage) {
             this.symbolsImage = new Image();
@@ -687,6 +691,7 @@ Game.prototype.drawPowerSymbols = function(ctx) {
         }
 };
 
+// crops and blits one power icon from the shared Symbols spritesheet
 Game.prototype.drawPowerSymbol = function(
     ctx,
     symbol,
@@ -711,6 +716,7 @@ Game.prototype.drawPowerSymbol = function(
         );
 };
 
+// draws styled button fills for the START and You hitboxes
 Game.prototype.drawCustomHitbox = function(ctx, hitbox) {
         if (hitbox === this.startButton) {
 
@@ -772,6 +778,7 @@ Game.prototype.drawCustomHitbox = function(ctx, hitbox) {
     
 };
 
+// debug outline for a card's bounding box
 Game.prototype.drawHitbox = function(ctx, card) {
 
         const left = card.position.x - card.size.x / 2;

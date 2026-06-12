@@ -3,6 +3,7 @@ const BASE = "http://localhost:3000";
 
 // helpers
 
+// converts seconds to a human-readable "Xh Ym" or "Ym" string
 function fmtTime(seconds) {
     if (!seconds || seconds === 0) return "0m";
     const h = Math.floor(seconds / 3600);
@@ -11,10 +12,12 @@ function fmtTime(seconds) {
     return `${m}m`;
 }
 
+// formats a number with locale-appropriate thousands separators
 function fmtNum(n) {
     return Number(n || 0).toLocaleString();
 }
 
+// formats a floating-point average to one decimal place
 function fmtAvg(n) {
     return Number(n || 0).toFixed(1);
 }
@@ -47,6 +50,7 @@ const BASE_OPTS = {
 };
 
 // Doughnut fix: Chart.js renders nothing when all values are 0
+// creates a Chart.js doughnut; when all values are 0 renders a faded placeholder so the canvas isn't blank
 function makeDoughnut(canvasId, labels, data, colors) {
     const canvas = el(canvasId);
     if (!canvas) return;
@@ -76,6 +80,7 @@ function makeDoughnut(canvasId, labels, data, colors) {
 
 // summary tables
 
+// populates global and personal summary stat cells; shows dashes if the user is not logged in
 async function fillSummaryTables() {
     const userId = localStorage.getItem("userId");
 
@@ -114,6 +119,7 @@ async function fillSummaryTables() {
 
 // leaderboards
 
+// builds and renders both leaderboard lists; highlights the logged-in player's row
 async function fillLeaderboards() {
     const me = localStorage.getItem("username") || "";
 
@@ -143,6 +149,7 @@ async function fillLeaderboards() {
 
 // personal chart P1: victories vs deaths
 
+// personal chart: victories vs deaths doughnut plus stat counts
 async function chartP_WinLoss(userId) {
     try {
         const res  = await fetch(`${BASE}/stats/personal`, {
@@ -164,6 +171,7 @@ async function chartP_WinLoss(userId) {
 
 // personal P2: last run summary
 
+// fills the "last run" panel with stats from v_current_run_stats
 async function fillCurrentRun(userId) {
     try {
         const json = await fetch(`${BASE}/stats/current-run`, {
@@ -204,6 +212,7 @@ async function fillCurrentRun(userId) {
 
 // global chart P3: enemy win rates
 
+// global bar chart of win rate per enemy; bars colored green above 50%, red below
 async function chartP_EnemyWinrate() {
     try {
         const json = await fetch(`${BASE}/stats/enemy-winrate`).then(r => r.json());
@@ -231,6 +240,7 @@ async function chartP_EnemyWinrate() {
 
 // personal chart P4: deck rarity + card table
 
+// personal deck panel: rarity doughnut + card table from v_player_deck_detail
 async function chartP_Deck(userId) {
     try {
         const json = await fetch(`${BASE}/stats/my-deck`, {
@@ -278,6 +288,7 @@ async function chartP_Deck(userId) {
 
 // personal P5: upgrades list
 
+// lists upgrades the player has purchased from v_player_upgrades
 async function fillPersonalUpgrades(userId) {
     try {
         const json = await fetch(`${BASE}/stats/my-upgrades`, {
@@ -301,6 +312,7 @@ async function fillPersonalUpgrades(userId) {
 
 // global chart G1: leaderboard victories
 
+// global bar chart of victories per player; the current user's bar is highlighted in gold
 async function chartG_Victories() {
     try {
         const json = await fetch(`${BASE}/stats/leaderboard/victories`).then(r => r.json());
@@ -322,6 +334,7 @@ async function chartG_Victories() {
 
 // global chart G2: difficulty win % + times fought
 
+// global dual-axis bar chart: win % (left axis) and times fought (right axis) per difficulty tier
 async function chartG_Difficulty() {
     try {
         const json = await fetch(`${BASE}/stats/difficulty-winrate`).then(r => r.json());
@@ -361,6 +374,7 @@ async function chartG_Difficulty() {
 
 // global chart G3: card popularity
 
+// global horizontal bar chart showing the top 10 most-owned cards, colored by rarity
 async function chartG_Cards() {
     try {
         const json = await fetch(`${BASE}/stats/card-popularity`).then(r => r.json());
@@ -397,6 +411,7 @@ async function chartG_Cards() {
 
 // global chart G4: upgrade popularity
 
+// global bar chart of total purchases per upgrade type
 async function chartG_Upgrades() {
     try {
         const json = await fetch(`${BASE}/stats/upgrade-popularity`).then(r => r.json());
@@ -417,6 +432,7 @@ async function chartG_Upgrades() {
 
 // global chart G5: victories vs deaths
 
+// global victories vs deaths doughnut, computed from aggregate averages
 async function chartG_WinLoss() {
     try {
         const g = (await fetch(`${BASE}/stats/global`).then(r => r.json())).stats || {};

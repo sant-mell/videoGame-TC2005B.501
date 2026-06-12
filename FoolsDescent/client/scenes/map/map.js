@@ -20,11 +20,12 @@ const NODE_REST = 0;
 const NODE_ENEMY = 1;
 const NODE_UPGRADE = 2;
 const NODE_BOSS = 3;
- //enemy difficulty definition
+// enemy difficulty tiers
 const ENEMY_COMMON = 0;
 const ENEMY_RARE = 1;
 const ENEMY_EPIC = 2;
 
+// maps fight number (1=first, 2=mid, 3+=late) to a difficulty tier using GDD probabilities
 function pickDifficulty(fight) {
     const r = Math.random();
     if (fight === 1) {
@@ -493,6 +494,7 @@ class Game {
         this.upgradeNames = ["Card Binding", "Life Extension", "Extra Card"];
     }
 
+    // loads all map spritesheet images and assigns them to nodes
     loadSprites() {
         this.sprites.bg = new Image();
         this.sprites.bg.src = "../../../assets/images/map/Map Background.png";
@@ -519,6 +521,7 @@ class Game {
         this.fool.setAnimation(6, 7, true, 150); // start on front-facing idle
     }
 
+    // serializes the current map state to a plain object for DB or localStorage
     getSaveData() {
         return {
             currentId: this.currentId,
@@ -541,6 +544,7 @@ class Game {
         };
     }
 
+    // restores map state from a saved data object; reconstructs Node instances from plain objects
     loadSaveData(data) {
         this.currentId = data.currentId;
         this.edges = data.edges;
@@ -768,7 +772,8 @@ class Game {
         });
     }
 
-    checkNodeClick(n, mouseX, mouseY) { // if it is 40 pixels away from the node, it will count as a click
+    // clicks within 40 px of a node center count as a hit
+    checkNodeClick(n, mouseX, mouseY) {
         if (this.fool.moving) return;
         let dx = mouseX - n.x;
         let dy = mouseY - n.y;

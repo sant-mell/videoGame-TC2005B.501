@@ -1,6 +1,6 @@
 "use strict";
 
-// Dealer's last words in red, followed by the narrator's closing lines
+// Dealer's last words shown in red, followed by the narrator's closing lines
 const dealerLines = [
     { text: "\"Impossible... No soul escapes my table...\"", dealer: true },
     { text: "\"The deck was rigged from the start... and still you won...\"", dealer: true },
@@ -17,6 +17,7 @@ const storyLines = [
 
 const allLines = [...dealerLines, ...storyLines];
 const lineDelay = 2800;
+// fool appears slightly before the last line finishes so the reveal feels timed with the narration
 const foolDelay = allLines.length * lineDelay - 2000;
 
 const storyText = document.getElementById("storyText");
@@ -29,6 +30,7 @@ const menuButton = document.getElementById("menuButton");
 const victorySound = new Audio("../../../assets/audio/BossSpeech.mov");
 victorySound.volume = 0.5;
 
+// appends one line to the story text area with the correct CSS class
 function addLine(text, isDealer) {
     const line = document.createElement("p");
     line.className = isDealer ? "dealer-line" : "story-line";
@@ -36,11 +38,12 @@ function addLine(text, isDealer) {
     storyText.appendChild(line);
 }
 
+// draws the Fool's front-facing idle frame (frame 6) on the canvas overlay
 function drawFool() {
     const ctx = foolCanvas.getContext("2d");
     const image = new Image();
     const cols = 3;
-    const frame = 6;
+    const frame = 6; // front-facing idle frame in the spritesheet
     const frameW = 256;
     const frameH = 341.25;
     const sx = frame % cols * frameW;
@@ -60,6 +63,7 @@ function showActionButtons() {
     actionButtons.classList.add("visible");
 }
 
+// plays through the narration sequence then shows the action buttons
 function startVictory() {
     startButton.classList.add("hidden");
     victorySound.currentTime = 0;
@@ -75,6 +79,7 @@ function startVictory() {
 
 startButton.addEventListener("click", startVictory);
 
+// clears all run state so the player can start a fresh descent
 async function resetForNewDescent() {
     const userId = localStorage.getItem("userId");
     if (userId) {
