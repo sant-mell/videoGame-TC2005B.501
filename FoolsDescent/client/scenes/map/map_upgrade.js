@@ -118,6 +118,7 @@ Game.prototype.acceptUpgrade = async function() {
                 this.bindingPickerOpen = true;
                 return;
             }
+            this.bindingDeck = deckData.cards;
         } catch (e) { return; }
     }
 
@@ -243,6 +244,10 @@ Game.prototype.pickCard = function(cardIndex) {
 };
 
 Game.prototype.openBindingPicker = async function() {
+    if (this.bindingDeck && this.bindingDeck.length > 0) {
+        this.bindingPickerOpen = true;
+        return;
+    }
     const userId = localStorage.getItem("userId");
     if (!userId) return;
     try {

@@ -579,7 +579,7 @@ class Game {
     async arrive() {
         if (this.isArriving) return;
         this.isArriving = true;
-        for (let n of this.nodes) {
+        try { for (let n of this.nodes) {
             if (n.x === this.fool.tx && n.y === this.fool.ty) {
                 if (n.state === "visited") {
                     this.currentId = n.id;
@@ -633,8 +633,7 @@ class Game {
                 }
                 break;
             }
-        }
-        this.isArriving = false;
+        } } finally { this.isArriving = false; }
     }
 
     // locks everything then unlocks only the nodes connected to where the fool is now

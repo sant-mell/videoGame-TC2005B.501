@@ -45,6 +45,7 @@ class Game {
         this.enemyTier = "boss";
         this.showStartButton = true;
         this.sunMessage = false;
+        this.sunMessageOwner = "";
         this.isEnemyShowing = true;
         this.isShowingDefeatedEnemy = false;
         this.strengthMessage = false;
@@ -382,6 +383,7 @@ async function main() {
     await loadPlayerDeck(game);
     await loadPlayerUpgrades(game);
     await loadDuelCheckpoint(game);
+    await applyExtraCards(game);
     await saveDuelCheckpoint(game);
 
     drawScene(0);

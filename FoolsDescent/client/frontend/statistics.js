@@ -1,6 +1,7 @@
+// Developed with assistance from Claude Code (Anthropic)
 const BASE = "http://localhost:3000";
 
-// ── helpers ─────────────────────────────────────────────────────────────────
+// helpers
 
 function fmtTime(seconds) {
     if (!seconds || seconds === 0) return "0m";
@@ -20,7 +21,7 @@ function fmtAvg(n) {
 
 function el(id) { return document.getElementById(id); }
 
-// ── chart colour constants (hex – canvas can't resolve CSS vars) ─────────────
+// chart colors (hex - canvas can't resolve CSS vars)
 
 const C = {
     purple:    "#7f77dd",
@@ -73,7 +74,7 @@ function makeDoughnut(canvasId, labels, data, colors) {
     });
 }
 
-// ── summary tables ───────────────────────────────────────────────────────────
+// summary tables
 
 async function fillSummaryTables() {
     const userId = localStorage.getItem("userId");
@@ -111,7 +112,7 @@ async function fillSummaryTables() {
     } catch (e) { console.error(e); }
 }
 
-// ── leaderboards ─────────────────────────────────────────────────────────────
+// leaderboards
 
 async function fillLeaderboards() {
     const me = localStorage.getItem("username") || "";
@@ -140,7 +141,7 @@ async function fillLeaderboards() {
     } catch (e) { console.error(e); }
 }
 
-// ── PERSONAL chart P1: Doughnut — victories vs deaths ────────────────────────
+// personal chart P1: victories vs deaths
 
 async function chartP_WinLoss(userId) {
     try {
@@ -161,7 +162,7 @@ async function chartP_WinLoss(userId) {
     } catch (e) { console.error(e); }
 }
 
-// ── PERSONAL P2: Last Run summary ────────────────────────────────────────────
+// personal P2: last run summary
 
 async function fillCurrentRun(userId) {
     try {
@@ -171,6 +172,7 @@ async function fillCurrentRun(userId) {
         }).then(r => r.json());
 
         const wrap = el("current-run-panel");
+        if (!wrap) return;
         if (!json.success || !json.stats) {
             wrap.innerHTML = `<p style="color:#6a5080;font-size:0.85rem">No runs found yet.</p>`;
             return;
@@ -200,7 +202,7 @@ async function fillCurrentRun(userId) {
     } catch (e) { console.error(e); }
 }
 
-// ── GLOBAL chart P3: Bar — enemy win rates ─────────────────────────────────
+// global chart P3: enemy win rates
 
 async function chartP_EnemyWinrate() {
     try {
@@ -227,7 +229,7 @@ async function chartP_EnemyWinrate() {
     } catch (e) { console.error(e); }
 }
 
-// ── PERSONAL chart P4: Doughnut — deck rarity + card table ───────────────────
+// personal chart P4: deck rarity + card table
 
 async function chartP_Deck(userId) {
     try {
@@ -274,7 +276,7 @@ async function chartP_Deck(userId) {
     } catch (e) { console.error(e); }
 }
 
-// ── PERSONAL P5: Upgrades list ────────────────────────────────────────────────
+// personal P5: upgrades list
 
 async function fillPersonalUpgrades(userId) {
     try {
@@ -297,7 +299,7 @@ async function fillPersonalUpgrades(userId) {
     } catch (e) { console.error(e); }
 }
 
-// ── GLOBAL chart G1: Bar — leaderboard victories ──────────────────────────────
+// global chart G1: leaderboard victories
 
 async function chartG_Victories() {
     try {
@@ -318,7 +320,7 @@ async function chartG_Victories() {
     } catch (e) { console.error(e); }
 }
 
-// ── GLOBAL chart G2: Dual-axis bar — difficulty win % + times fought ──────────
+// global chart G2: difficulty win % + times fought
 
 async function chartG_Difficulty() {
     try {
@@ -357,7 +359,7 @@ async function chartG_Difficulty() {
     } catch (e) { console.error(e); }
 }
 
-// ── GLOBAL chart G3: Horizontal bar — card popularity ────────────────────────
+// global chart G3: card popularity
 
 async function chartG_Cards() {
     try {
@@ -393,7 +395,7 @@ async function chartG_Cards() {
     } catch (e) { console.error(e); }
 }
 
-// ── GLOBAL chart G4: Bar — upgrade popularity ─────────────────────────────────
+// global chart G4: upgrade popularity
 
 async function chartG_Upgrades() {
     try {
@@ -413,7 +415,7 @@ async function chartG_Upgrades() {
     } catch (e) { console.error(e); }
 }
 
-// ── GLOBAL chart G5: Doughnut — global victories vs deaths ───────────────────
+// global chart G5: victories vs deaths
 
 async function chartG_WinLoss() {
     try {
@@ -428,7 +430,7 @@ async function chartG_WinLoss() {
     } catch (e) { console.error(e); }
 }
 
-// ── bootstrap ────────────────────────────────────────────────────────────────
+// bootstrap
 
 document.addEventListener("DOMContentLoaded", () => {
     const userId = localStorage.getItem("userId");

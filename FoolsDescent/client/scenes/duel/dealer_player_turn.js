@@ -168,6 +168,7 @@ Game.prototype.checkCardClick = function(cardEntry, mouseX, mouseY) {
                     this.foolRandomCardInfo;
                 cardEntry.showInfo = true;
                 setTimeout(() => {
+                    if (this.gameOver) return;
                     cardEntry.visible = false;
                     cardEntry.showInfo = false;
                     cardEntry.infoText = "Surprise!";

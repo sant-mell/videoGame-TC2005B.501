@@ -1,3 +1,4 @@
+// Developed with assistance from Claude Code (Anthropic)
 "use strict";
 
 function getDuelSnapshot(game) {
@@ -204,14 +205,18 @@ async function loadPlayerDeck(game) {
     game.characterCards = [...game.characterCards, ...dealt];
     game.repositionCardsArray(game.characterCards);
 
-    // Extra card picked from map upgrade node (consumed once then cleared)
+}
+
+async function applyExtraCards(game) {
     const extraCardsStr = localStorage.getItem("extraCards");
-    if (extraCardsStr) {
-        const extras = extraCardsStr.split(",").map(Number)
-            .filter(i => game.allCards[i])
-            .map(i => game.buildCharacterCardEntry(game.allCards[i], i));
+    if (!extraCardsStr) return;
+    const existingIndices = new Set(game.characterCards.map(c => c.cardIndex));
+    const toAdd = extraCardsStr.split(",").map(Number)
+        .filter(i => game.allCards[i] && !existingIndices.has(i));
+    if (toAdd.length > 0) {
+        const extras = toAdd.map(i => game.buildCharacterCardEntry(game.allCards[i], i));
         game.characterCards = [...game.characterCards, ...extras];
         game.repositionCardsArray(game.characterCards);
-        localStorage.removeItem("extraCards");
     }
+    localStorage.removeItem("extraCards");
 }
