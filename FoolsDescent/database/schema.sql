@@ -11,7 +11,7 @@ CREATE DATABASE fools_descent;
 USE fools_descent;
 
 -- catalog tables
-
+Update dummy data for game fitting
 CREATE TABLE Player (
     user_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     full_name VARCHAR(255) NOT NULL,
@@ -409,6 +409,7 @@ END$$
 DELIMITER ;
 
 -- stored procedures
+-- A few stored procedures were moved from a raw sql file embedded into a JS into a stored procedure here with the help of Claude Code
 
 DELIMITER $$
 
