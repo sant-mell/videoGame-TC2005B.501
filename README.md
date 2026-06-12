@@ -28,17 +28,24 @@ FoolsDescent/
 │   │   ├── tutorial.html            # how to play
 │   │   └── welcome.html             # landing page
 │   ├── scenes/
-│   │   ├── duel/                    # duel scene
-│   │   │   ├── duel.html / duel.js  # entry point and Game class
-│   │   │   ├── player_turn.js / enemy_turn.js   # turn logic
-│   │   │   ├── game_cards.js / game_update.js   # card definitions and update loop
-│   │   │   ├── render.js / layout.js / input.js # drawing, UI, keyboard
+│   │   ├── duel/                    # duel scene (one set of files per enemy tier)
+│   │   │   ├── duel.js / duel_easy.js / duel_intermedio.js / duel_dealer.js
+│   │   │   │                        # Game class and initObjects for each tier
+│   │   │   ├── player_turn.js / easy_player_turn.js / intermedio_player_turn.js / dealer_player_turn.js
+│   │   │   │                        # player turn logic per tier
+│   │   │   ├── enemy_turn.js / easy_enemy_turn.js / intermedio_enemy_turn.js / dealer_enemy_turn.js
+│   │   │   │                        # enemy AI per tier
+│   │   │   ├── game_cards.js        # all 16 card definitions and shared card utilities
+│   │   │   ├── game_update.js       # shared update loop
+│   │   │   ├── render.js / layout.js / input.js  # drawing, UI, keyboard
 │   │   │   ├── duel_stats.js        # posts result to /duel-result on win or loss
 │   │   │   └── duel_checkpoint.js   # saves mid-duel state to /duel-checkpoint
 │   │   └── map/                     # map scene
 │   │       ├── map.html / map.js    # entry point and node graph traversal
 │   │       ├── saving_system.js     # calls /save-progress and /load-game
-│   │       └── map_upgrade.js       # upgrade node logic
+│   │       ├── map_upgrade.js       # upgrade node logic
+│   │       ├── introduction.js      # intro cutscene
+│   │       └── victory.js           # victory screen after defeating The Dealer
 │   └── scripts/                     # JS for the web frontend pages
 │       ├── createaccount.js         # calls /register
 │       ├── mainmenu.js              # calls /login
@@ -141,8 +148,13 @@ All controls depend on the cursor. For debugging, `y` shows hitboxes.
 
 ### Done
 
-- Duel: player and enemy take turns drawing from the Great Deck and picking a target
-- Great Deck with randomized Sun/Moon cards, shown at the start of each round
+- Duel with four difficulty tiers:
+  - *Easy:* Drunk and Peasant
+  - *Intermediate:* Crazy Jester and Bounded Knight
+  - *Epic:* Mad Monarch and Killer Queen
+  - *Boss:* The Dealer (with intro dialogue and double-card mechanic every third turn)
+- Player and enemy take turns drawing from the Great Deck and picking a target
+- Great Deck with randomized Sun/Moon counts, shown at the start of each round
 - All 16 character cards:
   - *Common:* The Magician, The Chariot, Page of Pentacles, The Star, Strength, Two of Pentacles
   - *Rare:* The High Priestess, The Hermit, Justice, Wheel of Fortune, King of Pentacles
@@ -150,23 +162,20 @@ All controls depend on the cursor. For debugging, `y` shows hitboxes.
   - *Legendary:* The Fool
 - Hovering a card shows its name and effect
 - Candle health system with animations
-- Enemy AI that plays cards and draws automatically
+- Enemy AI that plays cards and draws automatically, with per-tier behavior and probabilities
 - Cards animate when played or discarded
-- Sound effects and background music
+- Sound effects and background music per difficulty tier
 - Win/lose detection with a defeated enemy sprite
-- Coin tracking
+- Player deck saves to the database after each duel and loads at the start of the next
+- Mid-duel state saves to the database each turn and restores on page reload
+- Coin tracking: 100 per non-boss victory, 300 for defeating The Dealer; persists via localStorage
+- Page of Pentacles and King of Pentacles coin bonuses apply and persist correctly
 - Map scene with The Fool walking between nodes
-- Map generates differently every run (node types and paths are randomized)
-- Three duel difficulties on the map: easy (Drunk and Peasant), intermediate (Jester and Knight), and The Dealer as the final boss
+- Upgrade nodes with a full canvas UI:
+  - *Card Binding* (100 coins): binds a chosen card so it survives death
+  - *Life Extension* (150 coins): increases maximum lives
+  - *Extra Card* (50 coins): opens a picker so the player chooses any of the 15 non-Fool cards
 - Login and account creation working with a local MySQL Workbench database
-- Save and load working, map position carries over between sessions
-- Web pages (menu, login, create account, tutorial, statistics) connected to MySQL
-
-### In Progress
-
-- Cards in hand are not tied to game progression yet
-- Cards don't save between sessions yet
-- Upgrade and rest nodes on the map are not implemented
-- Statistics page does not pull data yet
-- *Page of Pentacles* and *King of Pentacles* give coin bonuses but coins don't persist yet so nothing actually saves
-
+- Map position carries over between sessions
+- Full statistics page: personal and global stats, leaderboards by victories and coins, charts for win/loss ratio, enemy winrate, difficulty winrate, card popularity, and upgrade popularity
+- Introduction cutscene before the map and victory screen after defeating The Dealer

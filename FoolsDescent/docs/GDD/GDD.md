@@ -269,8 +269,8 @@ Negative fortunes:
 - *The Magician:* Repeats the effect of the last card played during this combat.
 - *The Chariot:* Throws away the top card of the [Great Deck](#great-deck). 
 - *The Star:* When you reach 0 lives it revives you with a singular extra life.
-- *Page of Pentacles:* If you win in the next round it gives you a coin bonus.
-- *Strength:* During the next round you cannot die.
+- *Page of Pentacles:* If you win this duel it gives you a coin bonus.
+- *Strength:* During the next draw you cannot lose a life.
 - *Two of Pentacles:* Draw two cards from the [Great Deck](#great-deck), choose one to use, the other is thrown away.
 
 
@@ -284,9 +284,9 @@ Negative fortunes:
 #### Rare Cards
 - *The High Priestess:* Can see the next card from the [Great Deck](#great-deck).
 - *The Hermit:* Blocks enemy's turn.  
-- *Justice:* If you lose a life during your next turn, your opponent loses one too.
+- *Justice:* If you lose a life on the current turn or the following turn after playing this card, your opponent loses one too.
 - *Wheel of Fortune:* Shuffles the [Great Deck](#great-deck).
-- *King of Pentacles:* If you win the award money doubles, but if you lose the loss money does too.
+- *King of Pentacles:* If you win this duel, the coin reward doubles.
 
 
 
@@ -328,24 +328,24 @@ Negative fortunes:
 The player will start with zero cards and money. They must [duel](#duel) a common enemy first in a match with an empty hand.  After this first battle, a procedurally generated [map](#map) will be shown, where the player must weigh their decisions to what benefits them the most; having a duel or not, facing the boss headfirst or risk a duel beforehand to get more cards and money and prioritize card collection for a next run. If the player dies during a duel, they will lose all of their cards but be able to keep half of their coins.
 
 ## Map
-The map will be a procedurally generated directed graph, similar to the one used in *Slay the Spire*, but stylized to match the pixelated tarot style.
+The map uses a fixed 4-column grid structure, stylized to match the pixelated tarot style. It has 10 nodes in total: a starting rest node, 8 intermediate nodes (4 enemies and 4 upgrades arranged in 4 columns of 2 in random vertical order), and a final boss node.
 
-1. **Nodes:** Each node will include an enemy, upgrade or rest site:
+1. **Nodes:** Each node will include an enemy, upgrade, or the starting rest site:
     - *Enemy:* Refer to the [enemy specifications](#opponents)
     - *Upgrade:* Refer to the [upgrade specifications](#upgrades)
-    - *Rest:* Similar to Monopoly rest stops, they do nothing, but give the player time to rethink their strategy.
-2.  **Paths:** The player will start from the far left, advancing towards the right.
+    - *Rest:* The starting node only. It places the player at the beginning of the map.
+2. **Paths:** Each column has exactly one enemy node and one upgrade node. The player starts at the far left and advances toward the boss on the far right.
 
-The encounters will be easier on the beginning, where a calculation to prioritize easier enemies will be made. However, the possibility of finding a hard enemy or even the boss at the beginning is never zero.
+Enemy difficulty scales by column: column 1 spawns only common enemies; column 2 skews heavily toward rare; column 3 skews toward epic. The boss is always the final node.
 
 ![Map](../../assets/images/Final%20Map.png)
 
 #### Upgrades
-- *Card Binding* (300 coins): Spend a high amount of coins in order to be able to "bound" a card. This will make the card return to your hand on the next duel even if it was used on the last one.
+- *Card Binding* (100 coins): Spend coins to bind a card. A bound card returns to your hand at the start of the next duel even if it was used in the last one.
 
-- *Life Extension* (400 coins): Increase the maximum life, where the baseline starts at 3.
+- *Life Extension* (150 coins): Increase the maximum lives, where the baseline starts at 3.
 
-- *Card* (100 coins): The player may purchase one random card to use in their next duel.
+- *Extra Card* (50 coins): Opens a picker where the player chooses any of the 15 non-Fool character cards to carry into the next duel.
 
 ## Duel
 
@@ -361,17 +361,17 @@ The progression as described in [gameplay](#gameplay) is made in the following m
 5. The enemy repeats the process.
 7. Repeat.
 
-The Character Cards for the player are the ones left from the past duel, plus new ones given randomly in the beginning each duel, the quantity is the following:
-- 3 for common enemies
-- 4 for rare enemies
-- 5 for epic enemies
-- 6 for legendary enemies
+The Character Cards for the player are the ones kept from the past duel. No new cards are given at the start of a duel; instead, one card from the difficulty pool is awarded each time the Great Deck runs out and is rebuilt during play. The pool of cards available scales with enemy tier:
+- Common enemies: common cards only
+- Rare enemies: common and rare cards
+- Epic enemies: common, rare, and epic cards (excluding The Fool)
+- Boss: all cards including The Fool
 
 Choosing a card from your character deck during your turn in a duel will discard it from your hand.
 
 
 ## Items and Currencies
-- *Coins:* Coins are gained at the end of a duel, granting 100 per victory. They may be used at certain points in the map to buy powerups or cards. The player will have the choice of buying it or not. 50% of the coins are kept after each reincarnation.
+- *Coins:* Coins are gained at the end of a duel: 100 per victory against common, rare, or epic enemies, and 300 for defeating the boss. They may be used at certain points in the map to buy powerups or cards. The player will have the choice of buying it or not. 50% of the coins are kept after each reincarnation.
 - *Cards:* 16 cards that help the player manage the risk of [moon](#the-moon) and [sun](#the-sun) cards in the [main deck](#great-deck) during [duels](#duel).
 
 
@@ -405,7 +405,7 @@ On the map, one of the enemies of each difficulty will appear, those are also ra
 
 
 
-These characters lack any real combat training, they only manage to play a basic common card every other turn, giving you plenty of time to find your footing. They have a 40% probability they attack you, 60% they target themselves. 
+These characters lack any real combat training, they only manage to play a basic common card every other turn, giving you plenty of time to find your footing. They have a 60% probability they attack you, 40% they target themselves. 
 
 - **Deck composition:** Magician, Chariot, Star, Strength
 
@@ -422,9 +422,9 @@ These characters lack any real combat training, they only manage to play a basic
 - "Bounded Knight"
 ![Rare Enemies](../../assets/images/Knight.png)
 
-These are a bit more seasoned but still have their openings. While they’ve added some rare cards to their deck, they aren't perfectly consistent, they’ll skip an action every third turn, offering you a brief window to strike back. They have a 50% probability they attack you, 50% they target themselves. 
+These are a bit more seasoned but still have their openings. While they’ve added some rare cards to their deck, they aren’t perfectly consistent, they’ll skip an action every third turn, offering you a brief window to strike back. They have a 70% probability they attack you, 30% they target themselves. 
 
-- **Deck composition:** Hermit, Justice, Wheel of Fortune, Chariot, Strength
+- **Deck composition:** Hermit, Justice, Wheel of Fortune, Chariot, Strength, Hanged Man
 
 
 
@@ -443,9 +443,9 @@ These are a bit more seasoned but still have their openings. While they’ve add
 
 
 
-These are relentless fighters who never miss a beat, playing a card every single turn. Their decks are packed with epic cards, meaning you’ll need to stay sharp just to keep up with their constant pressure. They have a 60% probability they attack you, 40% they target themselves. 
+These are relentless fighters who never miss a beat, playing a card every single turn. Their decks are packed with epic cards, meaning you’ll need to stay sharp just to keep up with their constant pressure. They have an 80% probability they attack you, 20% they target themselves. They will never willingly draw a Moon card onto themselves. 
 
-- **Deck composition:** Lovers, Devil, Hanged Man, Wheel of Fortune, Hermit, Chariot
+- **Deck composition:** Lovers, Devil, Hanged Man, Wheel of Fortune, Hermit, Chariot, Magician
 
 
 #### Legendary and Final Enemy:
@@ -461,9 +461,9 @@ These are relentless fighters who never miss a beat, playing a card every single
 
 
 
-He doesn’t just play the game, he MAKES it. Holding the only Legendary card in existence, he’s capable of overwhelming you by dropping two cards at once every few turns. To beat him, you’ll have to survive a level of aggression unlike anything else you have seen before. They have a 70% probability they attack you, 30% they target themselves. 
+He doesn’t just play the game, he MAKES it. Holding the only Legendary card in existence, he always opens with The Fool as his very first card. Every third turn he plays two character cards back to back, overwhelming you before you can react. When he plays The Fool, it isn’t truly random — he draws from a curated aggressive subset of cards, never wasting it on a coin bonus or a utility draw. To beat him, you’ll have to survive a level of aggression unlike anything else you have seen before. They have a 90% probability they attack you, 10% they target themselves. 
 
-- **Deck composition:** Fool, Lovers, Hanged Man, Justice, Hermit, Magician, Star
+- **Deck composition:** Fool, Lovers, Hanged Man, Justice, Hermit, Magician, Star, Devil
 
 
 ## Mindset
@@ -493,7 +493,7 @@ The key screens will be carefully selected and designed in order to enhance the 
 ### Main Screen
 Buttons: 
 
-[New Descent]: Will start a new game, deleting and starting from zero but with the money collected, cards kept and upgrades already bought.
+[New Descent]: Starts a completely fresh run. Coins reset to zero, the map is regenerated, and no resources carry over from the previous descent.
 
 [Continue Descent]: Will retrieve all data from the database: Runs, perks, cards saved, position within the node and enemies defeated.
 
@@ -799,9 +799,9 @@ The following audio files will be featured all throughout the game, during the s
 
 ## Level Design
 
-As said before, the levels will be procedurally generated with a graph. Each time the graph will be generated, it must have 8 nodes total, consisting of 4 enemies (including the boss), 3 upgrades and a single rest node. The structure for the node selection be a a Undirected Connected Graph, where each node will be calculated with a pool defined as [Enemy, Enemy, Enemy, Upgrade, Upgrade, Upgrade, Rest] and will be shuffled. The first node will be chosen as the start of the game. The next node will be connected to a random node already in the web. This will be repeated until all 8 nodes are connected.
+Each run generates a map with 10 nodes total: a starting rest node, 8 intermediate nodes arranged in 4 columns of 2 (each column contains exactly 1 enemy node and 1 upgrade node in random vertical order), and a final boss node. Guaranteed edges connect each column to the next; each column-pair may also have one extra cross-edge chosen at random. The player starts at the rest node on the far left and moves right toward the boss.
 
-With this procedure, we can guarantee that all nodes were randomly generated and connected, allowing the player to face all possibilities within the game. However, the type of enemies have not been defined yet. This will be calculated based off their height within the graph. This will be made with the help of probabilities. 
+Enemy difficulty is determined by column position using weighted probabilities. 
 
 First Fight:
 - Common Chance: 100%

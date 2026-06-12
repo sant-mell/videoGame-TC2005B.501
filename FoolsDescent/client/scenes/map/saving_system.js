@@ -1,3 +1,4 @@
+// Developed with assistance from Claude Code (Anthropic)
 function saveMapLocally(game) {
     const key = "mapData_" + localStorage.getItem("userId");
     localStorage.setItem(key, JSON.stringify(game.getSaveData()));

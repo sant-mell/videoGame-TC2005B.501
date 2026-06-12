@@ -1,3 +1,4 @@
+// Developed with assistance from Claude Code (Anthropic)
 const BASE = "http://localhost:3000";
 
 // helpers

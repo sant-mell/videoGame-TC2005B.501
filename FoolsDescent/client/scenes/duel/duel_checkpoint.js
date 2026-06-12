@@ -1,3 +1,4 @@
+// Developed with assistance from Claude Code (Anthropic)
 "use strict";
 
 function getDuelSnapshot(game) {
