@@ -1,5 +1,6 @@
 const registerForm = document.querySelector(".register-form");
 
+// calls sp_register_player on the server then redirects to login on success
 registerForm.addEventListener("submit", async (event) => {
 
     event.preventDefault();

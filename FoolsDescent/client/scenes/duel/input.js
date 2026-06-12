@@ -1,7 +1,8 @@
+// wires click and mousemove to the relevant game interaction checks
 Game.prototype.createEventListeners = function() {
 
         window.addEventListener("click", (event) => {
-
+            // scale mouse coords from CSS pixels to canvas pixels in case the canvas is CSS-resized
             const rect = ctx.canvas.getBoundingClientRect();
             const scaleX = ctx.canvas.width / rect.width;
             const scaleY = ctx.canvas.height / rect.height;
@@ -10,11 +11,13 @@ Game.prototype.createEventListeners = function() {
 
             this.checkStartButton(mouseX, mouseY);
 
+            // dealer intro intercepts all other clicks until dismissed
             if (this.showDealerIntro) {
                 this.checkDealerIntroClick(mouseX, mouseY);
                 return;
             }
 
+            // Two of Pentacles overlay blocks normal card/deck clicks
             if (this.showTwoPentaclesChoice) {
                 if (this.currentTurn !== "player") {
                     return;
@@ -39,6 +42,7 @@ Game.prototype.createEventListeners = function() {
 
             for (let c of this.characterCards) {
                 this.checkCardClick(c, mouseX, mouseY);
+                // a card click may open the Two of Pentacles overlay, stop here if so
                 if (this.showTwoPentaclesChoice) {
                     return;
                 }
@@ -46,21 +50,19 @@ Game.prototype.createEventListeners = function() {
             this.checkMainDeckClick(mouseX, mouseY);
             this.checkChoiceButtons(mouseX, mouseY);
             this.checkTwoPentaclesClick(mouseX, mouseY);
-
         });
-        window.addEventListener("mousemove", (event) => {
 
+        window.addEventListener("mousemove", (event) => {
             const rect = ctx.canvas.getBoundingClientRect();
             const scaleX = ctx.canvas.width / rect.width;
             const scaleY = ctx.canvas.height / rect.height;
             const mouseX = (event.clientX - rect.left) * scaleX;
             const mouseY = (event.clientY - rect.top) * scaleY;
-        
             this.checkCardHover(mouseX, mouseY);
         });
-    
 };
 
+// sets hoveredCard to whichever visible card the mouse is over, or null
 Game.prototype.checkCardHover = function(mouseX, mouseY) {
 
         this.hoveredCard = null;
@@ -99,7 +101,9 @@ Game.prototype.checkCardHover = function(mouseX, mouseY) {
     
 };
 
+// starts music on any click and, if the START button is visible, begins the duel
 Game.prototype.checkStartButton = function(mouseX, mouseY) {
+        // music is started here (on first user gesture) because browsers block autoplay
         if (!this.gameOver && this.startSound.paused && !this.hasDealerIntro){
             this.startSound.play();
         }
@@ -140,6 +144,7 @@ Game.prototype.checkStartButton = function(mouseX, mouseY) {
     
 };
 
+// transitions from the START button to the Dealer's intro dialog sequence
 Game.prototype.startDealerIntro = function() {
         this.showStartButton = false;
         this.showDealerIntro = true;
@@ -151,6 +156,7 @@ Game.prototype.startDealerIntro = function() {
         }
 };
 
+// advances the Dealer's intro to the next line when the CONTINUE button is clicked
 Game.prototype.checkDealerIntroClick = function(mouseX, mouseY) {
         const button = this.dealerIntroButton;
 
@@ -170,6 +176,7 @@ Game.prototype.checkDealerIntroClick = function(mouseX, mouseY) {
         }
 };
 
+// closes the Dealer intro and starts the actual duel (shows Great Deck counts and player turn)
 Game.prototype.finishDealerIntro = function() {
         this.showDealerIntro = false;
         this.hasDealerIntro = false;

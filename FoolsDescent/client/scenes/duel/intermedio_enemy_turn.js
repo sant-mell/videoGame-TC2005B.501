@@ -1,3 +1,4 @@
+// drives the enemy's turn for rare-tier duels; prioritizes Strength when at 1 life
 Game.prototype.intermedio_enemy_turn = function() {
 
         if (this.gameOver) return;
@@ -195,6 +196,7 @@ Game.prototype.intermedio_enemy_turn = function() {
     
 };
 
+// draws from the Great Deck for the enemy; rare-tier AI targets self 30% of the time
 Game.prototype.resolveEnemyDeckDraw = function() {
 
     if (this.gameOver) return;

@@ -1,3 +1,4 @@
+// Fisher-Yates in-place shuffle
 Game.prototype.shuffleDeck = function(deck) {
     for (let i = deck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -7,6 +8,7 @@ Game.prototype.shuffleDeck = function(deck) {
     }
 };
 
+// returns all 16 card definitions; indices here must match ALL_CARDS in map_upgrade.js
 Game.prototype.buildAllCards = function() {
         return [
             {
@@ -291,14 +293,17 @@ Game.prototype.buildAllCards = function() {
         ];
     
 };
+// runs an action as if it belongs to turnOwner, then restores the real turn
+// needed so The Magician's repeat uses the correct "player" or "enemy" context
 Game.prototype.runCardActionAsTurn = function(action, turnOwner) {
     const previousTurn = this.currentTurn;
-
     this.currentTurn = turnOwner;
     action();
     this.currentTurn = previousTurn;
 };
 
+// cards like The Hermit affect a different side depending on who plays them,
+// so the info text shown on screen has to match the actual outcome
 Game.prototype.getCardInfoTextForTurn = function(cardName, turnOwner, fallbackText) {
     const infoTexts = {
         "The Star": {
@@ -342,6 +347,7 @@ Game.prototype.getCardInfoTextForTurn = function(cardName, turnOwner, fallbackTe
     return fallbackText;
 };
 
+// The Tower card: removes floor(n/2) random cards from the opponent's hand
 Game.prototype.destroyHalfOpponentCards = function() {
     const targetCards = this.currentTurn === "enemy"
         ? this.characterCards
@@ -361,6 +367,7 @@ Game.prototype.destroyHalfOpponentCards = function() {
     }
 };
 
+// true whenever any animation is mid-flight so clicks are ignored
 Game.prototype.isPlayerTurnInputLocked = function() {
     return Boolean(
         this.playerInputLocked ||
@@ -371,6 +378,7 @@ Game.prototype.isPlayerTurnInputLocked = function() {
     );
 };
 
+// animates the deck card zooming from the deck rect to the center of the canvas
 Game.prototype.startCenterCardAnimation = function() {
     const startX = this.maindeck.x + this.maindeck.width / 2;
     const startY = this.maindeck.y + this.maindeck.height / 2;
@@ -396,6 +404,7 @@ Game.prototype.startCenterCardAnimation = function() {
     this.centerImage.size.y = this.centerCardStartH;
 };
 
+// called when the enemy tries to draw but the Great Deck is empty; rebuilds it and returns true so the caller skips normal draw logic
 Game.prototype.handleEmptyEnemyDeckDraw = function() {
     if (this.greatDeck.length > 0) {
         return false;
@@ -443,6 +452,7 @@ Game.prototype.handleEmptyEnemyDeckDraw = function() {
     return true;
 };
 
+// clears all reward-slide state after the card reaches the player's hand
 Game.prototype.finishRewardCardSlide = function() {
     this.pendingRewardCard = false;
     this.playerInputLocked = false;
@@ -450,6 +460,7 @@ Game.prototype.finishRewardCardSlide = function() {
     this.rewardCard = null;
 };
 
+// launches the reward card slide once conditions are right (not called during intros or animations)
 Game.prototype.startPendingRewardCard = function() {
     if (!this.pendingRewardCard || this.rewardCard || this.isRewardCardSliding) {
         return;
@@ -476,6 +487,8 @@ Game.prototype.startPendingRewardCard = function() {
     }
 };
 
+// builds a new Great Deck with random sun/moon counts, shows composition for 5 s,
+// then unlocks input; awardPlayerCard queues a reward card slide for the player
 Game.prototype.buildGreatDeck = function(awardPlayerCard = false) {
     if (
         this.gameOver ||
@@ -523,6 +536,7 @@ Game.prototype.buildGreatDeck = function(awardPlayerCard = false) {
         }
     }, 5000);
 };
+// revives the target to 1 life if their Star card is active; returns true if activated
 Game.prototype.activateStarPower = function(target) {
         if (target === "enemy") {
             if (!this.enemyStarActive || this.enemyLives > 0) return false;
@@ -544,6 +558,7 @@ Game.prototype.activateStarPower = function(target) {
         setTimeout(() => { this.starMessage = false; }, 2000);
         return true;
 };
+// blocks exactly one lethal hit for the target if Strength is active; returns true if activated
 Game.prototype.activateStrengthPower = function(target) {
 
 	    if (target === "enemy") {
@@ -586,6 +601,8 @@ Game.prototype.activateStrengthPower = function(target) {
 
     return true;
 };
+// handles the edge case where both sides reach 0 lives at the same time;
+// GDD says duels must have a result so both are restored to 1 life
 Game.prototype.resolveNoResultTie = function() {
     if (this.playerLives > 0 || this.enemyLives > 0) {
         return false;
@@ -655,6 +672,7 @@ Game.prototype.resolveNoResultTie = function() {
 
     return true;
 };
+// wraps a card definition into the runtime entry object used by characterCards
 Game.prototype.buildCharacterCardEntry = function(cardDef, cardIndex = null) {
         const obj = new AnimatedObject(
             new Vector(canvasWidth / 2, canvasHeight - 180),
@@ -675,6 +693,7 @@ Game.prototype.buildCharacterCardEntry = function(cardDef, cardIndex = null) {
     
 };
 
+// returns a random element from poolIndices without removing it, or null if the pool is empty
 Game.prototype.pickRandomCardIndexFromPool = function(poolIndices) {
         if (!poolIndices || poolIndices.length === 0) {
             return null;
@@ -684,6 +703,7 @@ Game.prototype.pickRandomCardIndexFromPool = function(poolIndices) {
         return poolIndices[randomPoolIndex];
 };
 
+// picks from whichever pool is available, preferring the difficulty pool
 Game.prototype.takeRandomPlayerCardIndex = function() {
         return this.pickRandomCardIndexFromPool(
             this.difficultyCardPoolIndices ||
@@ -692,6 +712,7 @@ Game.prototype.takeRandomPlayerCardIndex = function() {
         );
 };
 
+// pulls one card from the pool and starts the slide-in animation toward the player's hand
 Game.prototype.addPlayerCardFromPool = function() {
         if (!this.allCards || !this.characterCards) {
             return false;
@@ -722,6 +743,7 @@ Game.prototype.addPlayerCardFromPool = function() {
         return true;
 };
 
+// sets up the card pool from indices, then deals amount random cards plus any DB-loaded personal cards
 Game.prototype.chooseStartingCards = function(indices, amount = 0) {
         this.difficultyCardPoolIndices = indices.slice();
         this.playerCardPoolIndices = indices.slice();
@@ -753,6 +775,7 @@ Game.prototype.chooseStartingCards = function(indices, amount = 0) {
 
 };
 
+// builds enemy character cards at the smaller display size used above the table
 Game.prototype.chooseEnemyCards = function(indices) {
         const cards = indices.map(i => {
             const card = this.buildCharacterCardEntry(this.allCards[i], i);
@@ -766,6 +789,7 @@ Game.prototype.chooseEnemyCards = function(indices) {
     
 };
 
+// snapshots surviving cards once on win so duel_checkpoint can persist them to the DB
 Game.prototype.saveRemainingPlayerCardsAfterWin = function() {
         if (this.savedWinningCards || !this.gameOver || this.enemyLives > 0) {
             return;

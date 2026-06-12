@@ -1,6 +1,7 @@
 // Developed with assistance from Claude Code (Anthropic)
 "use strict";
 
+// captures the full duel state so it can be restored if the page is refreshed mid-duel
 function getDuelSnapshot(game) {
     return {
         enemyLives: game.enemyLives,
@@ -40,6 +41,7 @@ function getDuelSnapshot(game) {
     };
 }
 
+// applies a saved snapshot back onto game, rebuilding card objects from their indices
 function restoreDuelSnapshot(game, snap) {
     game.enemyLives = snap.enemyLives;
     game.playerLives = snap.playerLives;
@@ -99,6 +101,7 @@ function restoreDuelSnapshot(game, snap) {
     game.cardsPlayedOffset = game.characterCards.filter(c => c.visible === false).length;
 }
 
+// persists the current snapshot to the server so a page reload can resume the duel
 async function saveDuelCheckpoint(game) {
     const userId = localStorage.getItem("userId");
     if (!userId) return;
@@ -114,6 +117,7 @@ async function saveDuelCheckpoint(game) {
     }
 }
 
+// loads a server-side checkpoint into game; returns true if one was found
 async function loadDuelCheckpoint(game) {
     const userId = localStorage.getItem("userId");
     if (!userId) return false;
@@ -130,6 +134,7 @@ async function loadDuelCheckpoint(game) {
     return false;
 }
 
+// deletes the server checkpoint so a finished duel can't be resumed
 async function clearDuelCheckpoint() {
     const userId = localStorage.getItem("userId");
     if (!userId) return;
@@ -144,6 +149,7 @@ async function clearDuelCheckpoint() {
     }
 }
 
+// overwrites the player's DB deck with the given indices (empty array clears it on death)
 async function savePlayerDeckToDB(cardIndices) {
     const userId = localStorage.getItem("userId");
     if (!userId) return;
@@ -158,6 +164,7 @@ async function savePlayerDeckToDB(cardIndices) {
     }
 }
 
+// applies Life Extension upgrades from the DB; each one adds 1 life up to the 6-life cap
 async function loadPlayerUpgrades(game) {
     const userId = localStorage.getItem("userId");
     if (!userId) return;
@@ -176,6 +183,7 @@ async function loadPlayerUpgrades(game) {
     }
 }
 
+// loads the player's saved deck from the DB and merges it into the current hand
 async function loadPlayerDeck(game) {
     const userId = localStorage.getItem("userId");
     if (!userId) return;
@@ -197,7 +205,7 @@ async function loadPlayerDeck(game) {
         console.error(e);
     }
 
-    const dealCount = 0;// NO DAR CARTAS AL PRINCIPIO, PARA AGREGAR DIFICULTAD NO MOVER!!!!
+    const dealCount = 0; // keep at 0, giving extra cards at the start makes the game too easy
     const pool = game.difficultyCardPoolIndices.slice().sort(() => Math.random() - 0.5);
     const dealt = pool.slice(0, dealCount)
         .filter(i => game.allCards[i])
@@ -207,6 +215,7 @@ async function loadPlayerDeck(game) {
 
 }
 
+// picks up cards earned at the upgrade node (stored in localStorage) and adds them to the hand
 async function applyExtraCards(game) {
     const extraCardsStr = localStorage.getItem("extraCards");
     if (!extraCardsStr) return;

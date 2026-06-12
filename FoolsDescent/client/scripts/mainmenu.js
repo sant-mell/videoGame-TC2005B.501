@@ -1,5 +1,6 @@
 const loginButton = document.getElementById("loginButton");
 
+// stores userId and username in localStorage on a successful login then redirects to the menu
 loginButton.addEventListener("click", async () => {
 
     const username = document.getElementById("username").value;
