@@ -92,7 +92,7 @@ FoolsDescent/database/data.sql     ← seeds cards, enemies, and upgrades
 
 The schema file drops and recreates the `fools_descent` database, so running it on a fresh install is safe.
 
-The server connects with `user: root` and `password: 1234`. If your MySQL root password is different, edit those two lines at the top of `FoolsDescent/backend/server.js` before continuing.
+The server connects with `user: root` and `password: 1234`. If your MySQL root password is different, edit `FoolsDescent/backend/.env` before continuing.
 
 ### 3. Install backend dependencies
 
