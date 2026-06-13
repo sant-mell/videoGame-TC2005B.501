@@ -1,4 +1,5 @@
 // Developed with assistance from Claude Code (Anthropic)
+require("dotenv").config();
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
@@ -13,10 +14,10 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "..")));
 
 const pool = mysql.createPool({
-    host: "localhost",
-    user: "root",
-    password: "1234",
-    database: "fools_descent",
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     waitForConnections: true,
     connectionLimit: 10
 });
