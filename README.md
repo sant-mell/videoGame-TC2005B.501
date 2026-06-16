@@ -67,6 +67,39 @@ The Fool's Descent is a roguelike card game where you navigate a map, fight enem
 
 ---
 
+## Architecture
+
+A browser HTML5 Canvas client talks to a Node/Express API, which persists everything in MySQL through stored procedures, views, and triggers. The same server also serves the frontend pages.
+
+```mermaid
+flowchart LR
+    subgraph Client [Browser, HTML5 Canvas]
+        UI[Frontend pages<br/>menu, map, statistics]
+        DUEL[Duel + map scenes<br/>game loop, rendering]
+    end
+    DUEL <-->|fetch JSON| API[Express server<br/>server.js, REST endpoints]
+    UI <-->|fetch JSON| API
+    API <-->|SQL + stored procedures| DB[(MySQL<br/>fools_descent)]
+    DB --- V[Views, triggers,<br/>stored procedures]
+```
+
+## Duel turn flow
+
+Each round both sides draw from the Great Deck and pick a target; mid-duel state is saved every turn so a page reload restores the fight.
+
+```mermaid
+flowchart TD
+    A[Start round] --> B[Reveal Great Deck<br/>Sun / Moon counts]
+    B --> C[Player draws and targets<br/>enemy or self]
+    C --> D[Enemy AI draws and plays<br/>per-tier probabilities]
+    D --> E{Candle health = 0?}
+    E -->|no| F[Save duel checkpoint] --> B
+    E -->|player wins| G[Post result, award coins,<br/>save deck]
+    E -->|player loses| H[Post result,<br/>defeated screen]
+```
+
+---
+
 ## How to Run the Game
 
 ### Prerequisites
